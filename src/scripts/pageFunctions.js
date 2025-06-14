@@ -1,4 +1,4 @@
-import styles from '@/app/terminal.module.css'
+import styles from '@/app/styles/terminal.module.css'
 import { isMobile, wait } from '@/scripts/helpers.js';
 import { Terminal } from '@/scripts/terminal.js';
 import { Asteroid } from './asteroids';
@@ -10,10 +10,17 @@ export function initGlow() {
     // Clone the container node (deep clone)
     const glow = container.cloneNode(true);
     glow.id = "container-glow";
-    glow.classList.add(styles["glow"]);
+    glow.classList.add("glow");
 
     // Append the glow element to the same parent
     container.parentNode.appendChild(glow);
+}
+
+export function cleanGlow() {
+    const glow = document.getElementById("container-glow");
+    if (glow) {
+        glow.remove();
+    }
 }
 
 export async function showPage(){

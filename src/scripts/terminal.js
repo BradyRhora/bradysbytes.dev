@@ -2,14 +2,13 @@
 import { BBFileSystem } from "./filesystem";
 import { wait, shuffle, setCookie, getCookie, isMobile, setCSSVar } from "./helpers";
 import { showPage } from "./pageFunctions";
-import  {Asteroid } from "@/scripts/asteroids"
-import { Command } from "./terminal-commands";
+import { Asteroid } from "@/scripts/asteroids"
+import { Command } from "./terminalCommands";
 
 export class Terminal {
     static instance = undefined;
 
-    constructor() {
-        
+    constructor() {        
         this.terminalElement = document.getElementById("terminal");
         this.terminalGlowElement = document.getElementById("terminal-blur");
         this.currentInput = "";
@@ -18,18 +17,27 @@ export class Terminal {
 
         this.commandHistory = [];
         this.historyIndex = -1;
+        this.skipIntro = false;
+
+        this.forceSkipListener = this.forceSkipListener.bind(this);
+        document.addEventListener('keydown', this.forceSkipListener);
         
         Terminal.instance = this;
     }
 
-    clear() {
-        this.currentInput = "";
+    forceSkipListener(event) {
+        if (event.code == "Space" || event.code == "Enter") {
+            this.skipIntro = true;
+        }
+    }
+
+    clearText() {
         this.terminalElement.textContent = "";
         this.terminalGlowElement.textContent = "";
     }
 
     async getCommandReady(clearTerminal = true) {
-        if (clearTerminal) this.clear();
+        if (clearTerminal) this.clearText();
         this.currentInput = "";
         await this.print(getCommandPrefix(), 1.5);
     }
@@ -81,6 +89,7 @@ export class Terminal {
         if (!isMobile()) {
             await this.getCommandReady();
             await this.autoType(command, 0.5);
+            this.commandHistory.unshift(command);
         }
         if (callback != undefined) callback();
     }
@@ -119,13 +128,20 @@ export class Terminal {
     }
 
     async runCommand(args) {
+        if (args == undefined || args == "") {
+            this.getCommandReady();
+            return;
+        }
+        
         this.commandHistory.unshift(this.currentInput);
 
         let file = Terminal.instance.fileSystem.getFileFromPathString(args);
         if (file != undefined && file.name.endsWith('.sh')) {
             let output = await this.runScript(file.name);
-            await this.clear();
-            await this.print(output);
+            if (output != undefined) {
+                await this.clearText();
+                await this.print(output);
+            }
             return;
         }
 
@@ -133,7 +149,7 @@ export class Terminal {
         let commandName = args.shift();
         let command = Command.getCommand(commandName);
         
-        this.clear();
+        this.clearText();
         if (command == undefined) await this.print("Error: Command not found!", 3);
         else if (args.length < command.func.length) await this.print(command.description);
         else {
@@ -149,7 +165,7 @@ export class Terminal {
     }
 
     updateInput() {
-        this.clear();
+        this.clearText();
         this.print(getCommandPrefix() + this.currentInput);
     }
 
@@ -171,9 +187,21 @@ export class Terminal {
             this.historyIndex = -1;
             this.runCommand(this.currentInput);
         } else if (key == "ArrowUp") {
-            if (this.historyIndex < this.commandHistory.length - 1) this.historyIndex++;
-            this.currentInput = this.commandHistory[this.historyIndex];
-            this.updateInput();
+            if (this.historyIndex < this.commandHistory.length - 1) {
+                this.historyIndex++;
+                this.currentInput = this.commandHistory[this.historyIndex];
+                this.updateInput();
+            }
+        } else if (key == "ArrowDown") {
+            if (this.historyIndex > 0) {
+                this.historyIndex--;
+                this.currentInput = this.commandHistory[this.historyIndex];
+                this.updateInput();
+            } else if (this.historyIndex == 0) {
+                this.historyIndex = -1;
+                this.currentInput = "";
+                this.updateInput();
+            }
         }
     }
 }
@@ -234,6 +262,8 @@ export async function showIntro() {
     let terminal = Terminal.instance;
 
     for (const a in script) {
+        if (terminal.skipIntro) break;
+
         let action = script[a];
 
         switch(action.type) {
@@ -244,13 +274,14 @@ export async function showIntro() {
                 await terminal.autoType(action.text, action.time);
                 break;
             case CLEAR:
-                terminal.clear();
+                terminal.clearText();
             case WAIT:
                 await wait(action.time);
         }
     }
     
-    //setCookie("skip-intro", "", 15);
+    document.removeEventListener('keydown', terminal.forceSkipListener);
+    setCookie("skip-intro", "", 30);
 }
 
 export async function setup() {
@@ -268,5 +299,5 @@ export async function setup() {
         await showIntro();
     }
 
-    showPage();
+    await showPage();
 }

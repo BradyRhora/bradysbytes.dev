@@ -16,7 +16,7 @@ export class BBFileSystem {
         new BBFile("skipIntro.sh", scripts);
 
         new BBFile("default.sty", styles, `{"terminal-bg-color": "#002400","terminal-text-color": "#63ff63","terminal-bg-object-color": "#335b33bd"}`);
-        new BBFile("jace.sty", styles, `{"terminal-bg-color": "#420413","terminal-text-color": "#df8cdc","terminal-bg-object-color": "#e2ff35bd"}`);
+        new BBFile("jace.sty", styles, `{"terminal-bg-color": "#420413","terminal-text-color": "#df8cdc","terminal-bg-object-color": "#e2ff3557"}`);
         new BBFile("classic.sty", styles, `{"terminal-bg-color": "#111111","terminal-text-color": "#ffffff","terminal-bg-object-color": "#2a2a2abd"}`);
         new BBFile("bright.sty", styles, `{"terminal-bg-color": "#ffffff","terminal-text-color": "#333333","terminal-bg-object-color": "#878787bd"}`);
     }

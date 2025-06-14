@@ -1,4 +1,4 @@
-import styles from '@/app/terminal.module.css';
+import styles from '@/app/styles/asteroid.module.css';
 
 var asteroidCount = 10;
 const MOUSE_DETECTION_RANGE = 100;
@@ -55,8 +55,6 @@ export class Asteroid {
         this.div.innerHTML = `<svg height="${this.size}" width="${this.size}" viewBox="${-this.size} ${-this.size} ${this.size*2} ${this.size*2}" xmlns="http://www.w3.org/2000/svg">
             <path d="${pathData}" fill="none" stroke="var(--terminal-bg-object-color)" stroke-width="${STROKE_SIZE}" />
         </svg>`;
-        //this.div.style.filter = `blur(${Math.random() * 2 + 2}px)`;
-        this.div.style.filter = `blur(2px)`;
 
         Asteroid.container.append(this.div);
         Asteroid.asteroids.push(this);
@@ -173,10 +171,10 @@ export class Asteroid {
     static async start() {
         let div = document.createElement("div");
         div.id = "asteroids";
-        div.className = `${styles["background"]} ${styles["asteroids"]}`;
+        div.className = `${styles["asteroids"]}`;
         Asteroid.container = div;
 
-        document.getElementById("container").append(Asteroid.container);
+        document.getElementById("container-glow").append(Asteroid.container);
 
         setDynamicAsteroidCount();
         for (let i = 0; i < asteroidCount; i++) {
