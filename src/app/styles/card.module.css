@@ -1,0 +1,18 @@
+.card {
+    border: 1px solid var(--terminal-text-color);
+    width: auto;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+}
+
+:global(.glow) .card {
+    background-color: var(--terminal-bg-color);
+}
+
+.card > h2 {
+    font-size: 1.5em;
+    margin: 0;
+    color: var(--terminal-text-color);
+}

@@ -1,0 +1,58 @@
+.terminal-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.terminal, .terminal-blur {
+    box-sizing: border-box;
+    position: absolute;
+    overflow: hidden;
+    left: 0;
+    
+    color: var(--terminal-text-color);
+    font-size:2vw;
+    min-width: 50%;
+    max-width: 80%;
+    max-height: 95vh;
+
+    margin: 10px;
+    white-space: pre-wrap;
+}
+
+.terminal-container.lowered {
+    position:absolute;
+    bottom: 0px;
+    left: 0px;
+    margin: 0px;
+}
+
+.terminal-container.lowered > * {
+    position: absolute;
+    width: 100%;
+    min-width: unset;
+    max-width: 95%;
+    height: auto;
+    bottom: 0px;
+}
+
+/* Small Devices */
+@media (max-width: 480px) {
+    .terminal-container.lowered {
+        display: none;
+    }
+
+    .terminal, .terminal-blur {
+        width:100%;
+        max-width:100%;
+        font-size:7vw;
+        margin:0px;
+    }
+    /*
+    h1 {
+        text-align: center;
+        margin: 0px;
+    }*/
+}

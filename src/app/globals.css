@@ -3,8 +3,13 @@
     --terminal-text-color: #63ff63;
     --terminal-bg-object-color: #335b33bd;
 }
-
+    
 html {
     margin: 0;
     padding: 0;
+}
+
+.glow {
+    filter: blur(4px);
+    z-index: -1 !important;
 }
