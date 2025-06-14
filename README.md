@@ -1,36 +1,18 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BradysBytes.dev
+This is the public repository showcasing my personal website, BradysBytes.dev.
+The site is currently a work in progress, so don't expect much.
 
-## Getting Started
+## About
+The initial concept for this site was to showcase my projects and skillset in an interesting and creative way.
+To accomplish this, I decided to mimic the look and feel of an old phosphor green terminal.
+The first time the page loads, a silly intro is played in which the "user" runs some scripts and authenticates into the "terminal".
+This intro will only play once per session as it does take some time.
+After "loading", a semi-functional terminal is available at the bottom of the window (if not on mobile) which allows the user to browse directories and enter commands, simulating a Unix terminal. I intend to make the website entirely navigatable using just the terminal, if you so choose, as well as hide some easter eggs in there.
 
-First, run the development server:
+### Terminal Simulator
+Currently, aside from basic navigation and system commands (`cd`, `ls`, `pwd`, `help`, and `cat`), the only available command is `style`.
+This command accepts a "style file" (.sty) as an argument and will change the terminal colours based on the style file contents.
+This change is saved to cookies and will be present on reload.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Framework
+The site is currently running Next.js on my personal server.
