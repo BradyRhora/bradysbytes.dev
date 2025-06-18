@@ -1,6 +1,6 @@
 import styles from '@/app/styles/asteroid.module.css';
 
-var asteroidCount = 10;
+let asteroidCount = 10;
 const MOUSE_DETECTION_RANGE = 100;
 const STROKE_SIZE = 5; // must be set to match style.css svg stroke
 const MIN_SIZE = 32;
@@ -9,17 +9,25 @@ const MAX_SIZE = 86;
 // TODO: click & drag asteroids around?
 
 export class Asteroid {
-    static asteroids = [];
-    static container = undefined;
-    static mousePos = [-1000,-1000];
-    static asteroidInterval = undefined;
+    static asteroids : Asteroid[] = [];
+    static container : HTMLElement | null = null;
+    static mousePos: [number, number] = [-1000,-1000];
+    static asteroidInterval: ReturnType<typeof setInterval> | null = null;
 
-    constructor(x, y) {
+    size! : number;
+    speed! : [number, number];
+    x!: number;
+    y!: number;
+    div!: HTMLElement;
+
+    constructor(x: number | null = null, y: number | null = null) {
+        if (Asteroid.container == null) return; 
+
         this.size = Math.random() * (MAX_SIZE-MIN_SIZE) + MIN_SIZE;        
         this.speed = [Math.random() * 4 + 1 - (this.size * .0025), Math.random() * 4 + 1 - (this.size * .0025)];
        
-        if (x == undefined || y == undefined) {
-            let side = Math.trunc(Math.random() * 4);
+        if (x == null || y == null) {
+            const side = Math.trunc(Math.random() * 4);
 
             switch(side) {
                 case 0:
@@ -28,7 +36,7 @@ export class Asteroid {
                     this.speed = [Math.random() - 0.5, Math.random() * 0.5];
                     break;
                 case 1:
-                    this.x = Asteroid.container.clientWidth;;
+                    this.x = Asteroid.container.clientWidth;
                     this.y = Math.random() * Asteroid.container.clientHeight;
                     this.speed = [Math.random() * -0.5, Math.random() - 0.5];
                     break;
@@ -51,7 +59,7 @@ export class Asteroid {
 
         this.div = document.createElement("div");
         this.div.className = styles["asteroid"];
-        let pathData = noisyCirclePath(0, 0, this.size - STROKE_SIZE, 16, 0.15);
+        const pathData = noisyCirclePath(0, 0, this.size - STROKE_SIZE, 16, 0.15);
         this.div.innerHTML = `<svg height="${this.size}" width="${this.size}" viewBox="${-this.size} ${-this.size} ${this.size*2} ${this.size*2}" xmlns="http://www.w3.org/2000/svg">
             <path d="${pathData}" fill="none" stroke="var(--terminal-bg-object-color)" stroke-width="${STROKE_SIZE}" />
         </svg>`;
@@ -61,23 +69,23 @@ export class Asteroid {
         this.update();
     }
 
-    collide(other) {
-        let meCenter = [this.x + this.size / 2, this.y + this.size / 2];
-        let otherCenter = [other.x + other.size / 2, other.y + other.size / 2];
-        let directionVector = [otherCenter[0] - meCenter[0], otherCenter[1] - meCenter[1]];
-        let dist = Math.sqrt(directionVector[0] ** 2 + directionVector[1] ** 2);
+    collide(other: Asteroid) {
+        const meCenter = [this.x + this.size / 2, this.y + this.size / 2];
+        const otherCenter = [other.x + other.size / 2, other.y + other.size / 2];
+        const directionVector = [otherCenter[0] - meCenter[0], otherCenter[1] - meCenter[1]];
+        const dist = Math.sqrt(directionVector[0] ** 2 + directionVector[1] ** 2);
         if (dist === 0) return; // Prevent division by zero
 
-        let normal = [directionVector[0] / dist, directionVector[1] / dist];
-        let tangent = [-normal[1], normal[0]];
+        const normal = [directionVector[0] / dist, directionVector[1] / dist];
+        const tangent = [-normal[1], normal[0]];
 
-        let v1n = this.speed[0] * normal[0] + this.speed[1] * normal[1];
-        let v1t = this.speed[0] * tangent[0] + this.speed[1] * tangent[1];
-        let v2n = other.speed[0] * normal[0] + other.speed[1] * normal[1];
-        let v2t = other.speed[0] * tangent[0] + other.speed[1] * tangent[1];
+        const v1n = this.speed[0] * normal[0] + this.speed[1] * normal[1];
+        const v1t = this.speed[0] * tangent[0] + this.speed[1] * tangent[1];
+        const v2n = other.speed[0] * normal[0] + other.speed[1] * normal[1];
+        const v2t = other.speed[0] * tangent[0] + other.speed[1] * tangent[1];
 
-        let v1nAfter = v2n;
-        let v2nAfter = v1n;
+        const v1nAfter = v2n;
+        const v2nAfter = v1n;
 
         this.speed = [
             v1nAfter * normal[0] + v1t * tangent[0],
@@ -90,23 +98,23 @@ export class Asteroid {
     }
 
     checkCollision() {
-        for (let a in Asteroid.asteroids) {
-            let other = Asteroid.asteroids[a];
+        for (const a in Asteroid.asteroids) {
+            const other = Asteroid.asteroids[a];
             if (other == this) continue; // skip self
 
-            let thisCenter = [this.x + this.size / 2, this.y + this.size / 2];
-            let youCenter = [other.x + other.size / 2, other.y + other.size / 2];
+            const thisCenter = [this.x + this.size / 2, this.y + this.size / 2];
+            const youCenter = [other.x + other.size / 2, other.y + other.size / 2];
 
-            let distVec = [thisCenter[0] - youCenter[0], thisCenter[1] - youCenter[1]];
-            let dist = Math.sqrt((distVec[0] ** 2) + (distVec[1] ** 2));
-            let minDist = (this.size / 2) + (other.size / 2);
+            const distVec = [thisCenter[0] - youCenter[0], thisCenter[1] - youCenter[1]];
+            const dist = Math.sqrt((distVec[0] ** 2) + (distVec[1] ** 2));
+            const minDist = (this.size / 2) + (other.size / 2);
 
             if (dist < minDist && dist > 0) {
                 this.collide(other);
 
-                let overlap = minDist - dist;                
-                let nx = distVec[0] / dist;
-                let ny = distVec[1] / dist;
+                const overlap = minDist - dist;                
+                const nx = distVec[0] / dist;
+                const ny = distVec[1] / dist;
 
                 this.x += nx * (overlap / 2);
                 this.y += ny * (overlap / 2);
@@ -117,19 +125,20 @@ export class Asteroid {
     }
 
     update() {
+        if (!Asteroid.container) return false; // If container doesn't exist, don't update
         this.checkCollision();
 
         // Mouse detection
-        let mouseDistVec = [this.x+this.size/2 - Asteroid.mousePos[0], this.y+this.size/2 - Asteroid.mousePos[1]];
-        let mouseDist = Math.sqrt((mouseDistVec[0] ** 2) + (mouseDistVec[1] ** 2));
+        const mouseDistVec = [this.x+this.size/2 - Asteroid.mousePos[0], this.y+this.size/2 - Asteroid.mousePos[1]];
+        const mouseDist = Math.sqrt((mouseDistVec[0] ** 2) + (mouseDistVec[1] ** 2));
 
         if (mouseDist <= MOUSE_DETECTION_RANGE) 
         {
-            let normDistVec = [mouseDistVec[0] / mouseDist, mouseDistVec[1] / mouseDist];
-            let strength = ((MOUSE_DETECTION_RANGE - mouseDist) / MOUSE_DETECTION_RANGE) * 0.2;
+            const normDistVec = [mouseDistVec[0] / mouseDist, mouseDistVec[1] / mouseDist];
+            const strength = ((MOUSE_DETECTION_RANGE - mouseDist) / MOUSE_DETECTION_RANGE) * 0.2;
 
-            let xMod = normDistVec[0] * strength;
-            let yMod = normDistVec[1] * strength;
+            const xMod = normDistVec[0] * strength;
+            const yMod = normDistVec[1] * strength;
 
             this.speed = [this.speed[0] + xMod, this.speed[1] + yMod];
         }
@@ -164,17 +173,17 @@ export class Asteroid {
         }
     }
 
-    static updateMousePosition(x, y) {
+    static updateMousePosition(x: number, y: number) {
         Asteroid.mousePos = [x, y];
     }
 
     static async start() {
-        let div = document.createElement("div");
+        const div = document.createElement("div");
         div.id = "asteroids";
         div.className = `${styles["asteroids"]}`;
         Asteroid.container = div;
 
-        document.getElementById("container-glow").append(Asteroid.container);
+        document.getElementById("container-glow")?.append(Asteroid.container);
 
         setDynamicAsteroidCount();
         for (let i = 0; i < asteroidCount; i++) {
@@ -187,20 +196,22 @@ export class Asteroid {
     }
 
     static end() {
-        Asteroid.container.remove();
+        Asteroid.container?.remove();
         Asteroid.asteroids = [];
-        clearInterval(Asteroid.asteroidInterval);
-        Asteroid.asteroidInterval = undefined;
+        if (Asteroid.asteroidInterval != null) {
+            clearInterval(Asteroid.asteroidInterval);
+            Asteroid.asteroidInterval = null;
+        }
     }
 }
 
-function noisyCirclePath(cx, cy, r, points = 32, noise = 0.15) {
+function noisyCirclePath(cx: number, cy: number, r: number, points = 32, noise = 0.15) {
     let d = "";
     for (let i = 0; i < points; i++) {
-        let angle = (i / points) * 2 * Math.PI;
-        let rand = 1 + (Math.random() - 0.5) * noise; // noise factor
-        let x = cx + Math.cos(angle) * r * rand;
-        let y = cy + Math.sin(angle) * r * rand;
+        const angle = (i / points) * 2 * Math.PI;
+        const rand = 1 + (Math.random() - 0.5) * noise; // noise factor
+        const x = cx + Math.cos(angle) * r * rand;
+        const y = cy + Math.sin(angle) * r * rand;
         d += (i === 0 ? "M" : "L") + x + " " + y + " ";
     }
     d += "Z";
@@ -208,8 +219,8 @@ function noisyCirclePath(cx, cy, r, points = 32, noise = 0.15) {
 }
 
 function setDynamicAsteroidCount() {
-    let windowArea = window.innerWidth * window.innerHeight;
-    let avgAsteroidArea = ((MAX_SIZE + MIN_SIZE) / 2) ** 2;
+    const windowArea = window.innerWidth * window.innerHeight;
+    const avgAsteroidArea = ((MAX_SIZE + MIN_SIZE) / 2) ** 2;
 
     asteroidCount = (windowArea / avgAsteroidArea) / 10;
     //debug

@@ -6,11 +6,19 @@ import { Asteroid } from "@/scripts/asteroids"
 import { Command } from "./terminalCommands";
 
 export class Terminal {
-    static instance = undefined;
+    static instance: Terminal;
+    terminalElement: HTMLElement | null;
+    terminalGlowElement: HTMLElement | null;
+    currentInput: string;
+    fileSystem: BBFileSystem;
+    commandHistory: string[];
+    historyIndex: number;
+    skipIntro: boolean;
 
     constructor() {        
         this.terminalElement = document.getElementById("terminal");
         this.terminalGlowElement = document.getElementById("terminal-blur");
+
         this.currentInput = "";
 
         this.fileSystem = new BBFileSystem();
@@ -25,15 +33,15 @@ export class Terminal {
         Terminal.instance = this;
     }
 
-    forceSkipListener(event) {
+    forceSkipListener(event: KeyboardEvent) {
         if (event.code == "Space" || event.code == "Enter") {
             this.skipIntro = true;
         }
     }
 
     clearText() {
-        this.terminalElement.textContent = "";
-        this.terminalGlowElement.textContent = "";
+        if (this.terminalElement != null) this.terminalElement.textContent = "";
+        if (this.terminalGlowElement != null) this.terminalGlowElement.textContent = "";
     }
 
     async getCommandReady(clearTerminal = true) {
@@ -43,16 +51,21 @@ export class Terminal {
     }
 
     deleteLastCharacter() {
-        let newText = this.terminalElement.textContent.slice(0, this.terminalElement.textContent.length-1);
-        let newGlowText = this.terminalGlowElement.textContent.slice(0, this.terminalGlowElement.textContent.length-1);
-        
-        this.terminalElement.textContent = newText;
-        this.terminalGlowElement.textContent = newGlowText;
+        if (this.terminalElement != null && this.terminalElement.textContent != null) {
+            const newText = this.terminalElement.textContent.slice(0, this.terminalElement.textContent.length-1);
+            this.terminalElement.textContent = newText;
+        }
+
+        if (this.terminalGlowElement != null && this.terminalGlowElement.textContent != null) {
+            const newGlowText = this.terminalGlowElement.textContent.slice(0, this.terminalGlowElement.textContent.length-1);
+            this.terminalGlowElement.textContent = newGlowText;
+        }
     }
 
-    async print(text, time = 0) {
-        this.terminalElement.textContent = this.terminalElement.textContent + text;
+    async print(text: string, time: number = 0) {
+        if (this.terminalElement == null || this.terminalGlowElement == null) return;
 
+        this.terminalElement.textContent = this.terminalElement.textContent + text;
         this.terminalElement.scrollTop = this.terminalElement.scrollHeight;
 
         this.terminalGlowElement.textContent = this.terminalGlowElement.textContent + text;
@@ -60,52 +73,50 @@ export class Terminal {
         await wait(time);
     }
 
-    async autoType(text, time = 0) {
-        return new Promise(async (resolve) => {
-            for (let i = 0; i < text.length; i++){
+    async autoType(text: string, time: number = 0) {
+        if (this.terminalElement == null || this.terminalGlowElement == null) return;
+        
+        for (let i = 0; i < text.length; i++){
 
-                let newChar = text[i];
-                if (newChar == '\\' && text.length > i+1 && text[i+1] == 'n') { 
-                    newChar = '\n';
-                    i++;
-                }
-
-                let randomWait = Math.random() / 10;
-                await wait(randomWait);
-
-                // TODO: ==>
-                this.terminalElement.textContent = this.terminalElement.textContent + text[i];
-                this.terminalElement.scrollTop = this.terminalElement.scrollHeight;
-
-                this.terminalGlowElement.textContent = this.terminalGlowElement.textContent + text[i];
-                this.terminalGlowElement.scrollTop = this.terminalGlowElement.scrollHeight;
+            let newChar = text[i];
+            if (newChar == '\\' && text.length > i+1 && text[i+1] == 'n') { 
+                newChar = '\n';
+                i++;
             }
-            await wait(time);
-            resolve(); // why did i do it this way
-        })
+
+            const randomWait = Math.random() / 10;
+            await wait(randomWait);
+
+            this.terminalElement.textContent = this.terminalElement.textContent + text[i];
+            this.terminalElement.scrollTop = this.terminalElement.scrollHeight;
+
+            this.terminalGlowElement.textContent = this.terminalGlowElement.textContent + text[i];
+            this.terminalGlowElement.scrollTop = this.terminalGlowElement.scrollHeight;
+        }
+        await wait(time);
     }
 
-    async autoCommand(command, callback = undefined) {
+    async autoCommand(command: string, callback: (() => void) | null = null) {
         if (!isMobile()) {
             await this.getCommandReady();
             await this.autoType(command, 0.5);
             this.commandHistory.unshift(command);
         }
-        if (callback != undefined) callback();
+        if (callback != null) callback();
     }
 
-    changeStyle(style) {
-        let keys = Object.keys(style);
-        for (let s in keys) {
-            setCSSVar(keys[s], style[keys[s]]);
+    changeStyle(styleJSON: Record<string, string>) {
+        const keys = Object.keys(styleJSON);
+        for (const s in keys) {
+            setCSSVar(keys[s], styleJSON[keys[s]]);
         }
     }
 
-    async runScript(scriptName) {
+    async runScript(scriptName: string) {
         switch(scriptName)
         {
             case "asteroids.sh":                
-                let active = Asteroid.asteroidInterval != undefined;
+                const active = Asteroid.asteroidInterval != undefined;
                 if (active) Asteroid.end();
                 else Asteroid.start();
                 this.currentInput = "";
@@ -127,7 +138,7 @@ export class Terminal {
         }
     }
 
-    async runCommand(args) {
+    async runCommand(args: string) {
         if (args == undefined || args == "") {
             this.getCommandReady();
             return;
@@ -135,9 +146,9 @@ export class Terminal {
         
         this.commandHistory.unshift(this.currentInput);
 
-        let file = Terminal.instance.fileSystem.getFileFromPathString(args);
+        const file = Terminal.instance.fileSystem.getFileFromPathString(args);
         if (file != undefined && file.name.endsWith('.sh')) {
-            let output = await this.runScript(file.name);
+            const output = await this.runScript(file.name);
             if (output != undefined) {
                 await this.clearText();
                 await this.print(output);
@@ -145,15 +156,20 @@ export class Terminal {
             return;
         }
 
-        args = args.split(' ');
-        let commandName = args.shift();
-        let command = Command.getCommand(commandName);
+        const splitArgs = args.split(' ');
+        const commandName = splitArgs.shift();
+        if (commandName == undefined) {
+            await this.print("Error: Command not found!", 3);
+            return;
+        }
+
+        const command = Command.getCommand(commandName);
         
         this.clearText();
         if (command == undefined) await this.print("Error: Command not found!", 3);
-        else if (args.length < command.func.length) await this.print(command.description);
+        else if (splitArgs.length < command.func.length) await this.print(command.description);
         else {
-            let output = command.func(...args);
+            const output = command.func(...splitArgs);
             if (output != undefined)
                 await this.print(output);
             else {
@@ -169,7 +185,7 @@ export class Terminal {
         this.print(getCommandPrefix() + this.currentInput);
     }
 
-    charInput(key) {
+    charInput(key: string) {
         if (key.length > 1) return;
         if (this.currentInput.length == 0) this.updateInput();
 
@@ -177,7 +193,7 @@ export class Terminal {
         this.print(key);
     }
 
-    keyDown(key) {
+    keyDown(key: string) {
         if (key == "Backspace") {
             if (this.currentInput.length > 0) {
                 this.currentInput = this.currentInput.slice(0, this.currentInput.length-1);
@@ -212,8 +228,8 @@ const PRINT = 1;
 const TYPE = 2;
 
 // move these out of global
-var user = "guest";
-var fakePass = "*******";
+const user = "guest";
+const fakePass = "**********";
 function getCommandPrefix() { 
     let currentDir = Terminal.instance.fileSystem.currentDir.getPathString();
     currentDir = currentDir.slice(0, currentDir.length - 1);
@@ -221,7 +237,7 @@ function getCommandPrefix() {
 }
 
 export async function showIntro() {
-    let script = [//*
+    const script = [//*
         {type: WAIT, time:1},
         {type: PRINT, text:"BRADY_TERM 2.0\n", time:0},
         {type: PRINT, text:"(c) All rights reserved.\n\n", time:1.5},
@@ -241,17 +257,17 @@ export async function showIntro() {
         {type: CLEAR, time:.5},//*/
     ]
 
-    let jargon = ["Implementing style formatting","Upgrading service modules","Downloading processor firmware","Installing new updates","Deleting trojans","Calling mom","Adding firewall exceptions","Launching Garry's Mod","Activating Windows","Pushing to Git","Creating new user accounts","Hacking enemy mainframe","Fuzzing URLs","Downloading MineCraft modpack","Forwarding ports","Backing up critical files","Prompting AI","Initializing matrix transceiver","Stablizing black hole","Extracting tachyon crystals","Warping to Andromeda","Conceiving witty fake terminal commands","Obtaining launch codes","Searching hash tables","Pulling from database","Writing pseudocode","Imagining quantum algorithms","Rendering 3D objects","Enabling dark mode","Attaching to debugger breakpoints","Rebooting toilet server","Reloading hamster wheel cheese compartments","Reversing polarity","Artificially increasing load times","Reheating last night's dinner","Parsing source code","Connecting via dial-up","Aligning with moon phase","Scraping the internet","Gaining root access","Escalating Privileges","Coding yet another bot","Designing macros","Populating database","Cutting red wire","Summoning daemons"];
+    const jargon = ["Implementing style formatting","Upgrading service modules","Downloading processor firmware","Installing new updates","Deleting trojans","Calling mom","Adding firewall exceptions","Launching Garry's Mod","Activating Windows","Pushing to Git","Creating new user accounts","Hacking enemy mainframe","Fuzzing URLs","Downloading MineCraft modpack","Forwarding ports","Backing up critical files","Prompting AI","Initializing matrix transceiver","Stablizing black hole","Extracting tachyon crystals","Warping to Andromeda","Conceiving witty fake terminal commands","Obtaining launch codes","Searching hash tables","Pulling from database","Writing pseudocode","Imagining quantum algorithms","Rendering 3D objects","Enabling dark mode","Attaching to debugger breakpoints","Rebooting toilet server","Reloading hamster wheel cheese compartments","Reversing polarity","Artificially increasing load times","Reheating last night's dinner","Parsing source code","Connecting via dial-up","Aligning with moon phase","Scraping the internet","Gaining root access","Escalating Privileges","Coding yet another bot","Designing macros","Populating database","Cutting red wire","Summoning daemons"];
 
     const loopCount = 3;
     let counter = 0;
-    let jargonCount = jargon.length * loopCount;
+    const jargonCount = jargon.length * loopCount;
     for (let c = 1; c <= loopCount; c++) {
         shuffle(jargon);
         for (const i in jargon) {
-            let line = jargon[i];
-            let t = counter++ / jargonCount;
-            let length = 0.5 * Math.exp(-10 * t);
+            const line = jargon[i];
+            const t = counter++ / jargonCount;
+            const length = 0.5 * Math.exp(-10 * t);
 
             script.push({type:PRINT, text: line+"..\n", time:length});
         }
@@ -259,19 +275,19 @@ export async function showIntro() {
 
     script.push({type:CLEAR,time:1});
 
-    let terminal = Terminal.instance;
+    const terminal = Terminal.instance;
 
     for (const a in script) {
         if (terminal.skipIntro) break;
 
-        let action = script[a];
+        const action = script[a];
 
         switch(action.type) {
             case PRINT:
-                await terminal.print(action.text, action.time);
+                await terminal.print(action.text ?? "", action.time);
                 break;
             case TYPE: 
-                await terminal.autoType(action.text, action.time);
+                await terminal.autoType(action.text ?? "", action.time);
                 break;
             case CLEAR:
                 terminal.clearText();
@@ -288,13 +304,7 @@ export async function setup() {
     //let scriptElement = document.getElementsByClassName('terminal-script')[0];
     //user = scriptElement.attr("name") // need states
     //fakePass = scriptElement.attr("fakepass");
-    let terminal = new Terminal();
-
-    if (getCookie('terminal-style-file') != undefined) {
-        let styleFile = terminal.fileSystem.getFileFromPathString(getCookie('terminal-style-file'));
-        terminal.changeStyle(JSON.parse(styleFile.content));
-    }
-
+    
     if (getCookie('skip-intro') == undefined && getCookie('skip-intro-toggle') == undefined) {
         await showIntro();
     }

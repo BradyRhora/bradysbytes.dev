@@ -1,11 +1,14 @@
-import { Terminal } from "./terminal.js";
-import { setCookie } from "./helpers.js";
-
+import { Terminal } from "./terminal";
+import { setCookie } from "./helpers";
+import { BBDirectory } from "./filesystem";
 export class Command
 {
-    static commands = [];
+    static commands: Command[] = [];
+    name: string;
+    description: string;
+    func: (...args: string[]) => string | undefined;
 
-    constructor(name, desc, func){
+    constructor(name: string, desc: string, func: (...args: string[]) => string | undefined){
         this.name = name;
         this.description = desc;
         this.func = func;
@@ -18,9 +21,9 @@ export class Command
         return this.func.length;
     }
 
-    static getCommand(name)
+    static getCommand(name: string)
     {
-        for (let c in Command.commands)
+        for (const c in Command.commands)
         {
             if (Command.commands[c].name.toLowerCase() == name.toLowerCase()) return Command.commands[c];
         }
@@ -29,7 +32,7 @@ export class Command
     }
 }
 
-new Command("cd", "Usage: `cd [directory]` - Move to specified directory.", (newDir) =>
+new Command("cd", "Usage: `cd [directory]` - Move to specified directory.", (newDir: string) =>
 {
     if (newDir == "..")
     {
@@ -41,8 +44,12 @@ new Command("cd", "Usage: `cd [directory]` - Move to specified directory.", (new
     }
     else
     {
-        let file = Terminal.instance.fileSystem.currentDir.getFile(newDir);
-        if (file.isDirectory())
+        const file = Terminal.instance.fileSystem.currentDir.getFile(newDir);
+        if (file == null) 
+        {
+            return `'${newDir} not found.`;
+        }
+        else if (file instanceof BBDirectory)
         {
             Terminal.instance.fileSystem.currentDir = file;
             return undefined;
@@ -56,17 +63,21 @@ new Command("cd", "Usage: `cd [directory]` - Move to specified directory.", (new
     return `Directory '${newDir}' not found.`;
 });
 
-new Command("ls", "Usage: `ls (directory)` - Shows files in given directory, or current if no arguments.", (directoryName = undefined) =>
+new Command("ls", "Usage: `ls (directory)` - Shows files in given directory, or current if no arguments.", (directoryName: string | null = null) =>
 {
     let dir = Terminal.instance.fileSystem.currentDir;
-    if (directoryName != undefined) dir = Terminal.instance.fileSystem.getFileFromPathString(directoryName);
+    if (directoryName != undefined) {
+        const dirArg = Terminal.instance.fileSystem.getFileFromPathString(directoryName);
+        if (dirArg instanceof BBDirectory) dir = dirArg;
+        else return `'${directoryName}' is not a directory.`;
+    }
 
     let files = ". ";
     if (dir.parent != undefined) files += ".. ";
 
-    for(let f in dir.children)
+    for(const f in dir.children)
     {
-        let file = dir.children[f];
+        const file = dir.children[f];
         files += file.getPrintName() + " ";
     }
 
@@ -78,24 +89,26 @@ new Command("pwd", "Prints the current working directory.", () =>
     return Terminal.instance.fileSystem.currentDir.getPathString();
 });
 
-new Command("cat", "Usage: `cat [file]` - Prints file contents.", (fileName) =>
+new Command("cat", "Usage: `cat [file]` - Prints file contents.", (fileName: string) =>
 {
-    let file = Terminal.instance.fileSystem.getFileFromPathString(fileName);
+    const file = Terminal.instance.fileSystem.getFileFromPathString(fileName);
     if (file == undefined) return `File '${fileName}' not found.`;
 
     if (file.content == undefined) return "You do not have permission to read this file!";
     return file.content;
 });
 
-new Command("style", "Usage: `style [styleFile]` - Sets terminal style based on style file (.sty)", (styleFileName) =>
+new Command("style", "Usage: `style [styleFile]` - Sets terminal style based on style file (.sty)", (styleFileName: string) =>
 {
     let styleFile = Terminal.instance.fileSystem.getFileFromPathString(styleFileName);
 
     if (styleFile == undefined) styleFile = Terminal.instance.fileSystem.getFileFromPathString(styleFileName + ".sty");
     if (styleFile == undefined) return `Style file '${styleFileName}' not found.`;
         
-    let styleName = styleFile.name.replace(".sty", "");
-    let style = JSON.parse(styleFile.content);
+    const styleName = styleFile.name.replace(".sty", "");
+    if (styleFile.content == null) return `Invalid Style file '${styleFileName}.`;
+
+    const style = JSON.parse(styleFile.content);
     if (style == undefined) return `Invalid style file '${styleFileName}'.`;
 
     Terminal.instance.changeStyle(style);
@@ -104,18 +117,18 @@ new Command("style", "Usage: `style [styleFile]` - Sets terminal style based on 
     return `${styleName} style activated.`;
 });
 
-new Command("help", "Usage: `help (command)` - Get command information.", (command = undefined) =>
+new Command("help", "Usage: `help (command)` - Get command information.", (command: string | undefined = undefined) =>
 {
-    let sortedCommands = Command.commands.sort((a, b) => a.name.localeCompare(b.name));
+    const sortedCommands = Command.commands.sort((a, b) => a.name.localeCompare(b.name));
 
     let commands = "Available commands: ";
-    for (let c in sortedCommands)
+    for (const c in sortedCommands)
     {
         commands += Command.commands[c].name;
 
         if (command != undefined && Command.commands[c].name == command) return Command.commands[c].description;
 
-        if (c < Command.commands.length - 1) commands += ",";
+        if (Number(c) < Command.commands.length - 1) commands += ",";
         commands += " ";
     }
     
