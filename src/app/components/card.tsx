@@ -1,10 +1,15 @@
 import styles from "@/app/styles/card.module.css";
 
-export default function Card(){
+type CardProps = {
+    title: string,
+    content: string
+}
+
+export default function Card({title, content} : CardProps){
     return (
         <div className={styles.card}>
-            <h2>Card Title</h2>
-            <p>This is a simple card component. Now, it contains even more text! Fancy that.</p>
+            <h2>{title}</h2>
+            <p>{content}</p>
         </div>
     );
 }
