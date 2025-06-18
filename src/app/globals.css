@@ -1,7 +1,11 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Short+Stack&display=swa');
+
 :root {
     --terminal-bg-color: #002400;
     --terminal-text-color: #63ff63;
     --terminal-bg-object-color: #335b33bd;
+    --main-font: 'Inconsolata', monospace;
 }
     
 html {
@@ -9,7 +13,6 @@ html {
     padding: 0;
 }
 
-.glow {
-    filter: blur(4px);
-    z-index: -1 !important;
+body {
+    font-family: var(--main-font);
 }

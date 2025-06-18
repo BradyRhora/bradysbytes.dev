@@ -4,6 +4,7 @@
     width: 100%;
     margin: 0px;
     padding: 0px;
+    z-index: -3;
 }
 
 .terminal, .terminal-blur {
@@ -20,6 +21,10 @@
 
     margin: 10px;
     white-space: pre-wrap;
+}
+
+.terminal-blur{
+    filter: blur(4px);
 }
 
 .terminal-container.lowered {
