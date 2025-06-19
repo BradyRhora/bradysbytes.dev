@@ -1,11 +1,15 @@
-import styles from '@/app/styles/terminal.module.css'
-import { isMobile, wait } from '@/scripts/helpers';
+import mainStyles from '@/app/styles/main.module.css';
+import terminalStyles from '@/app/styles/terminal.module.css'
+
+import { wait } from '@/scripts/helpers';
 import { Terminal } from '@/scripts/terminal';
-import { Asteroid } from './asteroids';
+import { Asteroid } from '@/scripts/asteroids';
 import { getCookie } from '@/scripts/helpers';
 
 export function startTerminal() {
     const terminal = new Terminal();
+
+    // Set users chosen style based on cookie
     const styleName = getCookie('terminal-style-file');
     if (styleName != null) {
         const styleFile = Terminal.instance.fileSystem.getFileFromPathString(styleName);
@@ -14,26 +18,32 @@ export function startTerminal() {
 }
 
 export async function showPage(){
-    let margin = 20;
-    if (isMobile()) margin = 5;
-
+    // Get Containers
     const mainContainer = document.getElementById("container");
     const glowContainer = document.getElementById("container-glow");
     if (mainContainer != null) mainContainer.style.display = "block";
     if (glowContainer != null) glowContainer.style.display = "block";
 
+    // Move intro terminal into Container
     const termContainer = document.getElementById("terminal-container");
     if (termContainer != undefined) {
         if (mainContainer != null) mainContainer.appendChild(termContainer);
-        termContainer.classList.add(styles["lowered"]);
+        termContainer.classList.add(terminalStyles["lowered"]);
     }
-    
     await wait(.75);
-    if (mainContainer != null) mainContainer.style.height = `calc(100% - ${margin*2}px)`;
-    if (glowContainer != null) glowContainer.style.height = `calc(100% - ${margin*2}px)`;
-    
+
+    // Open Main Containers & Bind scroll events
+    if (glowContainer != null) glowContainer.classList.add(mainStyles["container-open"]);
+    if (mainContainer != null) {
+        mainContainer.classList.add(mainStyles["container-open"]);
+        mainContainer.addEventListener('scroll', () => {
+            const scrollAmount = mainContainer.scrollTop;
+            if (glowContainer != null) glowContainer.scrollTop = scrollAmount;
+        });
+    }
     await wait(.5);
 
+    // Start default background script and key input listeners
     if (termContainer != undefined) {
         await Terminal.instance.autoCommand("./scripts/asteroids.sh", Asteroid.start);
 

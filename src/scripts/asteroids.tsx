@@ -21,36 +21,11 @@ export class Asteroid {
     div!: HTMLElement;
 
     constructor(x: number | null = null, y: number | null = null) {
-        if (Asteroid.container == null) return; 
-
         this.size = Math.random() * (MAX_SIZE-MIN_SIZE) + MIN_SIZE;        
         this.speed = [Math.random() * 4 + 1 - (this.size * .0025), Math.random() * 4 + 1 - (this.size * .0025)];
        
         if (x == null || y == null) {
-            const side = Math.trunc(Math.random() * 4);
-
-            switch(side) {
-                case 0:
-                    this.y = -this.size;
-                    this.x = Math.random() * Asteroid.container.clientWidth;
-                    this.speed = [Math.random() - 0.5, Math.random() * 0.5];
-                    break;
-                case 1:
-                    this.x = Asteroid.container.clientWidth;
-                    this.y = Math.random() * Asteroid.container.clientHeight;
-                    this.speed = [Math.random() * -0.5, Math.random() - 0.5];
-                    break;
-                case 2:
-                    this.y = Asteroid.container.clientHeight;
-                    this.x = Math.random() * Asteroid.container.clientWidth;
-                    this.speed = [Math.random() - 0.5, Math.random() * -0.5];
-                    break;
-                case 3:
-                    this.x = -this.size;
-                    this.y = Math.random() * Asteroid.container.clientHeight;
-                    this.speed = [Math.random() * 0.5, Math.random() - 0.5];
-                    break;
-            }
+            this.randomSpawn();
         } else {
             this.x = x;
             this.y = y;
@@ -64,9 +39,38 @@ export class Asteroid {
             <path d="${pathData}" fill="none" stroke="var(--terminal-bg-object-color)" stroke-width="${STROKE_SIZE}" />
         </svg>`;
 
-        Asteroid.container.append(this.div);
+        
+        if (Asteroid.container != null) Asteroid.container.append(this.div);
         Asteroid.asteroids.push(this);
         this.update();
+    }
+
+    randomSpawn() {
+        if (Asteroid.container == null) return; 
+
+        const side = Math.trunc(Math.random() * 4);
+        switch(side) {
+            case 0:
+                this.y = -this.size;
+                this.x = Math.random() * Asteroid.container.clientWidth;
+                this.speed = [Math.random() - 0.5, Math.random() * 0.5];
+                break;
+            case 1:
+                this.x = Asteroid.container.clientWidth;
+                this.y = Math.random() * Asteroid.container.clientHeight;
+                this.speed = [Math.random() * -0.5, Math.random() - 0.5];
+                break;
+            case 2:
+                this.y = Asteroid.container.clientHeight;
+                this.x = Math.random() * Asteroid.container.clientWidth;
+                this.speed = [Math.random() - 0.5, Math.random() * -0.5];
+                break;
+            case 3:
+                this.x = -this.size;
+                this.y = Math.random() * Asteroid.container.clientHeight;
+                this.speed = [Math.random() * 0.5, Math.random() - 0.5];
+                break;
+        }
     }
 
     collide(other: Asteroid) {
@@ -222,9 +226,7 @@ function setDynamicAsteroidCount() {
     const windowArea = window.innerWidth * window.innerHeight;
     const avgAsteroidArea = ((MAX_SIZE + MIN_SIZE) / 2) ** 2;
 
-    asteroidCount = (windowArea / avgAsteroidArea) / 10;
-    //debug
-    //asteroidCount = 2;
+    asteroidCount = Math.floor((windowArea / avgAsteroidArea) / 10);
 }
 
 export function hookAsteroidEvents() {
