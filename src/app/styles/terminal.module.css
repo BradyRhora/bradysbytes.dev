@@ -1,10 +1,10 @@
 .terminal-container {
     position: relative;
-    height: 100%;
+    height: auto;
     width: 100%;
     margin: 0px;
     padding: 0px;
-    z-index: -3;
+    z-index: 10;
 }
 
 .terminal, .terminal-blur {
@@ -14,17 +14,19 @@
     left: 0;
     
     color: var(--terminal-text-color);
-    font-size:2vw;
+    font-size:1.8em;
     min-width: 50%;
     max-width: 80%;
     max-height: 95vh;
 
     margin: 10px;
     white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 
 .terminal-blur{
     filter: blur(4px);
+    background-color: var(--terminal-bg-color);
 }
 
 .terminal-container.lowered {
@@ -36,15 +38,15 @@
 
 .terminal-container.lowered > * {
     position: absolute;
-    width: 100%;
+    width: auto;
     min-width: unset;
-    max-width: 95%;
+    max-width: 98%;
     height: auto;
     bottom: 0px;
 }
 
 /* Small Devices */
-@media (max-width: 480px) {
+@media (max-width: 600px) {
     .terminal-container.lowered {
         display: none;
     }
