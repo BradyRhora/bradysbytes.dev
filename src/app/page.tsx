@@ -1,16 +1,16 @@
 "use client"
 import { useState, useEffect } from "react";
 
-import { LinkCard } from "./components/cards";
-import HeroHeader from "./components/hero";
-import DropdownBox from "./components/dropdownBox";
+import { LinkCard } from "./components/items/cards";
+import HeroHeader from "./components/items/hero";
+import DropdownBox from "./components/items/dropdownBox";
 
 import styles from "@/app/styles/main.module.css";
 import "@/app/styles/asteroid.module.css"
 
 import { Terminal } from "@/scripts/terminal";
 import { BBDirectory, BBFile } from "@/scripts/filesystem";
-import StyleSelector from "./components/styleSelector";
+import StyleSelector from "./components/items/styleSelector";
 /*import "@/scripts/filesystem";
 import "@/scripts/terminalCommands";*/
 

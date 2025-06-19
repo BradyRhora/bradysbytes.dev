@@ -1,4 +1,4 @@
-import BindSibling, {getGlowSibling} from "./siblingBinder";
+import BindSibling, {getGlowSibling} from "../wrappers/siblingBinder";
 
 import { BBFile } from "@/scripts/filesystem";
 
@@ -8,7 +8,6 @@ import { Terminal } from "@/scripts/terminal";
 function cardMouseEnter(event: React.MouseEvent<HTMLElement>) {
     const glowElem = getGlowSibling(event.currentTarget);
     glowElem?.classList.add("hovered");
-    console.log(glowElem?.classList)
 }
 
 function cardMouseLeave(event: React.MouseEvent<HTMLElement>) {
@@ -32,7 +31,16 @@ export default function StyleSelector({styleFile} : StyleSelectorProps) {
     else return (<></>)
     return (
         <BindSibling hashString={styleFile.name + styleFile.content}>
-        <div className={styles.styleSelector} style={styleObj} onMouseEnter={cardMouseEnter} onMouseLeave={cardMouseLeave} onClick={() => setStyle(styleFile)}>
+        <div
+            className={styles.styleSelector}
+            style={styleObj}
+            onMouseEnter={cardMouseEnter}
+            onMouseLeave={cardMouseLeave}
+            onClick={e => {
+                e.stopPropagation();
+                setStyle(styleFile);
+            }}
+        >
             <h4>{styleFile.name.replace(".sty","")}</h4>
         </div>
         </BindSibling>

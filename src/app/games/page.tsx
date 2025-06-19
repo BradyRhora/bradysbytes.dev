@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-import { GameCard } from "../components/cards";
+import { GameCard } from "../components/items/cards";
 import { Terminal } from "@/scripts/terminal";
 
 import styles from "../styles/main.module.css"

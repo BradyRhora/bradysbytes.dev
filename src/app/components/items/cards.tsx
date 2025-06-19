@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import BindSibling, {getGlowSibling} from "./siblingBinder";
+import BindSibling, {getGlowSibling} from "../wrappers/siblingBinder";
 
 import cardStyles from "@/app/styles/card.module.css";
 import linkCardStyles from "@/app/styles/linkcard.module.css";

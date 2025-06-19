@@ -306,7 +306,7 @@ export async function showIntro() {
     }
     
     document.removeEventListener('keydown', terminal.forceSkipListener);
-    setCookie("skip-intro", "", 30);
+    setCookie("skip-intro", "", 60);
 }
 
 export async function setup() {

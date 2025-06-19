@@ -7,8 +7,8 @@ import { startTerminal } from "@/scripts/pageFunctions";
 import { shuffle, wait } from "@/scripts/helpers";
 
 import GlowWrapper from "./glowWrapper";
-import TerminalComponent from "./terminal";
-import { SkillContext } from "./contextProvider";
+import TerminalComponent from "../terminal";
+import { SkillContext } from "../contextProvider";
 
 export default function MainBody({children,}: Readonly<{children: React.ReactNode;}>) {
 	

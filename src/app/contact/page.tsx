@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import styles from "@/app/styles/main.module.css"
-import { Card } from "../components/cards";
+import { Card } from "../components/items/cards";
 import Link from "next/link";
 
 export default function Contact() {
