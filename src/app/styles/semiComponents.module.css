@@ -1,0 +1,34 @@
+/* Dropdown Box */
+
+.dropdownBox {
+    border: solid 1px var(--terminal-text-color);
+    border-radius: 5px;
+
+    display:flex;
+    flex-direction: column;
+
+    width:300px;
+    cursor: pointer;
+}
+
+/* Style Selector */
+
+.styleSelector {
+    border: solid 1px var(--terminal-text-color);
+    color: var(--terminal-text-color);
+}
+
+.styleSelector:hover {
+    color: var(--terminal-bg-color);
+    transition: color 0.2s ease-in-out;
+}
+
+:global(.glow) .styleSelector {
+    background-color: var(--terminal-bg-color);
+    transition: background-color 0.2s ease-in-out;
+}
+
+:global(.hovered).styleSelector {
+    background-color: var(--terminal-text-color);
+    color: var(--terminal-bg-color);
+}
