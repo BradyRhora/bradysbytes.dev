@@ -21,9 +21,9 @@ export class BBFileSystem {
 
         // Styles
         new BBFile("default.sty", styles, `{"--terminal-bg-color": "#002400","--terminal-text-color": "#63ff63","--terminal-bg-object-color": "#335b33bd","--main-font": "'Inconsolata', monospace"}`);
+        new BBFile("classic.sty", styles, `{"--terminal-bg-color": "#111111","--terminal-text-color": "#ffffff","--terminal-bg-object-color": "#2a2a2abd","--main-font": "'Inconsolata', monospace"}`);
         new BBFile("jace.sty", styles, `{"--terminal-bg-color": "#420413","--terminal-text-color": "#df8cdc","--terminal-bg-object-color": "#e2ff3557","--main-font": "'Short Stack', cursive"}`);
         new BBFile("jacebright.sty", styles, `{"--terminal-bg-color": "#ffef86","--terminal-text-color": "#ffb1b1","--terminal-bg-object-color": "#ffb1b1","--main-font": "'Short Stack', cursive"}`);
-        new BBFile("classic.sty", styles, `{"--terminal-bg-color": "#111111","--terminal-text-color": "#ffffff","--terminal-bg-object-color": "#2a2a2abd","--main-font": "'Inconsolata', monospace"}`);
         new BBFile("bright.sty", styles, `{"--terminal-bg-color": "#ffffff","--terminal-text-color": "#333333","--terminal-bg-object-color": "#878787bd","--main-font": "'Inconsolata', monospace"}`);
     
         // Games

@@ -33,35 +33,8 @@ export class Terminal {
         Terminal.instance = this;
     }
 
-    forceSkipListener(event: KeyboardEvent) {
-        if (event.code == "Space" || event.code == "Enter") {
-            this.skipIntro = true;
-        }
-    }
-
-    clearText() {
-        if (this.terminalElement != null) this.terminalElement.textContent = "";
-        if (this.terminalGlowElement != null) this.terminalGlowElement.textContent = "";
-    }
-
-    async getCommandReady(clearTerminal = true) {
-        if (clearTerminal) this.clearText();
-        this.currentInput = "";
-        await this.print(getCommandPrefix(), 1.5);
-    }
-
-    deleteLastCharacter() {
-        if (this.terminalElement != null && this.terminalElement.textContent != null) {
-            const newText = this.terminalElement.textContent.slice(0, this.terminalElement.textContent.length-1);
-            this.terminalElement.textContent = newText;
-        }
-
-        if (this.terminalGlowElement != null && this.terminalGlowElement.textContent != null) {
-            const newGlowText = this.terminalGlowElement.textContent.slice(0, this.terminalGlowElement.textContent.length-1);
-            this.terminalGlowElement.textContent = newGlowText;
-        }
-    }
-
+    // Async functions
+    
     async print(text: string, time: number = 0) {
         if (this.terminalElement == null || this.terminalGlowElement == null) return;
 
@@ -103,13 +76,6 @@ export class Terminal {
             this.commandHistory.unshift(command);
         }
         if (callback != null) callback();
-    }
-
-    changeStyle(styleJSON: Record<string, string>) {
-        const keys = Object.keys(styleJSON);
-        for (const s in keys) {
-            setCSSVar(keys[s], styleJSON[keys[s]]);
-        }
     }
 
     async runScript(scriptName: string) {
@@ -180,10 +146,46 @@ export class Terminal {
         this.currentInput = "";
     }
 
+    async getCommandReady(clearTerminal = true) {
+        if (clearTerminal) this.clearText();
+        this.currentInput = "";
+        await this.print(getCommandPrefix(), 1.5);
+    }
+
+    // Methods
+
+    clearText() {
+        if (this.terminalElement != null) this.terminalElement.textContent = "";
+        if (this.terminalGlowElement != null) this.terminalGlowElement.textContent = "";
+    }
+
+    deleteLastCharacter() {
+        if (this.terminalElement != null && this.terminalElement.textContent != null) {
+            const newText = this.terminalElement.textContent.slice(0, this.terminalElement.textContent.length-1);
+            this.terminalElement.textContent = newText;
+        }
+
+        if (this.terminalGlowElement != null && this.terminalGlowElement.textContent != null) {
+            const newGlowText = this.terminalGlowElement.textContent.slice(0, this.terminalGlowElement.textContent.length-1);
+            this.terminalGlowElement.textContent = newGlowText;
+        }
+    }
+
+    changeStyle(styleJSON: Record<string, string>, pathString: string = "") {
+        const keys = Object.keys(styleJSON);
+        for (const s in keys) {
+            setCSSVar(keys[s], styleJSON[keys[s]]);
+        }
+        
+        if (pathString != "") setCookie("terminal-style-file", pathString);
+    }
+
     updateInput() {
         this.clearText();
         this.print(getCommandPrefix() + this.currentInput);
     }
+
+    // Event Listeners
 
     charInput(key: string) {
         if (key.length > 1) return;
@@ -220,6 +222,13 @@ export class Terminal {
             }
         }
     }
+    
+    forceSkipListener(event: KeyboardEvent) {
+        if (event.code == "Space" || event.code == "Enter") {
+            this.skipIntro = true;
+        }
+    }
+
 }
 
 const CLEAR = -1;

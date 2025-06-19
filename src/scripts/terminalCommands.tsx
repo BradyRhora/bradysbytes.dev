@@ -1,5 +1,4 @@
 import { Terminal } from "./terminal";
-import { setCookie } from "./helpers";
 import { BBDirectory } from "./filesystem";
 export class Command
 {
@@ -111,9 +110,7 @@ new Command("style", "Usage: `style [styleFile]` - Sets terminal style based on 
     const style = JSON.parse(styleFile.content);
     if (style == undefined) return `Invalid style file '${styleFileName}'.`;
 
-    Terminal.instance.changeStyle(style);
-    
-    setCookie("terminal-style-file", styleFile.getPathString());
+    Terminal.instance.changeStyle(style, styleFile.getPathString());
     return `${styleName} style activated.`;
 });
 
