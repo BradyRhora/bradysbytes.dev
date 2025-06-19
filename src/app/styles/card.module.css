@@ -15,10 +15,14 @@
     background-color: var(--terminal-bg-color);
 }
 
-.card  h3 {
+.card h3 {
     font-size: 2em;
     margin: 0;
     color: var(--terminal-text-color);
+}
+
+.card p {
+    font-size: 1.2em;
 }
 
 .cardText {
@@ -36,17 +40,20 @@
 
 .clickableCard {
     cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.cardText > * {
+    transition: color 0.3s ease-in-out;
 }
 
 /* Hover effects */
 :global(.hovered).clickableCard {    
     background-color: var(--terminal-text-color);
-    transition: background-color 0.3s ease-in-out;
 }
 
 .clickableCard:hover .cardText > * {
     color: var(--terminal-bg-color);
-    transition: color 0.3s ease-in-out;
 }
 
 .contentCard {
@@ -63,10 +70,6 @@
     }
 
     .cardText {
-        margin:5px;
-    }
-
-    .cardText > *{
         margin:10px;
     }
 

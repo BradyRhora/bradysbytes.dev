@@ -62,8 +62,10 @@
 }
 
 .main {    
-    background-color: var(--terminal-bg-color) !important;
-    color: var(--terminal-text-color) !important;
+    background-color: var(--terminal-bg-color);
+    color: var(--terminal-text-color);
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+
     padding: 20px;
     margin: 0px;
 }
@@ -104,8 +106,8 @@
     .heroContainer {
         flex-direction: column;
         font-size:1.5em;
-        margin-top:30px;
-        margin-bottom:20px;
+        margin-top:5px;
+        margin-bottom:0px;
     }
 
     .heroContainer > h2 {

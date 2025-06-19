@@ -6,6 +6,7 @@
 
 .arrow {
     fill: var(--terminal-text-color);
+    transition: fill 0.3s ease-in-out;
     height:100px;
     
     position:relative;
@@ -22,7 +23,6 @@
 
 .linkCard:hover .arrow {
     fill: var(--terminal-bg-color);
-    transition: fill 0.3s ease-in-out;
 }
 
 @media (max-width: 600px) {
