@@ -1,29 +1,7 @@
-.linkCard {
-    border: 1px solid var(--terminal-text-color);
-    border-radius:10px;
-    height:130px;
-    width: 60%;
-    max-width:800px;
-
-    margin-top:20px;
-    margin-left:auto;
-    margin-right:auto;
-    
-    cursor: pointer;
-}
-
-:global(.glow) .linkCard {
-    background-color: var(--terminal-bg-color);
-}
-
-.linkCardText {
+.linkCard {    
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.linkCard h3 {
-    margin-bottom:0px !important;
+    justify-content: space-between;
+    text-decoration: none;
 }
 
 .arrow {
@@ -41,31 +19,13 @@
 }
 
 /* Hover effects */
-.linkCard:hover {
-    color: var(--terminal-bg-color);
-    transition: color 0.3s ease-in-out;
-}
-
-:global(.hovered).linkCard {    
-    background-color: var(--terminal-text-color);
-    transition: background-color 0.3s ease-in-out;
-}
 
 .linkCard:hover .arrow {
     fill: var(--terminal-bg-color);
     transition: fill 0.3s ease-in-out;
 }
 
-@media (max-width: 480px) {
-    .linkCard {
-        width: 90%;
-        font-size:.9em;
-    }
-
-    .linkCardText > *{
-        margin:10px;
-    }
-    
+@media (max-width: 600px) {
     .arrowContainer {
         width: auto;
         padding:0px;

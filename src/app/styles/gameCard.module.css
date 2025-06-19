@@ -1,0 +1,34 @@
+.gameCard {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+
+    text-decoration: none;
+    height: 200px;
+    width:800px;
+    overflow: hidden;
+}
+
+.gameCardImage {
+    width: 252px;
+    right:0px;
+    position:relative;
+}
+
+@media (max-width: 600px) {
+    .gameCard {
+        height: 150px;
+    }
+
+    .gameCardImage {
+        width: 400px;
+        margin:20px;
+    }
+
+    .gameCardImage > img {
+        width: 100%;
+        height: 100%;
+        border: 1px solid var(--terminal-text-color);
+    }
+}
