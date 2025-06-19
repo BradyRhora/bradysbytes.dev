@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+
 import "./globals.css";
 import styles from "@/app/styles/main.module.css";
 import { BBFileSystem } from "@/scripts/filesystem";
-import { cookies } from "next/headers";
+
+import MainBody from "@/app/components/mainBody";
 
 export const metadata: Metadata = {
   title: "BradysBytes",
@@ -20,10 +23,12 @@ export default async function RootLayout({children,}: Readonly<{children: React.
   }
 
   return (
-    <html style={styleVars} lang="en">
-      <body className={`${styles.main}`}>
-        {children}
-      </body>
-    </html>
+	<html style={styleVars} lang="en">
+	  <body className={`${styles.main}`}>	
+      <MainBody>
+		    {children}
+      </MainBody>
+	  </body>
+	</html>
   );
 }
