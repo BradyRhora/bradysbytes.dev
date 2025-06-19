@@ -6,9 +6,9 @@ import { hookAsteroidEvents } from "@/scripts/asteroids";
 import { startTerminal } from "@/scripts/pageFunctions";
 import { shuffle, wait } from "@/scripts/helpers";
 
-import GlowWrapper from "./glowwrapper";
+import GlowWrapper from "./glowWrapper";
 import TerminalComponent from "./terminal";
-import { SkillContext } from "./skillProvider";
+import { SkillContext } from "./contextProvider";
 
 export default function MainBody({children,}: Readonly<{children: React.ReactNode;}>) {
 	
