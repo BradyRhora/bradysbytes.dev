@@ -12,17 +12,24 @@ export class BBFileSystem {
         // Directories
         const scripts = new BBDirectory("scripts", this.root);
         const styles = new BBDirectory("styles", this.root);
+        const games = new BBDirectory("games", this.root);
 
-        // Files
+        // Scripts
         new BBFile("BRADYSBYTES.sh", this.root);
         new BBFile("asteroids.sh", scripts);
         new BBFile("skipIntro.sh", scripts);
 
+        // Styles
         new BBFile("default.sty", styles, `{"--terminal-bg-color": "#002400","--terminal-text-color": "#63ff63","--terminal-bg-object-color": "#335b33bd","--main-font": "'Inconsolata', monospace"}`);
         new BBFile("jace.sty", styles, `{"--terminal-bg-color": "#420413","--terminal-text-color": "#df8cdc","--terminal-bg-object-color": "#e2ff3557","--main-font": "'Short Stack', cursive"}`);
         new BBFile("jacebright.sty", styles, `{"--terminal-bg-color": "#ffef86","--terminal-text-color": "#ffb1b1","--terminal-bg-object-color": "#ffb1b1","--main-font": "'Short Stack', cursive"}`);
         new BBFile("classic.sty", styles, `{"--terminal-bg-color": "#111111","--terminal-text-color": "#ffffff","--terminal-bg-object-color": "#2a2a2abd","--main-font": "'Inconsolata', monospace"}`);
         new BBFile("bright.sty", styles, `{"--terminal-bg-color": "#ffffff","--terminal-text-color": "#333333","--terminal-bg-object-color": "#878787bd","--main-font": "'Inconsolata', monospace"}`);
+    
+        // Games
+        new BBFile("pizzaverse.gam", games, `{"Title":"Pizzaverse","Description":"Achieve your dream of running the best pizzeria this size of the Milky Way!","ImagePath":"pizzaverse.png"}`);
+        new BBFile("gone_fishing.gam", games, `{"Title":"Gone Fishing","Description":"Catch fish to earn money and go deeper and deeper in this cute fishing game.","ImagePath":"gone_fishing.png"}`);
+        new BBFile("sea_shawty.gam", games, `{"Title":"Sea Shawty","Description":"Help Chestnut the Pirate and Clamantha escape the haunted island with the treasure!","ImagePath":"sea_shawty.png"}`);
     }
 
     getFileFromPathString(path: string) {
@@ -72,6 +79,12 @@ export class BBDirectory extends BBFile {
 
     addChild(child: BBFile) {
         this.children.push(child);
+    }
+
+    getAllFiles(includeDirectories = false) {
+        let files = this.children;
+        if (!includeDirectories) files = files.filter(f => !(f instanceof BBDirectory));
+        return files;
     }
 
     getFile(name: string) {
