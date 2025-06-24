@@ -1,8 +1,8 @@
 "use client"
 import { useState } from "react";
-import styles from "@/app/styles/main.module.css"
+
+import PageHeader from "../components/items/pageHeader";
 import { Card } from "../components/items/cards";
-import Link from "next/link";
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -21,8 +21,7 @@ export default function Contact() {
 
   return (
     <>
-    <Link className={styles.goBack} href="/">..</Link>
-    <h1 className={styles.header}>/CONTACT ME</h1>
+    <PageHeader title="CONTACT ME" parent="/"/>
     <h2 style={{textAlign: "center"}}>Not currently functional!</h2>
     <Card>            
         <form onSubmit={handleSubmit}>

@@ -3,22 +3,30 @@
     width: 60%;
     max-width:800px;
 
-    border: 1px solid var(--terminal-text-color);
+    border: 1px solid var(--term-text-color);
     border-radius:10px;
 
     margin-top:20px;
+    margin-bottom:20px;
     margin-left:auto;
     margin-right:auto;
+
+    transition: height 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    overflow: hidden;
 }
 
 :global(.glow) .card {
-    background-color: var(--terminal-bg-color);
+    background-color: var(--term-bg-color);
+}
+
+.card > * {
+    max-height: 100%;
 }
 
 .card h3 {
     font-size: 2em;
     margin: 0;
-    color: var(--terminal-text-color);
+    color: var(--term-text-color);
 }
 
 .card p {
@@ -29,7 +37,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    color: var(--terminal-text-color);
+    color: var(--term-text-color);
     margin:20px;
 }
 
@@ -40,7 +48,6 @@
 
 .clickableCard {
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
 }
 
 .cardText > * {
@@ -49,11 +56,12 @@
 
 /* Hover effects */
 :global(.hovered).clickableCard {    
-    background-color: var(--terminal-text-color);
+    background-color: var(--term-text-color);
+    transition: background-color 0.3s ease-in-out;
 }
 
 .clickableCard:hover .cardText > * {
-    color: var(--terminal-bg-color);
+    color: var(--term-bg-color);
 }
 
 .contentCard {
@@ -62,11 +70,26 @@
     font-size:1.5em;
 }
 
+.closed {
+    height: 0px;
+}
+
+.wide {
+    width: 95%;
+    max-width:unset;
+    margin-left:auto;
+    margin-right:auto;
+}
+
 /* Small screens */
-@media (max-width: 600px) {
+@media (max-width: 800px) {
     .card {
         width: 98% !important;
+        height:auto;
         font-size:.9em;
+        
+        margin-top:10px;
+        margin-bottom:10px;
     }
 
     .cardText {
@@ -74,7 +97,7 @@
     }
 
     .contentCard {
-        width: 90% !important;
+        width: 96% !important;
         padding:10px;
         font-size:1.5em;
     }

@@ -43,7 +43,7 @@ export default function MainBody({children,}: Readonly<{children: React.ReactNod
             "Software Engineering",
             "Database Management", 
             "Game Design",
-            "Systems Administration",
+            "System Administration",
             "Efficiency"
         ]; /* add more */
 

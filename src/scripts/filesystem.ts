@@ -20,16 +20,16 @@ export class BBFileSystem {
         new BBFile("skipIntro.sh", scripts);
 
         // Styles
-        new BBFile("default.sty", styles, `{"--terminal-bg-color": "#002400","--terminal-text-color": "#63ff63","--terminal-bg-object-color": "#335b33bd","--main-font": "'Inconsolata', monospace"}`);
-        new BBFile("classic.sty", styles, `{"--terminal-bg-color": "#111111","--terminal-text-color": "#ffffff","--terminal-bg-object-color": "#2a2a2abd","--main-font": "'Inconsolata', monospace"}`);
-        new BBFile("jace.sty", styles, `{"--terminal-bg-color": "#420413","--terminal-text-color": "#df8cdc","--terminal-bg-object-color": "#e2ff3557","--main-font": "'Short Stack', cursive"}`);
-        new BBFile("jacebright.sty", styles, `{"--terminal-bg-color": "#ffef86","--terminal-text-color": "#ffb1b1","--terminal-bg-object-color": "#ffb1b1","--main-font": "'Short Stack', cursive"}`);
-        new BBFile("bright.sty", styles, `{"--terminal-bg-color": "#ffffff","--terminal-text-color": "#333333","--terminal-bg-object-color": "#878787bd","--main-font": "'Inconsolata', monospace"}`);
-    
+        new BBFile("default.sty", styles, `{"--term-bg-color": "#002400","--term-text-color": "#63ff63","--term-bg-obj-color": "#335b33bd","--main-font": "'Inconsolata', monospace"}`);
+        new BBFile("classic.sty", styles, `{"--term-bg-color": "#111111","--term-text-color": "#ffffff","--term-bg-obj-color": "#2a2a2abd","--main-font": "'Inconsolata', monospace"}`);
+        new BBFile("bright.sty", styles, `{"--term-bg-color": "#ffffff","--term-text-color": "#333333","--term-bg-obj-color": "#878787bd","--main-font": "'Inconsolata', monospace"}`);
+        new BBFile("jace.sty", styles, `{"--term-bg-color": "#420413","--term-text-color": "#df8cdc","--term-bg-obj-color": "#e2ff3557","--main-font": "'Short Stack', cursive"}`);
+        new BBFile("jacebright.sty", styles, `{"--term-bg-color": "#ffef86","--term-text-color": "#ffb1b1","--term-bg-obj-color": "#ffb1b1","--main-font": "'Short Stack', cursive"}`);
+        
         // Games
-        new BBFile("pizzaverse.gam", games, `{"Title":"Pizzaverse","Description":"Achieve your dream of running the best pizzeria this size of the Milky Way!","ImagePath":"pizzaverse.png"}`);
-        new BBFile("gone_fishing.gam", games, `{"Title":"Gone Fishing","Description":"Catch fish to earn money and go deeper and deeper in this cute fishing game.","ImagePath":"gone_fishing.png"}`);
-        new BBFile("sea_shawty.gam", games, `{"Title":"Sea Shawty","Description":"Help Chestnut the Pirate and Clamantha escape the haunted island with the treasure!","ImagePath":"sea_shawty.png"}`);
+        new BBFile("pizzaverse.gam", games, `{"Title":"Pizzaverse","Description":"Achieve your dream of running the best pizzeria this size of the Milky Way!","ImagePath":"/game_covers/pizzaverse.png"}`);
+        new BBFile("gone_fishing.gam", games, `{"Title":"Gone Fishing","Description":"Catch fish to earn money and go deeper and deeper in this cute fishing game.","ImagePath":"/game_covers/gone_fishing.png"}`);
+        new BBFile("sea_shawty.gam", games, `{"Title":"Sea Shawty","Description":"Help Chestnut the Pirate and Clamantha escape the haunted island with the treasure!","ImagePath":"/game_covers/sea_shawty.png"}`);
     }
 
     getFileFromPathString(path: string) {
@@ -102,7 +102,7 @@ export class BBDirectory extends BBFile {
     seekFile(pathArray: string[]): BBFile | null {
         const nextName = pathArray.shift();
 
-        if (nextName == undefined) 
+        if (nextName == undefined || nextName == "") 
             return this;
 
         const next = this.getFile(nextName);

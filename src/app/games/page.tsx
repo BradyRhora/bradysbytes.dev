@@ -1,12 +1,11 @@
 "use client"
 import { useState, useEffect } from "react";
-import Link from "next/link";
 
 import { GameCard } from "../components/items/cards";
 import { Terminal } from "@/scripts/terminal";
 
-import styles from "../styles/main.module.css"
 import { BBDirectory } from "@/scripts/filesystem";
+import PageHeader from "../components/items/pageHeader";
 
 type Game = {
     Title: string,
@@ -29,11 +28,10 @@ export default function TestPage() {
 
     return (
         <>
-        <Link className={styles.goBack} href="/">..</Link>
-        <h1 className={styles.header}>/GAMES</h1>
+        <PageHeader title="GAMES" parent="/"/>
         {
         games.map((game) => (
-            <GameCard key={game.Title} title={game.Title} content={game.Description} imageSrc={"/game_covers/"+game.ImagePath}/>
+            <GameCard key={game.Title} title={game.Title} content={game.Description} imageSrc={game.ImagePath}/>
         ))
         }
         </>

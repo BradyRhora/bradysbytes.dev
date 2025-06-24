@@ -13,7 +13,8 @@
     overflow: hidden;
     left: 0;
     
-    color: var(--terminal-text-color);
+    color: var(--term-text-color);
+    transition: color 0.3s ease-in-out;
     font-size:1.8em;
     min-width: 50%;
     max-width: 80%;
@@ -26,24 +27,27 @@
 
 .terminal-blur{
     filter: blur(4px);
-    background-color: var(--terminal-bg-color);
+    background-color: var(--term-bg-color);
+    transition: background-color 0.3s ease-in-out;
 }
 
 .terminal-container.lowered {
-    position:absolute;
+    position:fixed;
     bottom: 0px;
     left: 0px;
     margin: 0px;
 }
 
+
 .terminal-container.lowered > * {
-    position: absolute;
+    position: fixed;
     width: auto;
     min-width: unset;
     max-width: 98%;
     height: auto;
     bottom: 0px;
 }
+
 
 /* Small Devices */
 @media (max-width: 600px) {

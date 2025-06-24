@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Short+Stack&display=swa');
 
 :root {
-    --terminal-bg-color: #002400;
-    --terminal-text-color: #63ff63;
-    --terminal-bg-object-color: #335b33bd;
+    --term-bg-color: #002400;
+    --term-text-color: #63ff63;
+    --term-bg-obj-color: #335b33bd;
     --main-font: 'Inconsolata', monospace;
 }
-    
+
+a {
+    text-decoration: none;
+}
+
 html {
     margin: 0;
     padding: 0;
@@ -14,4 +18,21 @@ html {
 
 body {
     font-family: var(--main-font);
+}
+
+.glow * {
+    user-select: none;
+}
+
+/* Target the scrollbar track */
+::-webkit-scrollbar {
+  width: 7px;
+  background: unset;
+}
+
+/* Handle (thumb) */
+::-webkit-scrollbar-thumb {
+  background: var(--term-text-color);
+  margin:5px;
+  border-radius: 6px;
 }

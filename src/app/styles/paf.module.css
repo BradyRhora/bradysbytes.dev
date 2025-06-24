@@ -1,0 +1,62 @@
+.todays-song {
+    border: 3px solid var(--term-text-color);
+    border-radius:5px;
+    padding: 0px;
+
+    display: flex;
+    flex-direction:row;
+    justify-content: space-between;
+
+    width: 700px;
+}
+
+.song-info {
+    height:auto;
+    text-align: center;
+    padding-left:20px;
+    padding-right:20px;
+    margin: auto;
+}
+
+.song-info h2 {
+    font-size: 1em;
+    margin-top:0px;
+}
+
+.song-info span {
+    font-size: 0.7em;
+}
+
+.song-info-player {
+    margin-top: 15px;
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+
+    fill:red;
+}
+
+.song-info > *{
+    margin-bottom:0px;
+}
+
+.album-cover {
+    width:250px;
+    border: 1px solid var(--term-text-color);
+}
+
+@media (max-width: 800px) {
+    .todays-song {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .album-cover {
+        margin:10px;
+    }
+
+    .song-info {
+        padding: 10px;
+    }
+}

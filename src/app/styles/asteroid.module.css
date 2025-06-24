@@ -15,6 +15,6 @@
 
 .asteroid svg {
     fill: none;
-    stroke: var(--terminal-bg-object-color);
+    stroke: var(--term-bg-obj-color);
     stroke-width: 5px;
 }

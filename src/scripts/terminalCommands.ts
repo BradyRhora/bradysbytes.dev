@@ -43,20 +43,17 @@ new Command("cd", "Usage: `cd [directory]` - Move to specified directory.", (new
     }
     else
     {
-        const file = Terminal.instance.fileSystem.currentDir.getFile(newDir);
-        if (file == null) 
-        {
-            return `'${newDir} not found.`;
-        }
-        else if (file instanceof BBDirectory)
+        const file = Terminal.instance.fileSystem.getFileFromPathString(newDir);
+        if (file == null) return `'${newDir} not found.`;
+        
+        if (file instanceof BBDirectory)
         {
             Terminal.instance.fileSystem.currentDir = file;
+            // switch page based on current directory (currently will cause infinite loop: cd dir -> change page -> auto cd command -> change page... etc)
+            // document.location = file.name;
             return undefined;
         }
-        else
-        {
-            return `'${newDir}' is not a directory.`;
-        }
+        else return `'${newDir}' is not a directory.`;
     }
     
     return `Directory '${newDir}' not found.`;

@@ -36,7 +36,7 @@ export class Asteroid {
         this.div.className = styles["asteroid"];
         const pathData = noisyCirclePath(0, 0, this.size - STROKE_SIZE, 16, 0.15);
         this.div.innerHTML = `<svg height="${this.size}" width="${this.size}" viewBox="${-this.size} ${-this.size} ${this.size*2} ${this.size*2}" xmlns="http://www.w3.org/2000/svg">
-            <path d="${pathData}" fill="none" stroke="var(--terminal-bg-object-color)" stroke-width="${STROKE_SIZE}" />
+            <path d="${pathData}" fill="none" stroke="var(--term-bg-obj-color)" stroke-width="${STROKE_SIZE}" />
         </svg>`;
 
         

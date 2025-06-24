@@ -44,3 +44,7 @@ next-env.d.ts
 run-dev.sh
 run-build.sh
 .nvimlog
+.vscode/settings.json
+
+# non git files
+/public/songs/*

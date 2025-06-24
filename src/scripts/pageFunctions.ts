@@ -3,7 +3,6 @@ import terminalStyles from '@/app/styles/terminal.module.css'
 
 import { wait } from '@/scripts/helpers';
 import { Terminal } from '@/scripts/terminal';
-import { Asteroid } from '@/scripts/asteroids';
 import { getCookie } from '@/scripts/helpers';
 
 export function startTerminal() {
@@ -45,7 +44,7 @@ export async function showPage(){
 
     // Start default background script and key input listeners
     if (termContainer != undefined) {
-        await Terminal.instance.autoCommand("./scripts/asteroids.sh", Asteroid.start);
+        await Terminal.instance.autoCommand("./scripts/asteroids.sh");
 
         document.addEventListener('keypress', (e) => {
             Terminal.instance.charInput(e.key);

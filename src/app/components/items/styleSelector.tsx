@@ -36,9 +36,12 @@ export default function StyleSelector({styleFile} : StyleSelectorProps) {
             style={styleObj}
             onMouseEnter={cardMouseEnter}
             onMouseLeave={cardMouseLeave}
-            onClick={e => {
-                e.stopPropagation();
+            onClick={()/*e*/ => {
+                // uncomment to keep open after choosing style
+                //e.stopPropagation();
+                
                 setStyle(styleFile);
+                Terminal.instance.autoCommand("style " + styleFile.getPathString(), false);
             }}
         >
             <h4>{styleFile.name.replace(".sty","")}</h4>

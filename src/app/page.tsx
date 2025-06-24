@@ -1,48 +1,25 @@
-"use client"
-import { useState, useEffect } from "react";
-
 import { LinkCard } from "./components/items/cards";
 import HeroHeader from "./components/items/hero";
-import DropdownBox from "./components/items/dropdownBox";
+import StyleDropDown from "./components/items/styleDropDown";
 
 import styles from "@/app/styles/main.module.css";
-import "@/app/styles/asteroid.module.css"
+import PageHeader from "./components/items/pageHeader";
 
-import { Terminal } from "@/scripts/terminal";
-import { BBDirectory, BBFile } from "@/scripts/filesystem";
-import StyleSelector from "./components/items/styleSelector";
-/*import "@/scripts/filesystem";
-import "@/scripts/terminalCommands";*/
 
 export default function Home() {
-	const [styleFiles, setStyleFiles] = useState<BBFile[]>([]);
-
-	useEffect(() => {
-		function loadStyles() {
-			const styleDir = Terminal.instance.fileSystem.getFileFromPathString("/styles") as BBDirectory;
-			const styleFiles = styleDir.getAllFiles();
-			const filteredFiles = styleFiles.filter((file: BBFile) => file.name.endsWith(".sty"));
-			setStyleFiles(filteredFiles);
-		}
-
-		loadStyles();
-	}, []);
-
 	return (
 		<>
-			<h1 className={styles.header}>BRADY&apos;S BYTES</h1> {/* Not too sure about how to style this */}
+			<PageHeader title="BRADY&apos;S BYTES"/>
 			<HeroHeader/>
-			<LinkCard destination="/" title="BLOG [WIP]" description="A space to read about my projects and thoughts."/>
-			<LinkCard destination="/games" title="GAMES" description="Check out and play some of the games I've helped create!"/>
-			<LinkCard destination="/contact" title="GET IN TOUCH" description=""/>
+
+			<div className={styles.navLinks}>
+				<LinkCard destination="/" title="BLOG [WIP]" description="A space to read about my projects and thoughts."/>
+				<LinkCard destination="/games" title="GAMES" description="Check out and play some of the games I've helped create!"/>
+				<LinkCard destination="/contact" title="GET IN TOUCH" description=""/>
+			</div>
+
 			<div className={styles.footerContainer}>
-				<DropdownBox>
-				{
-					styleFiles && styleFiles.map((styleFile) => {
-						return <StyleSelector key={styleFile.name} styleFile={styleFile}/>
-					})
-				}
-				</DropdownBox>
+				<StyleDropDown/>
 			</div>
 		</>
 	);

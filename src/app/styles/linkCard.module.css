@@ -1,11 +1,10 @@
-.linkCard {    
+.linkCard > a {    
     display: flex;
     justify-content: space-between;
-    text-decoration: none;
 }
 
 .arrow {
-    fill: var(--terminal-text-color);
+    fill: var(--term-text-color);
     transition: fill 0.3s ease-in-out;
     height:100px;
     
@@ -22,7 +21,7 @@
 /* Hover effects */
 
 .linkCard:hover .arrow {
-    fill: var(--terminal-bg-color);
+    fill: var(--term-bg-color);
 }
 
 @media (max-width: 600px) {

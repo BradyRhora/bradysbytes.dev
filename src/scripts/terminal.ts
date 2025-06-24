@@ -7,6 +7,8 @@ import { Command } from "./terminalCommands";
 
 export class Terminal {
     static instance: Terminal;
+    static autoTyping = false;
+
     terminalElement: HTMLElement | null;
     terminalGlowElement: HTMLElement | null;
     currentInput: string;
@@ -48,8 +50,17 @@ export class Terminal {
 
     async autoType(text: string, time: number = 0) {
         if (this.terminalElement == null || this.terminalGlowElement == null) return;
-        
+        if (Terminal.autoTyping) {
+            Terminal.autoTyping = false;
+            await wait(0.5);
+        }
+
+        Terminal.autoTyping = true;
         for (let i = 0; i < text.length; i++){
+            if (!Terminal.autoTyping) {
+                this.getCommandReady();
+                break;
+            }
 
             let newChar = text[i];
             if (newChar == '\\' && text.length > i+1 && text[i+1] == 'n') { 
@@ -69,13 +80,13 @@ export class Terminal {
         await wait(time);
     }
 
-    async autoCommand(command: string, callback: (() => void) | null = null) {
+    async autoCommand(command: string, runCommand = true) {
         if (!isMobile()) {
             await this.getCommandReady();
-            await this.autoType(command, 0.5);
+            await this.autoType(command, 0.35);
             this.commandHistory.unshift(command);
+            if (runCommand) this.runCommand(command);
         }
-        if (callback != null) callback();
     }
 
     async runScript(scriptName: string) {
@@ -147,9 +158,9 @@ export class Terminal {
     }
 
     async getCommandReady(clearTerminal = true) {
-        if (clearTerminal) this.clearText();
+        if (clearTerminal) this.clearText(); // TODO: why command no go away then
         this.currentInput = "";
-        await this.print(getCommandPrefix(), 1.5);
+        await this.print(getCommandPrefix());
     }
 
     // Methods
@@ -236,7 +247,7 @@ const WAIT = 0;
 const PRINT = 1;
 const TYPE = 2;
 
-// move these out of global
+// TODO: move these out of global
 const user = "guest";
 const fakePass = "**********";
 function getCommandPrefix() { 
