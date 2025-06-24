@@ -52,11 +52,12 @@
 }
 
 .goBack {
-    margin-left:10px;
-    display: inline-block;
     color: var(--term-text-color);
-    font-size: 2.5em;
     text-decoration: none;
+}
+
+.headerContainer {
+    line-break:auto;
 }
 
 .goBack:hover {
