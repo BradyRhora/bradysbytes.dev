@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { loadConfig, getTodaysSong, readMeta } from "@/scripts/paf";
+import { loadConfig, getTodaysSong, readMeta } from "@/scripts/heardle";
 
 // Get todays song information
 export async function GET() {
