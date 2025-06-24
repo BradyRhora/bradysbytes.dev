@@ -1,11 +1,14 @@
 "use client"
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useEffect, useState } from "react";
+
+import { Card } from "./cards";
+import HeardleAudioPlayer from "./audioPlayer";
+
+import { Terminal } from "@/scripts/terminal";
 
 import cardStyles from "@/app/styles/card.module.css";
 import styles from "@/app/styles/paf.module.css";
-import { Card } from "./cards";
-import { Terminal } from "@/scripts/terminal";
 
 export default function Heardle() {
     type songDataProps = {
@@ -18,11 +21,10 @@ export default function Heardle() {
         }
     }
 
-    const [songData, setSongData] = useState<songDataProps|null>(null);
+    const [songData, setSongData] = useState<songDataProps>({songPath:"", meta:{title:"",artist:"",date:null,imageData:null}});
     const [image, setImage] = useState<string|null>(null);
 
-    useEffect(() => {
-        Terminal.instance.skipIntro = true;
+    useLayoutEffect(() => {
         fetch("/api/songInfo")
         .then(res => res.json())
         .then(data => {
@@ -36,37 +38,48 @@ export default function Heardle() {
             }
         })
 
-        // hide terminal
+       
+    }, []);
+
+    useEffect(() => {
+        Terminal.instance.skipIntro = true;
+
+         // TODO: hide terminal
         
         return (() => {
             Terminal.instance.skipIntro = false;
-            // unhide terminal
+            // TODO: unhide terminal
         })
-    }, []);
+    })
 
     return (
         <Card className={`${cardStyles.wide}`}>
             {/* Song Player Here - Starts from a random (same for everyone) point in the song */}
             
+            {songData.songPath && <>
+                <HeardleAudioPlayer src={`songs/${songData.songPath}`}/>
+                
+                
+                {/* Guessing Box Here - Player enters text and song list is checked for fuzzy matches and returned via API */}
 
-            {/* Guessing Box Here - Player enters text and song list is checked for fuzzy matches and returned via API */}
-
-            <Card className={`${styles["todays-song"]} ${cardStyles.closed}`}>
-                <div className={styles["song-info"]}>
-                    {songData && 
-                        <>
-                        <h2>{songData.meta.title}</h2>
-                        <span><i>{songData.meta.artist} {songData.meta.date && `- ${songData.meta.date}`}</i></span>
-                        <audio className={styles["song-info-player"]} controls>
-                            <source src={`songs/${songData.songPath}`} type="audio/mpeg"/>
-                        </audio>
-                        </>
+                
+                <Card className={`${styles["todays-song"]} ${cardStyles.closed}`}>
+                    <div className={styles["song-info"]}>
+                        {songData && 
+                            <>
+                            <h2>{songData.meta.title}</h2>
+                            <span><i>{songData.meta.artist} {songData.meta.date && `- ${songData.meta.date}`}</i></span>
+                            <audio className={styles["song-info-player"]} controls>
+                                <source src={`songs/${songData.songPath}`} type="audio/mpeg"/>
+                            </audio>
+                            </>
+                        }
+                    </div>
+                    {image &&
+                        <Image className={styles["album-cover"]} width={250} height={250} alt="Album cover." src={image}></Image>
                     }
-                </div>
-                {image &&
-                    <Image className={styles["album-cover"]} width={250} height={250} alt="Album cover." src={image}></Image>
-                }
-            </Card>
+                </Card>
+            </> }
         </Card>
     )
 }
