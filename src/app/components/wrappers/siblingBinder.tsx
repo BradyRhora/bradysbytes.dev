@@ -24,6 +24,12 @@ type BindSiblingProps = {
     hashString: string
 }
 
+/*
+ * The purpose of this component is to enable an easy method of obtaining an element's "glow sibling",
+ * which is it's counterpart background component which is blurred to create a glowing effect. The reason
+ * we need to be able to get this sibling is because when the main element changes it's shape/content/etc.,
+ * the glow sibling has to match this change or else the elements will become visually out of sync.
+ */
 export default function BindSibling({children, hashString} : BindSiblingProps) {
     const hashID = generateHash(hashString);
     return (
