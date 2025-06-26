@@ -4,11 +4,13 @@ import { getGlowSibling } from "../wrappers/siblingBinder";
 
 import styles from "@/app/styles/semiComponents.module.css"
 
-export default function DropdownBox({children, placeholder}: {children: React.ReactNode, placeholder: React.ReactNode}) {
+export default function DropdownBox({children, forceOpen = false, clickable = false, className = "", placeholder = null}: {children: React.ReactNode, forceOpen?: boolean, clickable? : boolean, className?: string ,placeholder?: React.ReactNode}) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   function dropdownClickHandler(e: React.MouseEvent) {
+    if (!clickable) return;
+
     e.stopPropagation();
     const newState = !isOpen;
     setIsOpen(newState);
@@ -45,7 +47,7 @@ export default function DropdownBox({children, placeholder}: {children: React.Re
       }
     }
 
-    document.addEventListener('mousedown', mouseHandler);
+    if (clickable) document.addEventListener('mousedown', mouseHandler);
 
     return () => {
       if (elem) {
@@ -53,11 +55,11 @@ export default function DropdownBox({children, placeholder}: {children: React.Re
         document.removeEventListener('mousedown', mouseHandler);
       }
     };
-  }, [isOpen])
+  }, [isOpen, clickable])
 
   return (
-    <div ref={ref} className={`${styles.dropdownBox} ${isOpen ? styles.dropdownOpen : ""}`} onClick={dropdownClickHandler}>
-      {placeholder}
+    <div ref={ref} className={`${className} ${styles.dropdownBox} ${(forceOpen || isOpen) ? styles.dropdownOpen : ""}`} onClick={dropdownClickHandler}>
+      {placeholder && placeholder}
       <div className={styles.dropdownContents}>
         {children}
       </div>

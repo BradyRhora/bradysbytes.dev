@@ -1,7 +1,10 @@
 import React from "react";
 
 export function getGlowSibling(element: HTMLElement) {
-    const siblingID = element.parentElement?.getAttribute("data-sibling-id");
+    const binder = element.closest(".binder");
+    if (!binder) return null;
+    
+    const siblingID = binder.getAttribute("data-sibling-id");
     const glowElement = document.querySelector(`#container-glow [data-sibling-id="${siblingID}"]`);
     if (glowElement)
         return glowElement.firstChild as HTMLElement;
@@ -33,7 +36,7 @@ type BindSiblingProps = {
 export default function BindSibling({children, hashString} : BindSiblingProps) {
     const hashID = generateHash(hashString);
     return (
-        <div data-sibling-id={hashID} >
+        <div className="binder" data-sibling-id={hashID} >
             {children}
         </div>
     );

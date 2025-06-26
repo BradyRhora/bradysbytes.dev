@@ -3,11 +3,12 @@ import { loadConfig, getTodaysSong, readMeta } from "@/scripts/heardle";
 
 // Get todays song information
 export async function GET() {
-    const songPath = await getTodaysSong();
-    const meta = await readMeta(songPath); 
+    const song = await getTodaysSong();
+    const meta = await readMeta(song.path); 
     
     return NextResponse.json({
-        songPath: songPath,
+        songPath: song.path,
+        startTime: song.startTime,
         meta: {
             title: meta.common.title,
             artist: meta.common.artist,

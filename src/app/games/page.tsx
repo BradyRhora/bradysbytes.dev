@@ -8,12 +8,13 @@ import { BBDirectory } from "@/scripts/filesystem";
 import PageHeader from "../components/items/pageHeader";
 
 type Game = {
-    Title: string,
-    Description: string,
-    ImagePath: string
+    title: string,
+    description: string,
+    imagePath: string,
+    url?: string
 }
 
-export default function TestPage() {
+export default function Games() {
     const [games, setGames] = useState<Game[]>([]);
 
     useEffect(() => {
@@ -31,7 +32,7 @@ export default function TestPage() {
         <PageHeader title="GAMES" parent="/"/>
         {
         games.map((game) => (
-            <GameCard key={game.Title} title={game.Title} content={game.Description} imageSrc={game.ImagePath}/>
+            <GameCard key={game.title} title={game.title} content={game.description} href={game.url} imageSrc={game.imagePath}/>
         ))
         }
         </>

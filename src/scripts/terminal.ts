@@ -298,7 +298,10 @@ export async function showIntro() {
     const terminal = Terminal.instance;
 
     for (const a in script) {
-        if (terminal.skipIntro) break;
+        if (terminal.skipIntro) {
+            terminal.clearText();
+            break;
+        }
 
         const action = script[a];
 

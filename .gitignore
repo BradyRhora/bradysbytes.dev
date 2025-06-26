@@ -41,8 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # local development files
-run-dev.sh
-run-build.sh
+*.sh
 .nvimlog
 .vscode/settings.json
 

@@ -35,3 +35,9 @@ export async function wait(seconds: number) {
 export function setCSSVar(name: string, value: string) {
     document.documentElement.style.setProperty(name, value);
 }
+
+export function roundToDecimalPlaces(value: number, decimals : number) {
+    if (isNaN(value)) return value;
+    const factor = Math.pow(10, decimals);
+    return Math.round(value * factor) / factor;
+}

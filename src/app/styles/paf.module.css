@@ -1,3 +1,14 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container > * {
+    width: 100%;
+}
+
+/* Answer */
 .todays-song {
     border: 3px solid var(--term-text-color);
     border-radius:5px;
@@ -32,8 +43,18 @@
     display:block;
     margin-left:auto;
     margin-right:auto;
+}
 
-    fill:red;
+.playerContainer {
+    display:flex;
+    flex-direction: row;
+    width:100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.playerContainer > * {
+    margin: 0 10px;
 }
 
 .song-info > *{
@@ -42,7 +63,49 @@
 
 .album-cover {
     width:250px;
+    height:250px;
     border: 1px solid var(--term-text-color);
+}
+
+/* Guesser */
+.inputBox {
+    padding: 10px;
+    margin-top:30px;
+
+    max-width:55%;
+    margin-left:auto;
+    margin-right:auto;
+    
+    background-color: var(--term-bg-obj-color);
+    border: 1px solid var(--term-text-color);
+    border-radius: 3px;
+
+    color: var(--term-text-color);
+
+    font-size: 1em;
+}
+
+.guessDropdown {    
+    max-width: 55%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+:global(.glow) .guessDropdown {
+    background-color: var(--term-bg-color);
+}
+
+.dropdownItem {
+    width:100%;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 1px solid var(--term-text-color);
+}
+
+.dropdownItem:hover {
+    background-color: var(--term-bg-obj-color);
+    cursor: pointer;
 }
 
 @media (max-width: 800px) {
@@ -56,7 +119,23 @@
         margin:10px;
     }
 
+    
+    .playerContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .playerContainer > * {
+        margin: 10px 0;
+    }
+
     .song-info {
         padding: 10px;
+    }
+
+    .inputBox {
+        max-width: 90%;
+        width: 100%;
+        margin-top:10px;
     }
 }

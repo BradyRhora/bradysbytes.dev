@@ -7,6 +7,7 @@ import cardStyles from "@/app/styles/card.module.css";
 import linkCardStyles from "@/app/styles/linkCard.module.css";
 import gameCardStyles from "@/app/styles/gameCard.module.css";
 import CommandLink from "./commandLink";
+import ConditionalLink from "../wrappers/conditionalLink";
 
 function cardMouseEnter(event: React.MouseEvent<HTMLElement>) {
     const glowElem = getGlowSibling(event.currentTarget);
@@ -37,22 +38,27 @@ export function Card({children, className = undefined}: CardProps) {
 type GameCardProps = {
     title: string,
     content: string,
-    imageSrc: string
+    imageSrc: string,
+    href?: string
 }
 
-export function GameCard({title, content, imageSrc} : GameCardProps){
+export function GameCard({title, content, imageSrc, href} : GameCardProps){
     return (
-        <BindSibling hashString={title + content}>
-            <div className={`${gameCardStyles.gameCard} ${cardStyles.card}`} onMouseEnter={cardMouseEnter} onMouseLeave={cardMouseLeave}>
-                <div className={`${cardStyles.cardText}`}>
-                    <h3>{title}</h3>
-                    <p>{content}</p>
+        <ConditionalLink href={href}>
+            <BindSibling hashString={title + content}>
+                <div className={`${gameCardStyles.gameCard} ${cardStyles.card} ${href && cardStyles.clickableCard}`} onMouseEnter={cardMouseEnter} onMouseLeave={cardMouseLeave}>
+                    <div className={`${cardStyles.cardText}`}>
+                        <h3>{title}</h3>
+                        <p>{content}</p>
+                    </div>
+                    {imageSrc && 
+                    <div className={`${gameCardStyles.gameCardImage}`}>
+                        <Image width={252} height={200} alt={`Banner for ${title}`} src={imageSrc}></Image>
+                    </div>
+                    }
                 </div>
-                <div className={`${gameCardStyles.gameCardImage}`}>
-                    <Image width={252} height={200} alt={`Banner for ${title}`} src={imageSrc}></Image>
-                </div>
-            </div>
-        </BindSibling>
+            </BindSibling>
+        </ConditionalLink>
     );
 }
 

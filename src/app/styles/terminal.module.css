@@ -29,12 +29,11 @@
     filter: blur(4px);
     background-color: var(--term-bg-color);
     transition: background-color 0.3s ease-in-out;
+    user-select: none;
 }
 
 .terminal-container.lowered {
-    position:fixed;
-    bottom: 0px;
-    left: 0px;
+    position:static;
     margin: 0px;
 }
 
@@ -45,7 +44,8 @@
     min-width: unset;
     max-width: 98%;
     height: auto;
-    bottom: 0px;
+    bottom:20px;
+    left:20px;
 }
 
 

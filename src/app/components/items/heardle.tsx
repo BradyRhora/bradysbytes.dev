@@ -1,18 +1,22 @@
 "use client"
 import Image from "next/image";
-import { useLayoutEffect, useEffect, useState } from "react";
+import { useLayoutEffect, useEffect, useState, useContext } from "react";
 
 import { Card } from "./cards";
 import HeardleAudioPlayer from "./audioPlayer";
 
 import { Terminal } from "@/scripts/terminal";
+import { PafSkipContext } from "@/app/components/wrappers/contextProviderWrapper";
 
 import cardStyles from "@/app/styles/card.module.css";
 import styles from "@/app/styles/paf.module.css";
+import HeardleGuesser from "./heardleGuesser";
+import { roundToDecimalPlaces } from "@/scripts/helpers";
 
 export default function Heardle() {
     type songDataProps = {
         songPath: string,
+        startTime: number,
         meta: {
             title: string,
             artist: string,
@@ -21,11 +25,26 @@ export default function Heardle() {
         }
     }
 
-    const [songData, setSongData] = useState<songDataProps>({songPath:"", meta:{title:"",artist:"",date:null,imageData:null}});
+    const MAX_SKIPS = 5;
+    const CUTOFF_INCREASE = 1.75; // seconds
+
+    const [skips, setSkips] = useContext(PafSkipContext);
+    const [over, setOver] = useState(false);
+    const [songData, setSongData] = useState<songDataProps>({songPath:"", startTime:0, meta:{title:"",artist:"",date:null,imageData:null}});
     const [image, setImage] = useState<string|null>(null);
 
+    function skip() {
+        setSkips(skips + 1);
+    }
+
+    function getCutoffTime(skips : number) {
+        let time = songData.startTime + (skips * CUTOFF_INCREASE) + 1;
+        if (time > songData.startTime + 12) time = songData.startTime + 12;
+        return roundToDecimalPlaces(time, 5);
+    }
+
     useLayoutEffect(() => {
-        fetch("/api/songInfo")
+        fetch("/api/SongInfo")
         .then(res => res.json())
         .then(data => {
             setSongData(data);
@@ -36,34 +55,29 @@ export default function Heardle() {
                 const dataUrl = `data:${mimeType};base64,${data.meta.imageData}`;
                 setImage(dataUrl);
             }
-        })
-
-       
+        })       
     }, []);
 
     useEffect(() => {
+        if (MAX_SKIPS - skips < 0) setOver(true);
         Terminal.instance.skipIntro = true;
-
-         // TODO: hide terminal
         
         return (() => {
             Terminal.instance.skipIntro = false;
-            // TODO: unhide terminal
         })
-    })
+    }, [skips])
 
     return (
-        <Card className={`${cardStyles.wide}`}>
-            {/* Song Player Here - Starts from a random (same for everyone) point in the song */}
-            
+        <Card className={`${cardStyles.wide} ${styles.container}`}>            
             {songData.songPath && <>
-                <HeardleAudioPlayer src={`songs/${songData.songPath}`}/>
-                
-                
-                {/* Guessing Box Here - Player enters text and song list is checked for fuzzy matches and returned via API */}
+                <div className={styles.playerContainer}>
+                    <HeardleAudioPlayer src={`songs/${songData.songPath}`} startTime={songData.startTime} cutOffTime={getCutoffTime(skips)} maxTime={roundToDecimalPlaces(songData.startTime + ((MAX_SKIPS * CUTOFF_INCREASE) + 1), 5)}/>                
+                    {!over && <button id="skipButton" onClick={skip}>{skips < MAX_SKIPS ? `Skip (${MAX_SKIPS - skips})` : `Give Up`}</button>}
+                </div>
 
-                
-                <Card className={`${styles["todays-song"]} ${cardStyles.closed}`}>
+                {!over && <HeardleGuesser/>}
+
+                <Card className={`${styles["todays-song"]} ${!over && cardStyles.closed}`}>
                     <div className={styles["song-info"]}>
                         {songData && 
                             <>

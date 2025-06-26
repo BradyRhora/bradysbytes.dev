@@ -27,9 +27,10 @@ export class BBFileSystem {
         new BBFile("jacebright.sty", styles, `{"--term-bg-color": "#ffef86","--term-text-color": "#ffb1b1","--term-bg-obj-color": "#ffb1b1","--main-font": "'Short Stack', cursive"}`);
         
         // Games
-        new BBFile("pizzaverse.gam", games, `{"Title":"Pizzaverse","Description":"Achieve your dream of running the best pizzeria this size of the Milky Way!","ImagePath":"/game_covers/pizzaverse.png"}`);
-        new BBFile("gone_fishing.gam", games, `{"Title":"Gone Fishing","Description":"Catch fish to earn money and go deeper and deeper in this cute fishing game.","ImagePath":"/game_covers/gone_fishing.png"}`);
-        new BBFile("sea_shawty.gam", games, `{"Title":"Sea Shawty","Description":"Help Chestnut the Pirate and Clamantha escape the haunted island with the treasure!","ImagePath":"/game_covers/sea_shawty.png"}`);
+        new BBFile("pizzaverse.gam", games, `{"title":"Pizzaverse","description":"Achieve your dream of running the best pizzeria this size of the Milky Way.","imagePath":"/game_covers/pizzaverse.png"}`);
+        new BBFile("gone_fishing.gam", games, `{"title":"Gone Fishing","description":"Catch fish to earn money and go deeper and deeper in this cute fishing game.","imagePath":"/game_covers/gone_fishing.png"}`);
+        new BBFile("sea_shawty.gam", games, `{"title":"Sea Shawty","description":"Help Chestnut the Pirate and Clamantha escape the haunted island with the Pirate's Treasure!","imagePath":"/game_covers/sea_shawty.png"}`);
+        new BBFile("phineas_and_ferbdle.gam", games, `{"title":"Phineas and Ferbdle","description":"Guess the Phineas and Ferb song with as little context as possible!","url":"/paf"}`);
     }
 
     getFileFromPathString(path: string) {

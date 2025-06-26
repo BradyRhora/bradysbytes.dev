@@ -9,7 +9,7 @@ import MainBody from "@/app/components/wrappers/mainBody";
 
 export const metadata: Metadata = {
   title: "BradysBytes",
-  description: "[Think of some catchy description here]",
+  description: "A creative hub for my projects, games, and programming fun."
 };
 
 export default async function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {

@@ -1,22 +1,22 @@
 import fs from 'fs';
 import { IAudioMetadata, parseFile } from 'music-metadata';
 
-import { shuffle } from './helpers';
+import { roundToDecimalPlaces, shuffle } from './helpers';
 
-// automatically advance based on day
-// if no one played today dont bother advancing
 // show live players?
 
 const SONG_DIR = 'public/songs/';
 const CONFIG_FILE = 'paf.json';
+const MAX_CLIP_DURATION : number = 12;
 
 type Config = {
     schedule : number[],
-    day: number,
-    lastDay: string
+    dayCounter: number,
+    startTime: number,
+    date: string
 }
 
-let config : Config = { schedule: [], day: 0, lastDay: DateToString(new Date(Date.now())) };
+let config : Config = { schedule: [], dayCounter: 0,  startTime:0, date: DateToString(new Date(Date.now())) };
 
 function DateToString(date: Date) {
     return date.toISOString().slice(0,10);
@@ -31,12 +31,24 @@ async function createSongSchedule() {
     let indices = Array.from({ length: songCount }, (_, i) => i);
     indices = shuffle(indices);
     config.schedule = indices;
-    await saveConfig();
+    await updateSong();
+}
+
+async function updateSong() {
+    config.date = DateToString(new Date(Date.now()));
+
+    const song = await getTodaysSong();
+    const songLength = await readMeta(song.path).then(meta => meta.format.duration);
+
+    let startTime = 0;
+    if (songLength) startTime = roundToDecimalPlaces(Math.random() * (songLength - MAX_CLIP_DURATION), 5);
+
+    config.startTime = startTime;
 }
 
 export async function loadConfig() {
     if (!(await fs.existsSync(CONFIG_FILE))) {
-        createSongSchedule();
+        await createSongSchedule();
         await saveConfig();
     } else {
         const data = await fs.readFileSync(CONFIG_FILE);
@@ -50,13 +62,18 @@ export async function readMeta(filePath: string): Promise<IAudioMetadata> {
 }
 
 export async function getTodaysSong() {
-    if (config.lastDay < DateToString(new Date(Date.now()))) {
-        config.lastDay = DateToString(new Date(Date.now()));
-        config.day++;
-        saveConfig();
+    if (config.date < DateToString(new Date(Date.now()))) {
+        config.dayCounter++;
+        await updateSong();        
+        await saveConfig();
     }
 
-    const songIndex = config.schedule[config.day];
+    const songIndex = config.schedule[config.dayCounter];
     const songFiles = await fs.readdirSync(SONG_DIR);
-    return songFiles[songIndex];
+    return { path: songFiles[songIndex], startTime: config.startTime };
+}
+
+export async function getAllSongs() {
+    const songFiles = await fs.readdirSync(SONG_DIR);
+    return songFiles;
 }

@@ -1,6 +1,7 @@
 "use client"
 import { useContext } from 'react';
-import { SkillContext } from '../contextProvider'
+import { SkillContext } from "@/app/components/wrappers/contextProviderWrapper";
+
 import styles from '@/app/styles/main.module.css'
 
 export default function HeroHeader() {

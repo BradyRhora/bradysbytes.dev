@@ -26,7 +26,7 @@ export async function showPage(){
     // Move intro terminal into Container
     const termContainer = document.getElementById("terminal-container");
     if (termContainer != undefined) {
-        if (mainContainer != null) mainContainer.appendChild(termContainer);
+        //if (mainContainer != null) mainContainer.appendChild(termContainer);
         termContainer.classList.add(terminalStyles["lowered"]);
     }
     await wait(.75);
@@ -47,10 +47,28 @@ export async function showPage(){
         await Terminal.instance.autoCommand("./scripts/asteroids.sh");
 
         document.addEventListener('keypress', (e) => {
+            const active = document.activeElement;
+            if (active) {
+                switch(active.tagName) {
+                    case "INPUT":
+                    case "TEXTAREA":
+                        return;
+                }
+            }
+
             Terminal.instance.charInput(e.key);
         });
 
         document.addEventListener('keydown', (e) => {
+            const active = document.activeElement;
+            if (active) {
+                switch(active.tagName) {
+                    case "INPUT":
+                    case "TEXTAREA":
+                        return;
+                }
+            }
+
             Terminal.instance.keyDown(e.key);
         });
     }

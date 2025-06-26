@@ -1,9 +1,17 @@
 .audioPlayer {
     border: 1px solid var(--term-text-color);
-    max-width: 400px;
+    min-width:300px;
+    max-width: 500px;
     margin-left:auto;
     margin-right:auto;
     height:100px;
+    
+    /* Block text highlighting */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera, and Edge */
 }
 
 .audioControls {
@@ -15,16 +23,9 @@
 }
 
 .playButton {
-    font-size:2.5em;
-    line-height: 1.25em;
-    width:auto;
-    /* Block text highlighting */
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera, and Edge */
+    stroke: var(--term-text-color);
+    fill: var(--term-text-color);
+    padding:10px;
 }
 
 .playButton:hover {
@@ -50,6 +51,12 @@
     margin:10px;
     margin-left:0px;
     border: 1px solid var(--term-text-color);
+
+    cursor: pointer;
+}
+
+:global(.glow) .scrubber {
+    background-color: var(--term-bg-obj-color);
 }
 
 .cursor {
@@ -58,6 +65,14 @@
     height: 100%;
     background-color: var(--term-text-color);
     cursor: pointer;
+}
+
+.cutOff {
+    position: relative;
+    width:2px;
+    top:-100%;
+    height: 100%;
+    background-color: red;
 }
 
 .interactable:hover {
