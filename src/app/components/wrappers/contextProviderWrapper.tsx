@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useState, useEffect } from "react";
 
-import { wait, shuffle } from "@/scripts/helpers";
+import { wait, shuffle } from "@/scripts/lib/helpers";
 
 export const SkillContext = createContext("");
 export const PafSkipContext = createContext<[number, React.Dispatch<React.SetStateAction<number>>]>([0, () => {}]);

@@ -10,6 +10,7 @@ import dropdownStyles from "@/app/styles/semiComponents.module.css"
 export default function HeardleGuesser() {
     type basicSongInfo = {
         title: string,
+        id: string,
         artist: string
     }
 
@@ -37,11 +38,13 @@ export default function HeardleGuesser() {
                     glowDropdown?.classList.remove(dropdownStyles.dropdownOpen);
                 }
             }
-        }, 100);
+        }, 400);
     }
 
-    async function guess(title: string) {
-        const data = await fetch(`/api/GuessSong?guess=${title}`);
+    async function guess(e: React.MouseEvent, id: string) {
+        if (e.button == 2) return; // right click
+
+        const data = await fetch(`/api/GuessSong?id=${id}`);
         const result = data.status;
         if (result == 204) {
             alert("GOTTEM!");
@@ -53,7 +56,7 @@ export default function HeardleGuesser() {
     }
 
     async function getSongs(input: string) {
-        if (input.length <= 0) {
+        if (input.length <= 1) {
             searching.current = false;
             setSongs([]);
             return;
@@ -73,8 +76,8 @@ export default function HeardleGuesser() {
             
             <BindSibling hashString="heardle-guesser-dropdown">
                 <DropdownBox className={styles.guessDropdown} forceOpen={searching.current}>
-                    {songs?.length > 0 && songs.map((song, index) => (
-                        <div key={index} className={styles.dropdownItem} onMouseUp={async () => await guess(song.title)}>
+                    {songs?.length > 0 && songs.map((song) => (
+                        <div key={song.id} className={styles.dropdownItem} onMouseUp={async (e) => await guess(e, song.id)}>
                             <span>{song.title}</span>
                             <span className={styles.artist}>{song.artist}</span>
                         </div>

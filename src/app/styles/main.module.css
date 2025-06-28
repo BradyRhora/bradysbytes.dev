@@ -7,6 +7,10 @@
     margin: 0px;
 }
 
+.main * {
+    box-sizing: border-box;
+}
+
 .glow {
     filter: blur(4px);
 }

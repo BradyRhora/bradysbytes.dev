@@ -47,3 +47,5 @@ next-env.d.ts
 
 # non git files
 /public/songs/*
+/generated/prisma
+*.db

@@ -1,6 +1,6 @@
 //TODO: Ctrl + C => clear()?
 import { BBFileSystem } from "./filesystem";
-import { wait, shuffle, setCookie, getCookie, isMobile, setCSSVar } from "./helpers";
+import { wait, shuffle, setCookie, getCookie, isMobile, setCSSVar } from "./lib/helpers";
 import { showPage } from "./pageFunctions";
 import { Asteroid } from "@/scripts/asteroids"
 import { Command } from "./terminalCommands";

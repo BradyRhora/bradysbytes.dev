@@ -11,7 +11,9 @@ import { PafSkipContext } from "@/app/components/wrappers/contextProviderWrapper
 import cardStyles from "@/app/styles/card.module.css";
 import styles from "@/app/styles/paf.module.css";
 import HeardleGuesser from "./heardleGuesser";
-import { roundToDecimalPlaces } from "@/scripts/helpers";
+import { roundToDecimalPlaces } from "@/scripts/lib/helpers";
+
+import { CUTOFF_INCREASE, MAX_SKIPS } from "@/scripts/lib/db";
 
 export default function Heardle() {
     type songDataProps = {
@@ -25,8 +27,6 @@ export default function Heardle() {
         }
     }
 
-    const MAX_SKIPS = 5;
-    const CUTOFF_INCREASE = 1.75; // seconds
 
     const [skips, setSkips] = useContext(PafSkipContext);
     const [over, setOver] = useState(false);
@@ -51,9 +51,7 @@ export default function Heardle() {
         
             // convert img data
             if (data.meta.imageData) {
-                const mimeType = 'image/jpeg';
-                const dataUrl = `data:${mimeType};base64,${data.meta.imageData}`;
-                setImage(dataUrl);
+                setImage(data.meta.imageData);
             }
         })       
     }, []);
@@ -71,28 +69,30 @@ export default function Heardle() {
         <Card className={`${cardStyles.wide} ${styles.container}`}>            
             {songData.songPath && <>
                 <div className={styles.playerContainer}>
-                    <HeardleAudioPlayer src={`songs/${songData.songPath}`} startTime={songData.startTime} cutOffTime={getCutoffTime(skips)} maxTime={roundToDecimalPlaces(songData.startTime + ((MAX_SKIPS * CUTOFF_INCREASE) + 1), 5)}/>                
+                    <HeardleAudioPlayer src={songData.songPath} startTime={songData.startTime} cutOffTime={getCutoffTime(skips)} maxTime={roundToDecimalPlaces(songData.startTime + ((MAX_SKIPS * CUTOFF_INCREASE) + 1), 5)}/>                
                     {!over && <button id="skipButton" onClick={skip}>{skips < MAX_SKIPS ? `Skip (${MAX_SKIPS - skips})` : `Give Up`}</button>}
                 </div>
 
                 {!over && <HeardleGuesser/>}
 
-                <Card className={`${styles["todays-song"]} ${!over && cardStyles.closed}`}>
+                {over &&
+                <Card className={`${styles["todays-song"]}`}>
                     <div className={styles["song-info"]}>
                         {songData && 
                             <>
                             <h2>{songData.meta.title}</h2>
-                            <span><i>{songData.meta.artist} {songData.meta.date && `- ${songData.meta.date}`}</i></span>
+                            <span><i>{songData.meta.artist} {songData.meta.date && `- ${songData.meta.date.slice(0,4)}`}</i></span>
                             <audio className={styles["song-info-player"]} controls>
-                                <source src={`songs/${songData.songPath}`} type="audio/mpeg"/>
+                                <source src={songData.songPath} type="audio/mpeg"/>
                             </audio>
                             </>
                         }
                     </div>
                     {image &&
-                        <Image className={styles["album-cover"]} width={250} height={250} alt="Album cover." src={image}></Image>
+                        <Image className={styles["album-cover"]} width={250} height={250} alt="Album cover" src={image}></Image>
                     }
                 </Card>
+                }
             </> }
         </Card>
     )

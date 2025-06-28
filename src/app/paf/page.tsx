@@ -10,11 +10,12 @@ export const metadata = {
 
 export default function HeardlePage() {
     function isSafari() {
-        const ua = navigator.userAgent;
+        /*const ua = navigator.userAgent;
         return (
             /Safari/.test(ua) &&
             !/Chrome|CriOS|Chromium|Android/.test(ua)
-        );
+        );*/
+        return false; // TODO: FIX!!
     }
     
     return (

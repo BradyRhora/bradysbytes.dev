@@ -1,0 +1,98 @@
+import { PrismaClient, Song } from "@/../generated/prisma"; 
+import { shuffle } from "./helpers";
+
+export const prisma = new PrismaClient();
+
+export const MAX_SKIPS = 5;
+export const CUTOFF_INCREASE = 1.75; // seconds
+const MAX_CLIP_DURATION = MAX_SKIPS * CUTOFF_INCREASE;
+
+export async function getAllSongs() {
+    const songs = await prisma.song.findMany();
+    return songs;
+}
+
+export async function getSongByScheduleIndex(index: number) {
+	const scheduledSong = await prisma.schedule.findFirst({where: {id: index}, include:{song:true}});
+	
+	if (!scheduledSong) return null;
+	return scheduledSong.song;
+}
+
+export async function getTodaysSong() {
+    const config = await prisma.paFConfig.findFirst();
+	if (!config) return null;
+
+	const lastDay = config.currentDate;
+	const today = new Date(Date.now());
+	today.setHours(0, 0, 0, 0);
+	
+	if (!lastDay || lastDay < today) {
+		config.currentDate = today;
+		config.songIndex++;
+		const newSongLength = (await getSongByScheduleIndex(config.songIndex))?.duration || 0;
+		//config.todaysStartTime = roundToDecimalPlaces(Math.random() * (newSongLength) - MAX_CLIP_DURATION, 5);
+		config.todaysStartTime = Math.random() * (newSongLength - MAX_CLIP_DURATION);
+		//console.log(`start time is ${config.todaysStartTime} from duration of ${newSongLength} (${(await getSongByScheduleIndex(config.songIndex))?.duration})`)
+
+		await prisma.paFConfig.update({
+			where: { id: config.id },
+			data: {
+				currentDate: config.currentDate,
+				songIndex: config.songIndex,
+				todaysStartTime: config.todaysStartTime
+			}
+		});
+	}
+
+	const scheduledSong = await prisma.schedule.findFirst({where: {id: config.songIndex}, include:{song:true}});
+	
+	if (!scheduledSong) return null;
+	return { ...scheduledSong.song, startTime: config.todaysStartTime};
+}
+
+export async function addSong(title: string, artist: string, duration: number, path: string, date?: Date) {
+    const song = await prisma.song.create({
+        data: {
+            title: title,
+            artist: artist,
+			duration: duration,
+			date: date,
+            filePath: path
+        }
+    }) 
+
+    return song;
+}
+
+export async function addSongsToSchedule(songs: Song[]) {
+	if (!songs || songs.length === 0) return;
+
+	// Get the last scheduled song ID or start from -1
+	let lastScheduled = (await prisma.schedule.findFirst({orderBy: {id: "desc"}}))?.id || -1;
+
+	const shuffled = shuffle(songs);
+	const schedule = await prisma.schedule.createMany({
+		data: shuffled.map((song) => ({
+			id: ++lastScheduled,
+			songId: song.id
+		}))
+	});
+
+	return schedule;
+
+}
+
+/*
+async function main() {}
+
+main()
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
+*/

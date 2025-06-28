@@ -16,6 +16,7 @@ export default async function RootLayout({children,}: Readonly<{children: React.
   const fs = new BBFileSystem();
   const cookieStore = await cookies();
   const styleFileName = cookieStore.get('terminal-style-file')?.value;
+  
   let styleVars = null;
   if (styleFileName != undefined) {
     const styleFile = fs.getFileFromPathString(styleFileName);
@@ -23,12 +24,12 @@ export default async function RootLayout({children,}: Readonly<{children: React.
   }
 
   return (
-	<html style={styleVars} lang="en">
-	  <body className={`${styles.main}`}>	
+    <html style={styleVars} lang="en">
+      <body className={`${styles.main}`}>	
       <MainBody>
-		    {children}
+            {children}
       </MainBody>
-	  </body>
-	</html>
+      </body>
+    </html>
   );
 }

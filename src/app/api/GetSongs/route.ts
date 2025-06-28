@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllSongs, readMeta } from "@/scripts/heardle";
+import { getAllSongs } from "@/scripts/lib/db";
 
 function stripString(string: string) {
     let returnString = string.trim().toLowerCase();
@@ -7,19 +7,31 @@ function stripString(string: string) {
     return returnString;
 }
 
+function containsAllTerms(string: string, terms: string[]) {
+    for (const t in terms) {
+        if (!string.includes(terms[t])) return false;
+    }
+
+    return true;
+}
+
 export async function GET(req: NextRequest) {
     const songs = await getAllSongs();
     const input = req.nextUrl.searchParams.get('input') as string;
     const songData = [];
 
-    for (const song in songs) {
-        const meta = await readMeta(songs[song]);
-        if (!meta.common.title) continue;
+    const strippedSearch = stripString(input);
+    const searchTerms = strippedSearch.split(/\s/);
 
-        if (stripString(meta.common.title).includes(stripString(input))) {
+    for (const s in songs) {
+        const strippedTitle = stripString(songs[s].title);
+        const strippedArtist = stripString(songs[s].artist);
+        const combinedSongData = strippedTitle + strippedArtist;
+        if (containsAllTerms(combinedSongData, searchTerms)) {
             songData.push({
-                title: meta.common.title,
-                artist: meta.common.artist
+                title: songs[s].title,
+                artist: songs[s].artist,
+                id: songs[s].id
             });
         }
     }

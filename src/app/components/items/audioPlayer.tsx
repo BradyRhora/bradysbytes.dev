@@ -169,7 +169,6 @@ export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cut
             if (endTime.current == 0) endTime.current = audioRef.current.duration;
             audioRef.current.volume = 0.1; // TODO: Remove this when volume slider created
             
-            
 
             audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
 

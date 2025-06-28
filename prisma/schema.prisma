@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  performances UserPerformance[]
+}
+
+model UserPerformance {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  skipsUsed Int      @default(0)
+  success   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Song {
+  id            String     @id @default(uuid())
+  title         String
+  artist        String
+  duration      Float
+  filePath      String
+  date          DateTime?
+  scheduleIndex Schedule?
+  addedAt       DateTime   @default(now())
+}
+
+model PaFConfig {
+  id              Int      @id @default(0)
+  currentDate     DateTime?
+  songIndex       Int      @default(-1)
+  todaysStartTime Int      @default(0)
+}
+
+model Schedule {
+  id     Int    @id
+  songId String @unique
+  song   Song   @relation(fields: [songId], references: [id])
+}

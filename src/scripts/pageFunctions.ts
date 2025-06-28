@@ -1,9 +1,9 @@
 import mainStyles from '@/app/styles/main.module.css';
 import terminalStyles from '@/app/styles/terminal.module.css'
 
-import { wait } from '@/scripts/helpers';
+import { wait } from '@/scripts/lib/helpers';
 import { Terminal } from '@/scripts/terminal';
-import { getCookie } from '@/scripts/helpers';
+import { getCookie } from '@/scripts/lib/helpers';
 
 export function startTerminal() {
     const terminal = new Terminal();

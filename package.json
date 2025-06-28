@@ -6,9 +6,11 @@
     "dev": "PORT=4000 next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "load-songs": "tsx src/scripts/server/loadSongsToDB.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.10.1",
     "music-metadata": "^11.3.0",
     "next": "^15.3.4",
     "react": "^19.0.0",
@@ -22,6 +24,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
+    "prisma": "^6.10.1",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   }
 }

@@ -1,0 +1,33 @@
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "UserPerformance" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "skipsUsed" INTEGER NOT NULL DEFAULT 0,
+    "success" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "UserPerformance_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Song" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "title" TEXT NOT NULL,
+    "artist" TEXT NOT NULL,
+    "configId" INTEGER,
+    CONSTRAINT "Song_configId_fkey" FOREIGN KEY ("configId") REFERENCES "PaFConfig" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "PaFConfig" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "currentDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "songIndex" INTEGER NOT NULL DEFAULT 0
+);
