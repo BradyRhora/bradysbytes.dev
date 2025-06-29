@@ -12,6 +12,7 @@ export async function GET() {
     return NextResponse.json({
         songPath: song.filePath,
         startTime: song.startTime,
+        dayIndex: song.dayIndex,
         meta: {
             title: song.title,
             artist: song.artist,

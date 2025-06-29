@@ -49,7 +49,7 @@ export async function getTodaysSong() {
 	const scheduledSong = await prisma.schedule.findFirst({where: {id: config.songIndex}, include:{song:true}});
 	
 	if (!scheduledSong) return null;
-	return { ...scheduledSong.song, startTime: config.todaysStartTime};
+	return { ...scheduledSong.song, dayIndex: config.songIndex, startTime: config.todaysStartTime};
 }
 
 export async function addSong(title: string, artist: string, duration: number, path: string, date?: Date) {
@@ -120,6 +120,7 @@ export async function addSkip(userID: string) {
 		return 1;
 	} else {
 		todaysPerformance.skipsUsed++;
+		if (todaysPerformance.skipsUsed > 5) return 5;
 
 		await prisma.userPerformance.update({
 			where: {id: todaysPerformance.id},
@@ -127,6 +128,42 @@ export async function addSkip(userID: string) {
 		});
 
 		return todaysPerformance.skipsUsed;
+	}
+}
+
+export async function getSuccess(userID: string) {
+	const config = await prisma.paFConfig.findFirst();
+	if (!config) return;
+
+	const todaysPerformance = await prisma.userPerformance.findFirst({
+		where: {userId: userID, scheduleIndex: config.songIndex}
+	});
+
+	if (todaysPerformance) {
+		return todaysPerformance.success;
+	}
+}
+
+export async function succeed(userID: string) {
+	const config = await prisma.paFConfig.findFirst();
+	if (!config) return;
+
+	const todaysPerformance = await prisma.userPerformance.findFirst({
+		where: {userId: userID, scheduleIndex: config.songIndex}
+	});
+
+	if (!todaysPerformance) {
+		await prisma.userPerformance.create({data: {
+			userId: userID,
+			scheduleIndex: config.songIndex,
+			skipsUsed: 0,
+			success: true
+		}})
+	} else {
+		await prisma.userPerformance.update({
+			where: {id: todaysPerformance.id},
+			data: {success: true}
+		});
 	}
 }
 

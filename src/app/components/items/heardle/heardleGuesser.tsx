@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from "react";
 
 import DropdownBox from "../../wrappers/dropdownBox";
-import { PafSkipContext } from "@/app/components/wrappers/contextProviderWrapper";
+import { PafSkipContext, PafSuccessContext } from "@/app/components/wrappers/contextProviderWrapper";
 import BindSibling, { getGlowSibling } from "../../wrappers/siblingBinder";
 
 import styles from "@/app/styles/paf.module.css"
@@ -17,6 +17,7 @@ export default function HeardleGuesser() {
 
     const [user,] = useContext(UserContext);
     const [skips, setSkips] = useContext(PafSkipContext);
+    const [, setSuccess] = useContext(PafSuccessContext);
     const [songs, setSongs] = useState<basicSongInfo[]>([]);
 
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -63,11 +64,11 @@ export default function HeardleGuesser() {
 
     async function guess(e: React.MouseEvent, id: string) {
         if (e.button == 2) return; // right click
-
-        const data = await fetch(`/api/GuessSong?id=${id}`);
+        
+        const data = await fetch(`/api/GuessSong?id=${id}${user ? '&user='+user.id : ''}`);
         const result = data.status;
         if (result == 204) {
-            setSkips(6); // TODO: hopefully not necessary
+            setSuccess(true);
         } else if (result == 406) {
             skip();
             setSongs([]);

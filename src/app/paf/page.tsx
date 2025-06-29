@@ -5,7 +5,7 @@ import StyleDropDown from '../components/items/styleDropDown';
 
 export const metadata = {
     title: "Phineas and Ferbdle",
-    description: "Guess the Phineas and Ferb song!"
+    description: "Can you guess today's Phineas and Ferb song?"
 }
 
 export default function HeardlePage() {    

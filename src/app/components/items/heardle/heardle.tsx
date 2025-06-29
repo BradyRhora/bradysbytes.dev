@@ -6,7 +6,7 @@ import { Card } from "../cards";
 import HeardleAudioPlayer from "./audioPlayer";
 
 import { Terminal } from "@/scripts/terminal";
-import { ErrorContext, PafSkipContext } from "@/app/components/wrappers/contextProviderWrapper";
+import { ErrorContext, PafOverContext, PafSkipContext, PafSuccessContext } from "@/app/components/wrappers/contextProviderWrapper";
 import { UserContext } from "../../wrappers/mainBody";
 
 import cardStyles from "@/app/styles/card.module.css";
@@ -21,6 +21,7 @@ export default function Heardle() {
     type songDataProps = {
         songPath: string,
         startTime: number,
+        dayIndex: number
         meta: {
             title: string,
             artist: string,
@@ -30,11 +31,12 @@ export default function Heardle() {
     }
 
     const [skips, setSkips] = useContext(PafSkipContext);
+    const [success, setSuccess] = useContext(PafSuccessContext);
+    const [over, setOver] = useContext(PafOverContext);
     const [error, setError] = useContext(ErrorContext);
     const [user, setUser] = useContext(UserContext);
 
-    const [over, setOver] = useState(false);
-    const [songData, setSongData] = useState<songDataProps>({songPath:"", startTime:0, meta:{title:"",artist:"",date:null,imageData:null}});
+    const [songData, setSongData] = useState<songDataProps>({songPath:"", startTime:0, dayIndex: 0, meta:{title:"",artist:"",date:null,imageData:null}});
     const [image, setImage] = useState<string|null>(null);
 
     const nameInputRef = useRef<HTMLInputElement>(null);
@@ -58,10 +60,12 @@ export default function Heardle() {
             })
             .then(res => res.json())
             .then((data: {skips: number}) => {
-                setSkips(data.skips);
+                if (skips + 1 > MAX_SKIPS) setOver(true);
+                else setSkips(data.skips);
             })
         } else {
-            setSkips(skips + 1);
+            if (skips + 1 > MAX_SKIPS) setOver(true);
+            else setSkips(skips + 1);
         }
     }
 
@@ -69,6 +73,11 @@ export default function Heardle() {
         let time = songData.startTime + (skips * CUTOFF_INCREASE) + 1;
         if (time > songData.startTime + 12) time = songData.startTime + 12;
         return roundToDecimalPlaces(time, 5);
+    }
+
+    function copyResults() {
+        const results = `🎧 Phineas and Ferbdle - Day ${songData.dayIndex+1} Results 🎧\n\nSkips needed: ${skips}\n${success ? "Got it! ✅" : "Didn't know it... ❌"}`;
+        navigator.clipboard.writeText(results);
     }
 
     async function submitName() {
@@ -101,14 +110,14 @@ export default function Heardle() {
         })       
     }, [setUser]);
 
-    useEffect(() => {
-        if (MAX_SKIPS - skips < 0) setOver(true);
+    useEffect(() => {        
         Terminal.instance.skipIntro = true;
+        if (skips > MAX_SKIPS || success) setOver(true);
         
         return (() => {
             Terminal.instance.skipIntro = false;
         })
-    }, [skips])
+    }, [skips, setSuccess, success])
 
     return (
         <Card className={`${cardStyles.wide} ${styles.container}`}>
@@ -125,23 +134,33 @@ export default function Heardle() {
 
                 {!over && <HeardleGuesser/>}
 
-                {over &&
-                <Card className={`${styles["todays-song"]}`}>
-                    <div className={styles["song-info"]}>
-                        {songData && 
-                            <>
-                            <h2>{songData.meta.title}</h2>
-                            <span><i>{songData.meta.artist} {songData.meta.date && `- ${songData.meta.date.slice(0,4)}`}</i></span>
-                            <audio className={styles["song-info-player"]} controls>
-                                <source src={songData.songPath} type="audio/mpeg"/>
-                            </audio>
-                            </>
+                {over && <>
+                    <Card className={`${styles["todays-song"]}`}>
+                        <div className={styles["song-info"]}>
+                            {songData && 
+                                <>
+                                <h2>{songData.meta.title}</h2>
+                                <span><i>{songData.meta.artist} {songData.meta.date && `- ${songData.meta.date.slice(0,4)}`}</i></span>
+                                <audio className={styles["song-info-player"]} controls>
+                                    <source src={songData.songPath} type="audio/mpeg"/>
+                                </audio>
+                                </>
+                            }
+                        </div>
+                        {image &&
+                            <Image className={styles["album-cover"]} width={250} height={250} alt="Album cover" src={image}></Image>
                         }
+                    </Card>
+                    
+                    <div className={styles.resultsContainer}>
+                        { success ? <>
+                        <div>Nice one! You got it with <span style={{color:"green"}}>{skips}</span> skips.</div>
+                        </>:<>
+                        <div>Too bad! Try again tomorrow!</div>
+                        </>}                        
+                        <div>Click <button onClick={copyResults}>here</button> to copy your results to your clipboard.</div>
                     </div>
-                    {image &&
-                        <Image className={styles["album-cover"]} width={250} height={250} alt="Album cover" src={image}></Image>
-                    }
-                </Card>
+                </>
                 }
 
                 {!user && 

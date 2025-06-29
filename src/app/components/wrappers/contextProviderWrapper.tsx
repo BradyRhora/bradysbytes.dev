@@ -5,6 +5,8 @@ import { UserContext } from "./mainBody";
 
 export const SkillContext = createContext("");
 export const PafSkipContext = createContext<[number, React.Dispatch<React.SetStateAction<number>>]>([0, () => {}]);
+export const PafSuccessContext = createContext<[boolean, React.Dispatch<React.SetStateAction<boolean>>]>([false, () => {}]);
+export const PafOverContext = createContext<[boolean, React.Dispatch<React.SetStateAction<boolean>>]>([false, () => {}]);
 export const PafPlayingContext = createContext<[boolean, React.Dispatch<React.SetStateAction<boolean>>]>([false, () => {}]);
 export const ErrorContext = createContext<[string, React.Dispatch<React.SetStateAction<string>>]>(["", () => {}]);
 
@@ -12,6 +14,8 @@ export default function ContextProvider({children}: {children: React.ReactNode})
     const [user, ] = useContext(UserContext);
     const [skill, setSkill] = useState("");
     const [pafSkips, setPafSkips] = useState(0);
+    const [pafSuccess, setPafSuccess] = useState(false);
+    const [pafOver, setPafOver] = useState(false);
     const [pafPlaying, setPafPlaying] = useState(false);
     const [error, setError] = useState("");
 
@@ -19,8 +23,9 @@ export default function ContextProvider({children}: {children: React.ReactNode})
         if (user) {
             fetch('/api/skip?user='+user.id)
                 .then(res => res.json())
-                .then(({skips} : {skips:number}) => {
+                .then(({skips, success} : {skips:number, success:boolean}) => {
                     setPafSkips(skips);
+                    if (success) setPafSuccess(true);
                 });
         }
     }, [user])
@@ -71,13 +76,17 @@ export default function ContextProvider({children}: {children: React.ReactNode})
 
     return (
         <SkillContext.Provider value={skill}>
-            <PafSkipContext.Provider value={[pafSkips, setPafSkips]}>
-                <PafPlayingContext.Provider value={[pafPlaying, setPafPlaying]}>
-                    <ErrorContext.Provider value={[error, setError]}>
-                        {children}
-                    </ErrorContext.Provider>
-                </PafPlayingContext.Provider>
-            </PafSkipContext.Provider>
+        <PafSuccessContext.Provider value={[pafSuccess, setPafSuccess]}>
+        <PafOverContext.Provider value={[pafOver, setPafOver]}>
+        <PafSkipContext.Provider value={[pafSkips, setPafSkips]}>
+        <PafPlayingContext.Provider value={[pafPlaying, setPafPlaying]}>
+        <ErrorContext.Provider value={[error, setError]}>
+            {children}
+        </ErrorContext.Provider>
+        </PafPlayingContext.Provider>
+        </PafSkipContext.Provider>
+        </PafOverContext.Provider>
+        </PafSuccessContext.Provider>
         </SkillContext.Provider>
     )
 }
