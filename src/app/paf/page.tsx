@@ -1,4 +1,4 @@
-import Heardle from '@/app/components/items/heardle'
+import Heardle from '@/app/components/items/heardle/heardle'
 
 import PageHeader from '../components/items/pageHeader';
 import StyleDropDown from '../components/items/styleDropDown';
@@ -8,24 +8,15 @@ export const metadata = {
     description: "Guess the Phineas and Ferb song!"
 }
 
-export default function HeardlePage() {
-    function isSafari() {
-        /*const ua = navigator.userAgent;
-        return (
-            /Safari/.test(ua) &&
-            !/Chrome|CriOS|Chromium|Android/.test(ua)
-        );*/
-        return false; // TODO: FIX!!
-    }
-    
+export default function HeardlePage() {    
     return (
         <>
-            <PageHeader title="Phineas and Ferbdle" parent="/"/>
-            { isSafari() && 
-                <p style={{margin: 20}}>Older Safari versions may have issues with playback. Update or try another browser if you experience issues!</p>
-            }
+            <PageHeader title="Phineas and Ferbdle" path={["games"]}/>
+            
             <Heardle/>
+            <div style={{display:"flex", justifyContent:"center"}}>
             <StyleDropDown/>
+            </div>
         </>
     );
 }

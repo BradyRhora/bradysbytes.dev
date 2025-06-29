@@ -21,12 +21,14 @@ model User {
 }
 
 model UserPerformance {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  skipsUsed Int      @default(0)
-  success   Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  scheduleIndex Int
+  schedule      Schedule  @relation(fields: [scheduleIndex], references: [id])
+  skipsUsed     Int      @default(0)
+  success       Boolean  @default(false)
+  createdAt     DateTime @default(now())
 }
 
 model Song {
@@ -48,7 +50,8 @@ model PaFConfig {
 }
 
 model Schedule {
-  id     Int    @id
-  songId String @unique
-  song   Song   @relation(fields: [songId], references: [id])
+  id           Int    @id
+  songId       String @unique
+  song         Song   @relation(fields: [songId], references: [id])
+  performances UserPerformance[]
 }

@@ -16,6 +16,7 @@ export class Terminal {
     commandHistory: string[];
     historyIndex: number;
     skipIntro: boolean;
+    user: string;
 
     constructor() {        
         this.terminalElement = document.getElementById("terminal");
@@ -28,6 +29,8 @@ export class Terminal {
         this.commandHistory = [];
         this.historyIndex = -1;
         this.skipIntro = false;
+        this.user = "guest";
+        
 
         this.forceSkipListener = this.forceSkipListener.bind(this);
         document.addEventListener('keydown', this.forceSkipListener);
@@ -81,7 +84,7 @@ export class Terminal {
     }
 
     async autoCommand(command: string, runCommand = true) {
-        if (!isMobile()) {
+        if (true || !isMobile()) {
             await this.getCommandReady();
             await this.autoType(command, 0.35);
             this.commandHistory.unshift(command);
@@ -100,7 +103,6 @@ export class Terminal {
                 break;
             case "BRADYSBYTES.sh":
                 return "BRADYSBYTES.DEV is already running!";
-                break;
             case "skipIntro.sh":
                 if (getCookie("skip-intro-toggle") == undefined) {
                     setCookie("skip-intro-toggle","");
@@ -109,7 +111,7 @@ export class Terminal {
                 else
                 {
                     setCookie("skip-intro-toggle", "" , 0);
-                    setCookie("skip-intros", "" , 0);
+                    setCookie("skip-intro", "" , 0);
                     return "Intro will play each session.";
                 }
         }
@@ -160,10 +162,15 @@ export class Terminal {
     async getCommandReady(clearTerminal = true) {
         if (clearTerminal) this.clearText(); // TODO: why command no go away then
         this.currentInput = "";
-        await this.print(getCommandPrefix());
+        await this.print(this.getCommandPrefix());
     }
 
     // Methods
+    getCommandPrefix() { 
+        let currentDir = Terminal.instance.fileSystem.currentDir.getPathString();
+        currentDir = currentDir.slice(0, currentDir.length - 1);
+        return `${this.user}@bradyserver:${currentDir}$ `; 
+    }
 
     clearText() {
         if (this.terminalElement != null) this.terminalElement.textContent = "";
@@ -193,7 +200,7 @@ export class Terminal {
 
     updateInput() {
         this.clearText();
-        this.print(getCommandPrefix() + this.currentInput);
+        this.print(this.getCommandPrefix() + this.currentInput);
     }
 
     // Event Listeners
@@ -247,21 +254,15 @@ const WAIT = 0;
 const PRINT = 1;
 const TYPE = 2;
 
-// TODO: move these out of global
-const user = "guest";
-const fakePass = "**********";
-function getCommandPrefix() { 
-    let currentDir = Terminal.instance.fileSystem.currentDir.getPathString();
-    currentDir = currentDir.slice(0, currentDir.length - 1);
-    return `${user}@bradyserver:${currentDir}$ `; 
-}
-
 export async function showIntro() {
+    const terminal = Terminal.instance;
+    const pass = "*********";
+    
     const script = [//*
         {type: WAIT, time:1},
         {type: PRINT, text:"BRADY_TERM 2.0\n", time:0},
         {type: PRINT, text:"(c) All rights reserved.\n\n", time:1.5},
-        {type: PRINT, text: getCommandPrefix(), time:1.5},
+        {type: PRINT, text: terminal.getCommandPrefix(), time:1.5},
         {type: TYPE, text:"./BRADYSBYTES.sh\n", time:1},
         {type: PRINT, text: "Loading BRADYSBYTES.DEV", time:.5},//.5},
         {type: PRINT, text: ".", time:.6},
@@ -270,9 +271,9 @@ export async function showIntro() {
         {type: CLEAR, time:0},
         {type: PRINT, text:"ENTER LOGIN\n", time:0},
         {type: PRINT, text:"USER: " , time: .6},
-        {type: TYPE, text: user + "\n", time: .7},
+        {type: TYPE, text: terminal.user + "\n", time: .7},
         {type: PRINT, text:"PASS: " , time: .5},
-        {type: TYPE, text: fakePass + "\n", time: (fakePass.length * .05)},
+        {type: TYPE, text: pass + "\n", time: (pass.length * .05)},
         {type: PRINT, text: "ACCESS GRANTED.", time: 2},
         {type: CLEAR, time:.5},//*/
     ]
@@ -294,8 +295,6 @@ export async function showIntro() {
     }
 
     script.push({type:CLEAR,time:1});
-
-    const terminal = Terminal.instance;
 
     for (const a in script) {
         if (terminal.skipIntro) {
@@ -323,10 +322,8 @@ export async function showIntro() {
     setCookie("skip-intro", "", 60);
 }
 
-export async function setup() {
-    //let scriptElement = document.getElementsByClassName('terminal-script')[0];
-    //user = scriptElement.attr("name") // need states
-    //fakePass = scriptElement.attr("fakepass");
+export async function setup(username?: string) {  
+    if (username) Terminal.instance.user = username;
     
     if (getCookie('skip-intro') == undefined && getCookie('skip-intro-toggle') == undefined) {
         await showIntro();

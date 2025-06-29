@@ -29,7 +29,7 @@ export default function Games() {
 
     return (
         <>
-        <PageHeader title="GAMES" parent="/"/>
+        <PageHeader title="GAMES"/>
         {
         games.map((game) => (
             <GameCard key={game.title} title={game.title} content={game.description} href={game.url} imageSrc={game.imagePath}/>

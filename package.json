@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "PORT=4000 next dev --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "DATABASE_URL=\"file:./prod.db\" next start",
     "lint": "next lint",
     "load-songs": "tsx src/scripts/server/loadSongsToDB.ts"
   },

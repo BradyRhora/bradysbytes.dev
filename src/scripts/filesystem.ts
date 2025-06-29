@@ -24,13 +24,13 @@ export class BBFileSystem {
         new BBFile("classic.sty", styles, `{"--term-bg-color": "#111111","--term-text-color": "#ffffff","--term-bg-obj-color": "#2a2a2abd","--main-font": "'Inconsolata', monospace"}`);
         new BBFile("bright.sty", styles, `{"--term-bg-color": "#ffffff","--term-text-color": "#333333","--term-bg-obj-color": "#878787bd","--main-font": "'Inconsolata', monospace"}`);
         new BBFile("jace.sty", styles, `{"--term-bg-color": "#420413","--term-text-color": "#df8cdc","--term-bg-obj-color": "#e2ff3557","--main-font": "'Short Stack', cursive"}`);
-        new BBFile("jacebright.sty", styles, `{"--term-bg-color": "#ffef86","--term-text-color": "#ffb1b1","--term-bg-obj-color": "#ffb1b1","--main-font": "'Short Stack', cursive"}`);
+        new BBFile("jacebright.sty", styles, `{"--term-bg-color": "#ffef86","--term-text-color": "#ffb1b1","--term-bg-obj-color": "#ffcbcb","--main-font": "'Short Stack', cursive"}`);
         
         // Games
-        new BBFile("pizzaverse.gam", games, `{"title":"Pizzaverse","description":"Achieve your dream of running the best pizzeria this size of the Milky Way.","imagePath":"/game_covers/pizzaverse.png"}`);
-        new BBFile("gone_fishing.gam", games, `{"title":"Gone Fishing","description":"Catch fish to earn money and go deeper and deeper in this cute fishing game.","imagePath":"/game_covers/gone_fishing.png"}`);
-        new BBFile("sea_shawty.gam", games, `{"title":"Sea Shawty","description":"Help Chestnut the Pirate and Clamantha escape the haunted island with the Pirate's Treasure!","imagePath":"/game_covers/sea_shawty.png"}`);
         new BBFile("phineas_and_ferbdle.gam", games, `{"title":"Phineas and Ferbdle","description":"Guess the Phineas and Ferb song with as little context as possible!","url":"/paf"}`);
+        new BBFile("pizzaverse.gam", games, `{"title":"Pizzaverse","description":"Achieve your dream of running the best pizzeria this size of the Milky Way.","imagePath":"/game_covers/pizzaverse.png", "url":"https://www.coolmathgames.com/0-pizzaverse"}`);
+        new BBFile("gone_fishing.gam", games, `{"title":"Gone Fishing","description":"Catch fish to earn money and go deeper and deeper in this cute fishing game.","imagePath":"/game_covers/gone_fishing.png", "url":"https://matthewi.itch.io/gone-fishing"}`);
+        new BBFile("sea_shawty.gam", games, `{"title":"Sea Shawty","description":"Help Chestnut the Pirate and Clamantha escape the haunted island with the Pirate's Treasure!","imagePath":"/game_covers/sea_shawty.png", "url":"https://matthewi.itch.io/sea-shawty"}`);
     }
 
     getFileFromPathString(path: string) {

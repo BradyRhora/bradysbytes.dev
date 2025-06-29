@@ -7,6 +7,7 @@ export const MAX_SKIPS = 5;
 export const CUTOFF_INCREASE = 1.75; // seconds
 const MAX_CLIP_DURATION = MAX_SKIPS * CUTOFF_INCREASE;
 
+// Songs
 export async function getAllSongs() {
     const songs = await prisma.song.findMany();
     return songs;
@@ -81,6 +82,65 @@ export async function addSongsToSchedule(songs: Song[]) {
 
 	return schedule;
 
+}
+
+// Users
+export async function getUser(id: string) {
+	const user = await prisma.user.findFirst({where: {id: id}});
+	return user;
+}
+
+export async function getOrCreateUserByName(name: string) {
+	let user = await prisma.user.findFirst({where: {name: name}});
+	if (!user) {
+		user = await prisma.user.create({data: {
+			name: name,			
+		}})
+	}
+	return user;
+}
+
+// User performance
+// Returns new number of user skips for today
+export async function addSkip(userID: string) {
+	const config = await prisma.paFConfig.findFirst();
+	if (!config) return null;
+
+	const todaysPerformance = await prisma.userPerformance.findFirst({
+		where: {userId: userID, scheduleIndex: config.songIndex}
+	});
+
+	if (!todaysPerformance) {
+		await prisma.userPerformance.create({data: {
+			userId: userID,
+			scheduleIndex: config.songIndex,
+			skipsUsed: 1
+		}})
+
+		return 1;
+	} else {
+		todaysPerformance.skipsUsed++;
+
+		await prisma.userPerformance.update({
+			where: {id: todaysPerformance.id},
+			data: {skipsUsed: todaysPerformance.skipsUsed}
+		});
+
+		return todaysPerformance.skipsUsed;
+	}
+}
+
+export async function getSkips(userID: string) {
+	const config = await prisma.paFConfig.findFirst();
+	if (!config) return null;
+
+	const todaysPerformance = await prisma.userPerformance.findFirst({
+		where: {userId: userID, scheduleIndex: config.songIndex}
+	});
+
+	if (!todaysPerformance) return 0;
+
+	return todaysPerformance.skipsUsed;
 }
 
 /*

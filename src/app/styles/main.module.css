@@ -119,6 +119,10 @@
     .heroSkill {
         height:80px;
     }
+
+    .terminalSpacer {
+        height:80px;
+    }
 }
 
 @media (max-width: 650px) {

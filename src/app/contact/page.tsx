@@ -13,7 +13,7 @@ export default function Contact() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Replace this with your API call or email logic
+    // Replace this with API call 
     console.log("Form submitted:", form);
     alert("Thank you for your message!");
     setForm({ name: "", email: "", message: "" });
@@ -21,7 +21,7 @@ export default function Contact() {
 
   return (
     <>
-    <PageHeader title="CONTACT ME" parent="/"/>
+    <PageHeader title="CONTACT ME"/>
     <h2 style={{textAlign: "center"}}>Not currently functional!</h2>
     <Card>            
         <form onSubmit={handleSubmit}>

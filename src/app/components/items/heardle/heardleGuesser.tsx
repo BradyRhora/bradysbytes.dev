@@ -1,11 +1,12 @@
 import React, { useState, useRef, useContext } from "react";
 
-import DropdownBox from "../wrappers/dropdownBox";
+import DropdownBox from "../../wrappers/dropdownBox";
 import { PafSkipContext } from "@/app/components/wrappers/contextProviderWrapper";
-import BindSibling, { getGlowSibling } from "../wrappers/siblingBinder";
+import BindSibling, { getGlowSibling } from "../../wrappers/siblingBinder";
 
 import styles from "@/app/styles/paf.module.css"
 import dropdownStyles from "@/app/styles/semiComponents.module.css"
+import { UserContext } from "../../wrappers/mainBody";
 
 export default function HeardleGuesser() {
     type basicSongInfo = {
@@ -14,9 +15,12 @@ export default function HeardleGuesser() {
         artist: string
     }
 
+    const [user,] = useContext(UserContext);
     const [skips, setSkips] = useContext(PafSkipContext);
-    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [songs, setSongs] = useState<basicSongInfo[]>([]);
+
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const searching = useRef(false);
 
     function inputHandler(e: React.ChangeEvent<HTMLInputElement>) {
@@ -41,17 +45,39 @@ export default function HeardleGuesser() {
         }, 400);
     }
 
+    function skip() {
+        if (user) {
+            fetch('/api/skip', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user: user.id })
+            })
+            .then(res => res.json())
+            .then((data: {skips: number}) => {
+                setSkips(data.skips);
+            })
+        } else {
+            setSkips(skips + 1);
+        }
+    }
+
     async function guess(e: React.MouseEvent, id: string) {
         if (e.button == 2) return; // right click
 
         const data = await fetch(`/api/GuessSong?id=${id}`);
         const result = data.status;
         if (result == 204) {
-            alert("GOTTEM!");
-            setSkips(6); // TODO: add message showing score and whatnot
+            setSkips(6); // TODO: hopefully not necessary
         } else if (result == 406) {
-            alert("NOPE!");
-            setSkips(skips+1);
+            skip();
+            setSongs([]);
+            if (inputRef.current) {
+                inputRef.current.value = "";  
+                inputRef.current.classList.add(styles.error);
+                setTimeout(() => {
+                    inputRef.current?.classList.remove(styles.error);
+                }, 1000);
+            }
         }
     }
 
@@ -72,7 +98,7 @@ export default function HeardleGuesser() {
 
     return (
         <>
-            <input placeholder="Search here..." name="searchInput" onChange={inputHandler} className={styles.inputBox} type="text"></input>
+            <input ref={inputRef} placeholder="Search here..." name="searchInput" onChange={inputHandler} className={styles.inputBox} type="text"></input>
             
             <BindSibling hashString="heardle-guesser-dropdown">
                 <DropdownBox className={styles.guessDropdown} forceOpen={searching.current}>

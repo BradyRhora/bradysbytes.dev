@@ -3,11 +3,11 @@
 import React, { useRef, useEffect, useState, useCallback, useContext } from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
 
-import BindSibling from "../wrappers/siblingBinder";
-import { getGlowSibling } from "../wrappers/siblingBinder";
+import BindSibling from "../../wrappers/siblingBinder";
+import { getGlowSibling } from "../../wrappers/siblingBinder";
 
 import styles from "@/app/styles/audioPlayer.module.css";
-import { PafPlayingContext } from "../wrappers/contextProviderWrapper";
+import { PafPlayingContext } from "../../wrappers/contextProviderWrapper";
 
 type AudioPlayerProps = {
     src: string,

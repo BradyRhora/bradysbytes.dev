@@ -1,7 +1,6 @@
 .terminal-container {
     position: relative;
     height: auto;
-    width: 100%;
     margin: 0px;
     padding: 0px;
     z-index: 10;
@@ -40,7 +39,7 @@
 
 .terminal-container.lowered > * {
     position: fixed;
-    width: auto;
+    width: 95%;
     min-width: unset;
     max-width: 98%;
     height: auto;
@@ -51,8 +50,9 @@
 
 /* Small Devices */
 @media (max-width: 600px) {
-    .terminal-container.lowered {
-        display: none;
+    .terminal-container.lowered > * {
+        /*display: none;*/
+        width:90%;
     }
 
     .terminal, .terminal-blur {

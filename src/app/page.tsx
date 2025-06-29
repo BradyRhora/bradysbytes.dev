@@ -9,7 +9,7 @@ import PageHeader from "./components/items/pageHeader";
 export default function Home() {
 	return (
 		<>
-			<PageHeader title="BRADY&apos;S BYTES"/>
+			<PageHeader title="BRADY&apos;S BYTES" root={true}/>
 			<HeroHeader/>
 
 			<div className={styles.navLinks}>
