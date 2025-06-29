@@ -117,7 +117,7 @@ export default function Heardle() {
         return (() => {
             Terminal.instance.skipIntro = false;
         })
-    }, [skips, setSuccess, success])
+    }, [skips, setSuccess, success, setOver])
 
     return (
         <Card className={`${cardStyles.wide} ${styles.container}`}>
