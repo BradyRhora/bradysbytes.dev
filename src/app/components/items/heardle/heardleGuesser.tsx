@@ -99,7 +99,7 @@ export default function HeardleGuesser() {
 
     return (
         <>
-            <input ref={inputRef} placeholder="Search here..." name="searchInput" onChange={inputHandler} className={styles.inputBox} type="text"></input>
+            <input ref={inputRef} placeholder="Search here..." name="searchInput" onChange={inputHandler} className={styles.inputBox} type="text" autoComplete="off"></input>
             
             <BindSibling hashString="heardle-guesser-dropdown">
                 <DropdownBox className={styles.guessDropdown} forceOpen={searching.current}>

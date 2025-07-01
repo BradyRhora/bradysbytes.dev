@@ -20,6 +20,18 @@ export async function getSongByScheduleIndex(index: number) {
 	return scheduledSong.song;
 }
 
+async function reshuffleSongs() {
+	const lastID = (await prisma.schedule.findFirst({orderBy: {id: "desc"}}))?.id || -1;
+	let songIDs = (await prisma.song.findMany()).map(s => s.id);
+	songIDs = shuffle(songIDs);
+	await prisma.schedule.createMany({
+		data: songIDs.map((id, index) => ({
+			id: 1 + index + lastID,
+			songId: id
+		}))
+	});
+}
+
 export async function getTodaysSong() {
     const config = await prisma.paFConfig.findFirst();
 	if (!config) return null;
@@ -31,6 +43,13 @@ export async function getTodaysSong() {
 	if (!lastDay || lastDay < today) {
 		config.currentDate = today;
 		config.songIndex++;
+
+		let song = await getSongByScheduleIndex(config.songIndex);
+		if (!song) {
+			await reshuffleSongs();
+			song = await getSongByScheduleIndex(0);
+		}
+
 		const newSongLength = (await getSongByScheduleIndex(config.songIndex))?.duration || 0;
 		config.todaysStartTime = Math.random() * (newSongLength - MAX_CLIP_DURATION);
 

@@ -70,8 +70,6 @@ export default function Heardle() {
     }
 
     function getCutoffTime(skips : number) {
-        if (success || over) return null;
-
         let time = songData.startTime + (skips * CUTOFF_INCREASE) + 1;
         if (time > songData.startTime + 12) time = songData.startTime + 12;
         return roundToDecimalPlaces(time, 5);
@@ -91,9 +89,10 @@ export default function Heardle() {
     }
 
     function copyResults() {
-        const remaining = MAX_SKIPS - skips;
-        const skipChart = `${"❌".repeat(skips)}${remaining > 0 ? "🎵 " : ""}${"⬛ ".repeat(Math.max(remaining - 1, 0))}`;
-        const results = `Phineas and Ferbdle | Day ${numberToEmoji(songData.dayIndex+1)}\n${skipChart}\n${success ? "🎉 Got it!" : "🔇 Didn't know it..."}`;
+        const remaining = (MAX_SKIPS - skips) + 1;
+        const skipChart = `${"◼️".repeat(skips)}${remaining > 0 ? "🎵 " : ""}${"⬜ ".repeat(Math.max(remaining - 1, 0))}`;
+        const secondsNeeded = Math.min((skips * CUTOFF_INCREASE) + 1, 12);
+        const results = `Phineas and Ferbdle 🔸 Day ${numberToEmoji(songData.dayIndex+1)}\n${skipChart}\n${success ? `🎉 Got it in ${secondsNeeded} second${secondsNeeded == 1 ? "" : "s"}!` : "🔇 Didn't know it..."}`;
         navigator.clipboard.writeText(results);
     }
 
@@ -145,7 +144,7 @@ export default function Heardle() {
             {songData.songPath ? 
             <>
                 <div className={styles.playerContainer}>
-                    <HeardleAudioPlayer src={songData.songPath} startTime={songData.startTime} cutOffTime={getCutoffTime(skips)} maxTime={roundToDecimalPlaces(songData.startTime + ((MAX_SKIPS * CUTOFF_INCREASE) + 1), 5)}/>                
+                    <HeardleAudioPlayer src={songData.songPath} startTime={songData.startTime} cutOffTime={(!success && !over) ? getCutoffTime(skips) : null} maxTime={roundToDecimalPlaces(songData.startTime + ((MAX_SKIPS * CUTOFF_INCREASE) + 1), 5)}/>                
                     {!over && <button id="skipButton" onClick={skip}>{skips < MAX_SKIPS ? `Skip (${MAX_SKIPS - skips})` : `Give Up`}</button>}
                 </div>
 
@@ -171,7 +170,7 @@ export default function Heardle() {
                     
                     <div className={styles.resultsContainer}>
                         { success ? <>
-                        <div>Nice one! You got it with <span style={{color:"green"}}>{skips}</span> skips.</div>
+                        <div>{skips == MAX_SKIPS ? "Close" : "Nice"} one! You got it with <span style={{color:"green"}}>{skips}</span> skips.</div>
                         </>:<>
                         <div>Too bad! Try again tomorrow!</div>
                         </>}                        

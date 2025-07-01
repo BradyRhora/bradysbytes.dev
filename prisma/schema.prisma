@@ -38,7 +38,7 @@ model Song {
   duration      Float
   filePath      String
   date          DateTime?
-  scheduleIndex Schedule?
+  scheduleIndices Schedule[]
   addedAt       DateTime   @default(now())
 }
 
@@ -51,7 +51,7 @@ model PaFConfig {
 
 model Schedule {
   id           Int    @id
-  songId       String @unique
+  songId       String
   song         Song   @relation(fields: [songId], references: [id])
   performances UserPerformance[]
 }
