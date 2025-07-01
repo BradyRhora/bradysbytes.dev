@@ -32,9 +32,7 @@ export async function getTodaysSong() {
 		config.currentDate = today;
 		config.songIndex++;
 		const newSongLength = (await getSongByScheduleIndex(config.songIndex))?.duration || 0;
-		//config.todaysStartTime = roundToDecimalPlaces(Math.random() * (newSongLength) - MAX_CLIP_DURATION, 5);
 		config.todaysStartTime = Math.random() * (newSongLength - MAX_CLIP_DURATION);
-		//console.log(`start time is ${config.todaysStartTime} from duration of ${newSongLength} (${(await getSongByScheduleIndex(config.songIndex))?.duration})`)
 
 		await prisma.paFConfig.update({
 			where: { id: config.id },
@@ -179,17 +177,3 @@ export async function getSkips(userID: string) {
 
 	return todaysPerformance.skipsUsed;
 }
-
-/*
-async function main() {}
-
-main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
-*/

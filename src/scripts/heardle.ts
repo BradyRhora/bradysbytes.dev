@@ -1,27 +1,9 @@
 import fs from 'fs';
 import { IAudioMetadata, parseFile } from 'music-metadata';
-
-//import { roundToDecimalPlaces, shuffle } from './lib/helpers';
 import { addSong, addSongsToSchedule, getAllSongs } from './lib/db';
 
 const SONG_DIR = 'songs/';
 const PUBLIC_SONG_DIR = 'public/' + SONG_DIR;
-//const MAX_CLIP_DURATION : number = 12;
-
-
-/*
-async function updateSong() {
-    config.date = DateToString(new Date(Date.now()));
-
-    const song = await getTodaysSong();
-    const songLength = await readAudioMeta(song.path).then(meta => meta.format.duration);
-
-    let startTime = 0;
-    if (songLength) startTime = roundToDecimalPlaces(Math.random() * (songLength - MAX_CLIP_DURATION), 5);
-
-    config.startTime = startTime;
-}
-*/
 
 export async function readAudioMeta(filePath: string): Promise<IAudioMetadata> {
     const metadata = await parseFile(filePath);

@@ -41,15 +41,15 @@ export default function Heardle() {
 
     const nameInputRef = useRef<HTMLInputElement>(null);
 
-    /*
     function isSafari() {
+        if (typeof navigator === "undefined" || !navigator.userAgent) return false;
+
         const ua = navigator.userAgent;
         return (
             /Safari/.test(ua) &&
             !/Chrome|CriOS|Chromium|Android/.test(ua)
         );
     }
-    */
    
     function skip() {
         if (user) {
@@ -70,13 +70,30 @@ export default function Heardle() {
     }
 
     function getCutoffTime(skips : number) {
+        if (success || over) return null;
+
         let time = songData.startTime + (skips * CUTOFF_INCREASE) + 1;
         if (time > songData.startTime + 12) time = songData.startTime + 12;
         return roundToDecimalPlaces(time, 5);
     }
 
+    function numberToEmoji(num : number) {
+        const dict = {"1":"1️⃣", "2":"1️⃣", "3":"3️⃣", "4":"4️⃣", "5":"5️⃣", "6":"6️⃣", "7":"7️⃣", "8":"8️⃣", "9":"9️⃣", "0":"0️⃣"};
+
+        const nStr = num.toString();
+        let string = "";
+        for (let i = 0; i < nStr.length; i++) {
+            const key = nStr.charAt(i) as keyof typeof dict;
+            string += dict[key];
+        }
+
+        return string;
+    }
+
     function copyResults() {
-        const results = `🎧 Phineas and Ferbdle - Day ${songData.dayIndex+1} Results 🎧\n\nSkips needed: ${skips}\n${success ? "Got it! ✅" : "Didn't know it... ❌"}`;
+        const remaining = MAX_SKIPS - skips;
+        const skipChart = `${"❌".repeat(skips)}${remaining > 0 ? "🎵 " : ""}${"⬛ ".repeat(Math.max(remaining - 1, 0))}`;
+        const results = `Phineas and Ferbdle | Day ${numberToEmoji(songData.dayIndex+1)}\n${skipChart}\n${success ? "🎉 Got it!" : "🔇 Didn't know it..."}`;
         navigator.clipboard.writeText(results);
     }
 
@@ -121,9 +138,9 @@ export default function Heardle() {
 
     return (
         <Card className={`${cardStyles.wide} ${styles.container}`}>
-            {/* isSafari() && 
+            { isSafari() && 
                 <p style={{marginTop:0,textAlign:'center', fontSize:12}}>Some Safari versions may have issues with playback. Update or try another browser if you experience issues!</p>
-            bugged */} 
+            } 
 
             {songData.songPath ? 
             <>
