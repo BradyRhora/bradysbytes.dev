@@ -1,13 +1,15 @@
 "use client";
 // this file is a bit messy....
-import React, { useRef, useEffect, useState, useCallback, useContext } from "react";
-import { FaPlay, FaPause } from "react-icons/fa";
+import React, { useRef, useEffect, useState, useCallback, useContext, useLayoutEffect } from "react";
+import { FaPlay, FaPause, FaVolumeUp } from "react-icons/fa";
 
 import BindSibling from "../../wrappers/siblingBinder";
 import { getGlowSibling } from "../../wrappers/siblingBinder";
+import { PafPlayingContext } from "../../wrappers/contextProviderWrapper";
 
 import styles from "@/app/styles/audioPlayer.module.css";
-import { PafPlayingContext } from "../../wrappers/contextProviderWrapper";
+import Slider from "./slider";
+import { getCookie, setCookie } from "@/scripts/lib/helpers";
 
 type AudioPlayerProps = {
     src: string,
@@ -19,14 +21,16 @@ type AudioPlayerProps = {
 export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cutOffTime = null} : AudioPlayerProps) {
     const [glowSibling, setGlowSibling] = useState<HTMLElement|null>(null);
     const [safetyInterval, setSafetyInterval] = useState<NodeJS.Timeout|null>();
+    const [volume, setVolume] = useState(1);
+    const [currentTimeString, setCurrentTimeString] = useState("0:00");
 
     const cursorDraggingRef = useRef(false);
     const endTime = useRef(maxTime);
-
     const audioRef = useRef<HTMLAudioElement>(null);
     const scrubberRef = useRef<HTMLDivElement>(null);
     const cursorRef = useRef<HTMLDivElement>(null);
     const cutOffRef = useRef<HTMLDivElement>(null);
+    const cutOffTimeRef = useRef(cutOffTime);
 
     const [isPlaying, setIsPlaying] = useContext(PafPlayingContext);
 
@@ -38,7 +42,7 @@ export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cut
         if (maxTime !== 0) end = maxTime;
         const percent = ((time - startTime) / (end - startTime)) * 100;
         return percent;
-    }, [audioRef, maxTime, startTime]);
+    }, [maxTime, startTime]);
 
     // Methods
     let ensureTimeInBounds = useCallback(() => {}, []); // Placeholder for the initial definition
@@ -75,7 +79,7 @@ export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cut
                 if (!safetyInterval) setSafetyInterval(setInterval(doubleCheckInBounds, 100)); // Check every 300ms to ensure time is in bounds
             }
         }
-    }, [audioRef, glowSibling, startTime, cutOffTime, maxTime, ensureTimeInBounds, safetyInterval, setIsPlaying]);
+    }, [glowSibling, startTime, cutOffTime, maxTime, ensureTimeInBounds, safetyInterval, setIsPlaying]);
 
     const setCursorPos = useCallback((time: number) => {
         if (cursorRef.current && audioRef.current) {
@@ -87,7 +91,7 @@ export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cut
             cursorRef.current.style.left = `calc(${percent}% - ${cursorWidth/2}px)`;
             if (glowCursor) glowCursor.style.left = cursorRef.current.style.left;
         }
-    }, [cursorRef, glowSibling, audioRef, timeToRelativePercentage]);
+    }, [cursorRef, glowSibling, timeToRelativePercentage]);
     
     ensureTimeInBounds = useCallback(() => {        
         const audio = audioRef.current;
@@ -104,9 +108,13 @@ export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cut
                 audio.currentTime = time;
             } 
             setCursorPos(time);
+            const relTime = time - startTime;
+            const mins = Math.floor(relTime / 60);
+            const secs = Math.floor(relTime - mins*60)
+            setCurrentTimeString(`${mins}:${secs.toString().padStart(2,"0")}`)
             
         }
-    }, [audioRef, maxTime, toggleAudio, setCursorPos]);
+    }, [startTime, maxTime, toggleAudio, setCursorPos]);
 
 
     // Mouse Callbacks
@@ -126,7 +134,7 @@ export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cut
 
         audio.currentTime = time;
         ensureTimeInBounds();
-    }, [scrubberRef, audioRef, ensureTimeInBounds, startTime, maxTime]);
+    }, [scrubberRef, ensureTimeInBounds, startTime, maxTime]);
 
     const updateScrubberCursorOnDrag = useCallback((e: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
         moveCursorToMouse(e as React.MouseEvent<HTMLDivElement>);
@@ -157,32 +165,30 @@ export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cut
     function audioEndHandler() {
         toggleAudio(true);
     }
-    
 
     useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
         function handleLoadedMetadata() {
             if (audioRef.current)
                 audioRef.current.currentTime = startTime;
         }
+        
+        audio.addEventListener("loadedmetadata", handleLoadedMetadata);
 
+        return (() => {            
+            if (audio) audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        })
+    }, [startTime]);
+
+    useEffect(() => {
         if (audioRef.current) {
-            if (endTime.current == 0) endTime.current = audioRef.current.duration;
-            audioRef.current.volume = 0.1; // TODO: Remove this when volume slider created
-            
-
-            audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
-
-            const glowSib = getGlowSibling(audioRef.current.parentElement as HTMLElement);
-            if (glowSib) {
-                setGlowSibling(glowSib);
-            } else {
-                console.warn("No glow sibling found for audio player.");
-            }
-
+            // Set initial cut-off cursor position
             if (cutOffTime && cutOffRef.current) {
                 const percentage = timeToRelativePercentage(cutOffTime) + "%";
-                if (glowSib) {
-                    const glowCutOff = glowSib.querySelector(`.${styles.cutOff}`) as HTMLElement;
+                if (glowSibling) {
+                    const glowCutOff = glowSibling.querySelector(`.${styles.cutOff}`) as HTMLElement;
                     if (glowCutOff) {
                         glowCutOff.style.left = percentage;
                     }
@@ -191,32 +197,64 @@ export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cut
             }
         }
         
-        const audio = audioRef.current;
         document.addEventListener("mouseup", releaseCursor);
 
         return () => {
-            document.removeEventListener("mouseup", releaseCursor);
-            if (audio) audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-  
+            document.removeEventListener("mouseup", releaseCursor);  
         }
-    }, [audioRef, releaseCursor, startTime, cutOffTime, cutOffRef, timeToRelativePercentage, ensureTimeInBounds]);
+    }, [cutOffTime, glowSibling, releaseCursor, timeToRelativePercentage, ensureTimeInBounds]);
 
 
-    const cutOffTimeRef = useRef(cutOffTime);
     useEffect(() => {
         cutOffTimeRef.current = cutOffTime;
         ensureTimeInBounds();
     }, [cutOffTime, ensureTimeInBounds]);
     
+    const didMount = useRef(false);
+    useEffect(() => {
+        if (!didMount.current) {
+            didMount.current = true;
+            return;
+        }
+
+        if (audioRef.current)
+            audioRef.current.volume = volume;
+
+        setCookie("volume", volume.toString());
+    }, [volume])
+
+    useLayoutEffect(() => {        
+        // Set volume via cookie
+        const volCookie = getCookie("volume");
+        if (volCookie) setVolume(Number(volCookie));
+
+        if (!audioRef.current) return;
+
+        // Ensure end time exists
+        if (endTime.current == 0) endTime.current = audioRef.current.duration;
+
+        // Retrieve glow sibling
+        const glowSib = getGlowSibling(audioRef.current.parentElement as HTMLElement);
+        if (glowSib) {
+            setGlowSibling(glowSib);
+        } else {
+            console.warn("No glow sibling found for audio player.");
+        }
+    }, [])
+
     return (
         <BindSibling hashString={`player-${src}`}>
             <div className={styles.audioPlayer}>
                 <audio ref={audioRef} src={src} onTimeUpdate={ensureTimeInBounds} onEnded={audioEndHandler}></audio>
-                <div className={styles.audioControls}>
-                    <div onMouseDown={pauseButtonHandleClick} className={`${styles.playButton}`}>
-                        {isPlaying ? <FaPause/> : <FaPlay/>}
-                    </div>
-                    <div className={styles.scrubberContainer}>
+
+        
+                <div className={styles.audioContainer}>
+                    <div className={styles.audioControls}>            
+
+                        <div onMouseDown={pauseButtonHandleClick} className={`${styles.playButton}`}>
+                            {isPlaying ? <FaPause/> : <FaPlay/>}
+                        </div>
+
                         <div ref={scrubberRef} onMouseDown={scrubberMouseDownHandler} className={styles.scrubber}>
                             <div ref={cursorRef} className={`${styles.cursor} ${styles.interactable}`}></div>
                             {cutOffTime && (
@@ -227,7 +265,11 @@ export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cut
                               ></div>
                             )}
                         </div>
-                        {/* TODO: Needs ?time display? and volume slider */}
+                    </div>
+
+                    <div className={styles.timeVolume}>
+                        <div style={{marginLeft:4, fontSize: ".7em"}}>{currentTimeString}/0:09</div>
+                        <div className={styles.volumeContainer}><FaVolumeUp/><Slider value={volume} setValue={setVolume} max={1}/></div>
                     </div>
                 </div>
             </div>

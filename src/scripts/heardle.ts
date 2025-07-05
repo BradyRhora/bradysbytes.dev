@@ -2,8 +2,8 @@ import fs from 'fs';
 import { IAudioMetadata, parseFile } from 'music-metadata';
 import { addSong, addSongsToSchedule, getAllSongs } from './lib/db';
 
-const SONG_DIR = 'songs/';
-const PUBLIC_SONG_DIR = 'public/' + SONG_DIR;
+const SONG_DIR = '/songs/';
+const PUBLIC_SONG_DIR = 'public' + SONG_DIR;
 
 export async function readAudioMeta(filePath: string): Promise<IAudioMetadata> {
     const metadata = await parseFile(filePath);

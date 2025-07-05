@@ -4,7 +4,6 @@
     max-width: 500px;
     margin-left:auto;
     margin-right:auto;
-    height:100px;
     
     /* Block text highlighting */
     -webkit-touch-callout: none; /* iOS Safari */
@@ -14,12 +13,15 @@
     user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera, and Edge */
 }
 
+:global(.glow) .audioPlayer {
+    background-color: var(--term-bg-color);
+}
+
 .audioControls {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    height:100%;
 }
 
 .playButton {
@@ -34,7 +36,7 @@
 
 }
 
-.scrubberContainer {
+.audioContainer {
     width: 100%;
     height: 100%;
     display:flex;
@@ -43,6 +45,7 @@
 }
 
 .scrubber {
+    flex: 100;
     border-radius:13px;
     overflow: hidden;
 
@@ -73,6 +76,24 @@
     top:-100%;
     height: 100%;
     background-color: red;
+}
+
+.timeVolume {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 30px;
+    width: 100%;
+    padding:5px;
+    padding-right:10px;
+}
+
+.volumeContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .interactable:hover {

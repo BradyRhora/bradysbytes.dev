@@ -1,7 +1,7 @@
 import Heardle from '@/app/components/items/heardle/heardle'
 
-import PageHeader from '../components/items/pageHeader';
-import StyleDropDown from '../components/items/styleDropDown';
+import PageHeader from '../../components/items/pageHeader';
+import StyleDropDown from '../../components/items/styleDropDown';
 
 export const metadata = {
     title: "Phineas and Ferbdle",

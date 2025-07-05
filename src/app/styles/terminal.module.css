@@ -45,13 +45,14 @@
     height: auto;
     bottom:20px;
     left:20px;
+    margin-bottom:1px;
 }
 
 
 /* Small Devices */
 @media (max-width: 600px) {
     .terminal-container.lowered > * {
-        /*display: none;*/
+        display: none;
         width:90%;
     }
 

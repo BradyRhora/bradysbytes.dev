@@ -75,8 +75,12 @@ export default function Heardle() {
         return roundToDecimalPlaces(time, 5);
     }
 
+    function getMaxTimeFromStart(startTime: number) {
+        return roundToDecimalPlaces(startTime + ((MAX_SKIPS * CUTOFF_INCREASE) + 1), 5)
+    }
+
     function numberToEmoji(num : number) {
-        const dict = {"1":"1️⃣", "2":"1️⃣", "3":"3️⃣", "4":"4️⃣", "5":"5️⃣", "6":"6️⃣", "7":"7️⃣", "8":"8️⃣", "9":"9️⃣", "0":"0️⃣"};
+        const dict = {"1":"1️⃣", "2":"1️⃣", "3":"3️⃣", "4":"4️⃣", "5":"5️⃣", "6":"6️⃣", "7":"7️⃣", "8":"8️⃣", "9":"9️⃣", "0":"0️⃣", ".": "."};
 
         const nStr = num.toString();
         let string = "";
@@ -90,9 +94,9 @@ export default function Heardle() {
 
     function copyResults() {
         const remaining = (MAX_SKIPS - skips) + 1;
-        const skipChart = `${"◼️".repeat(skips)}${remaining > 0 ? "🎵 " : ""}${"⬜ ".repeat(Math.max(remaining - 1, 0))}`;
+        const skipChart = `${"◼️".repeat(skips)}${remaining > 0 ? `${success ? "✅" : "❌ "} ` : ""}${"⬜ ".repeat(Math.max(remaining - 1, 0))}`;
         const secondsNeeded = Math.min((skips * CUTOFF_INCREASE) + 1, 12);
-        const results = `Phineas and Ferbdle 🔸 Day ${numberToEmoji(songData.dayIndex+1)}\n${skipChart}\n${success ? `🎉 Got it in ${secondsNeeded} second${secondsNeeded == 1 ? "" : "s"}!` : "🔇 Didn't know it..."}`;
+        const results = `Phineas and Ferbdle 🔸 ${numberToEmoji(songData.dayIndex+1)}\n${skipChart}\n${success ? `🕒 In ${secondsNeeded}s` : ""}`;
         navigator.clipboard.writeText(results);
     }
 
@@ -138,13 +142,13 @@ export default function Heardle() {
     return (
         <Card className={`${cardStyles.wide} ${styles.container}`}>
             { isSafari() && 
-                <p style={{marginTop:0,textAlign:'center', fontSize:12}}>Some Safari versions may have issues with playback. Update or try another browser if you experience issues!</p>
+                <p style={{marginLeft: 15, marginRight: 15, marginTop:0, marginBottom:0, textAlign:'center', fontSize:"0.5em"}}>Some Safari versions may have issues with playback. Update or try another browser if you experience issues!</p>
             } 
 
             {songData.songPath ? 
             <>
                 <div className={styles.playerContainer}>
-                    <HeardleAudioPlayer src={songData.songPath} startTime={songData.startTime} cutOffTime={(!success && !over) ? getCutoffTime(skips) : null} maxTime={roundToDecimalPlaces(songData.startTime + ((MAX_SKIPS * CUTOFF_INCREASE) + 1), 5)}/>                
+                    <HeardleAudioPlayer src={songData.songPath} startTime={songData.startTime} cutOffTime={(!success && !over) ? getCutoffTime(skips) : null} maxTime={getMaxTimeFromStart(songData.startTime)}/>                
                     {!over && <button id="skipButton" onClick={skip}>{skips < MAX_SKIPS ? `Skip (${MAX_SKIPS - skips})` : `Give Up`}</button>}
                 </div>
 

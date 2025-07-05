@@ -105,8 +105,7 @@ export default function HeardleGuesser() {
                 <DropdownBox className={styles.guessDropdown} forceOpen={searching.current}>
                     {songs?.length > 0 && songs.map((song) => (
                         <div key={song.id} className={styles.dropdownItem} onMouseUp={async (e) => await guess(e, song.id)}>
-                            <span>{song.title}</span>
-                            <span className={styles.artist}>{song.artist}</span>
+                            <span>{song.title} - {song.artist}</span>
                         </div>
                     ))}
                 </DropdownBox>
