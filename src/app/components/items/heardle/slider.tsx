@@ -14,13 +14,18 @@ export default function Slider({value, setValue, max, min = 0} : SliderProps) {
     
     
     function followMouse() {
-        console.log("guhhnn");
-        const handleMouseMove = (event: MouseEvent) => {
+        const handleMouseMove = (event: MouseEvent | TouchEvent) => {
             const bar = barRef.current;
             if (!bar) return;
 
             const rect = bar.getBoundingClientRect();
-            const x = event.clientX - rect.left;
+            let x = 0;
+
+            if (event.type.startsWith("touch"))
+                x = (event as TouchEvent).touches[0].clientX - rect.left;
+            else 
+                x = (event as MouseEvent).clientX - rect.left;
+
             const percent = Math.min(1, Math.max(0, (x / bar.clientWidth)));
 
             const newValue = Math.round((min + (max - min) * percent) * 100) / 100;
@@ -28,10 +33,14 @@ export default function Slider({value, setValue, max, min = 0} : SliderProps) {
         };
 
         const handleMouseUp = () => {
+            document.removeEventListener("touchmove", handleMouseMove);
+            document.removeEventListener("touchup", handleMouseUp);
             document.removeEventListener("mousemove", handleMouseMove);
             document.removeEventListener("mouseup", handleMouseUp);
         };
 
+        document.addEventListener("touchmove", handleMouseMove);
+        document.addEventListener("touchup", handleMouseUp);
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
 
