@@ -33,14 +33,15 @@ export default function Slider({value, setValue, max, min = 0} : SliderProps) {
         };
 
         const handleMouseUp = () => {
+            console.log('ouuuu');
             document.removeEventListener("touchmove", handleMouseMove);
-            document.removeEventListener("touchup", handleMouseUp);
+            document.removeEventListener("touchend", handleMouseUp);
             document.removeEventListener("mousemove", handleMouseMove);
             document.removeEventListener("mouseup", handleMouseUp);
         };
 
         document.addEventListener("touchmove", handleMouseMove);
-        document.addEventListener("touchup", handleMouseUp);
+        document.addEventListener("touchend", handleMouseUp);
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
 
