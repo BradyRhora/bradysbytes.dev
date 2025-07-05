@@ -14,6 +14,7 @@ export default function Slider({value, setValue, max, min = 0} : SliderProps) {
     
     
     function followMouse() {
+        console.log("guhhnn");
         const handleMouseMove = (event: MouseEvent) => {
             const bar = barRef.current;
             if (!bar) return;
@@ -51,9 +52,9 @@ export default function Slider({value, setValue, max, min = 0} : SliderProps) {
     }, [value, max, min])
 
     return (
-        <div className={styles.sliderContainer} onMouseDown={followMouse}>
+        <div className={styles.sliderContainer} onTouchStart={followMouse} onMouseDown={followMouse}>
             <div ref={barRef} className={styles.sliderBar}></div>
-            <div ref={cursorRef} className={`volCursor ${styles.sliderCursor}`} onMouseDown={followMouse}></div>
+            <div ref={cursorRef} className={`volCursor ${styles.sliderCursor}`} onTouchStart={followMouse} onMouseDown={followMouse}></div>
         </div>
     )
 }
