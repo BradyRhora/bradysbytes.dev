@@ -176,8 +176,9 @@
 
 /* Leaderboard */
 .leaderboardContainer {
-    margin: 40px;
+    margin: 30px;
     height: unset;
+    width:600px;
 }
 
 .leaderboardContainer > h3 {
