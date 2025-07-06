@@ -7,6 +7,12 @@
     border: unset;
 }
 
+.pageContainer {
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+}
+
 :global(.glow) .container {
     background-color: unset;
 }
@@ -158,6 +164,7 @@
 
 /* Results */
 .resultsContainer {
+    margin:10px;
     text-align: center;
 }
 
@@ -167,9 +174,39 @@
     padding:0px;
 }
 
+/* Leaderboard */
+.leaderboardContainer {
+    margin: 40px;
+    height: unset;
+}
+
+.leaderboardContainer > h3 {
+    font-size:1.2em;
+    text-align:center;
+}
+
+.leaderboardContainer ol {
+    padding:0px;
+}
+
+.leaderboardContainer li div {
+    word-break: break-all;
+}
+
+.leaderboardContainer li {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
 @media (max-width: 800px) {
     .container {
         padding-bottom:0px;
+    }
+
+    .pageContainer {
+        flex-direction:column;
     }
 
     .todays-song {
@@ -181,7 +218,6 @@
     .album-cover {
         margin:10px;
     }
-
     
     .playerContainer {
         flex-direction: column;
@@ -204,5 +240,10 @@
     .guessDropdown {
         max-width: 100%;
         width: 100%;
+    }
+
+    .leaderboardContainer {
+        margin: 10px;
+        width:auto;
     }
 }

@@ -23,7 +23,7 @@ export default function MainBody({children,}: Readonly<{children: React.ReactNod
         async function loadUserCookie() {
             const userID = getCookie("user");
             if (userID) {
-                const res = await fetch("/api/GetUser?id="+userID)
+                const res = await fetch("/api/User?id="+userID)
                 const userData = await res.json();
                 
                 setUser(userData);
@@ -44,7 +44,7 @@ export default function MainBody({children,}: Readonly<{children: React.ReactNod
         <>
         <UserContext.Provider value={[user, setUser]}>
             <ContextProvider>
-                <GlowWrapper> {/* <-- Sh*t gets FREAKY in here... */}
+                <GlowWrapper>
                     {children}
                     <div className={styles.terminalSpacer}></div>
                 </GlowWrapper>

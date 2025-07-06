@@ -91,7 +91,7 @@ export default function HeardleGuesser() {
 
         searching.current = true;
 
-        const res = await fetch(`/api/GetSongs?input=${input}`);
+        const res = await fetch(`/api/Songs?input=${input}`);
         const songs = await res.json();
         if (songs.songData)
             setSongs(songs.songData);
