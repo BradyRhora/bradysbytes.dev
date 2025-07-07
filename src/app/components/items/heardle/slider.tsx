@@ -33,7 +33,6 @@ export default function Slider({value, setValue, max, min = 0} : SliderProps) {
         };
 
         const handleMouseUp = () => {
-            console.log('ouuuu');
             document.removeEventListener("touchmove", handleMouseMove);
             document.removeEventListener("touchend", handleMouseUp);
             document.removeEventListener("mousemove", handleMouseMove);
@@ -54,7 +53,8 @@ export default function Slider({value, setValue, max, min = 0} : SliderProps) {
         let percent =  (value - min) / (max - min);
         percent = Math.min(1, Math.max(0, percent)) * 100;
 
-        const left = `calc(${percent}% - ${cursor.getBoundingClientRect().width/2}px)`;
+        const halfWidth = cursor.getBoundingClientRect().width ? cursor.getBoundingClientRect().width/2 : 7.5;
+        const left = `calc(${percent}% - ${halfWidth}px)`;
         cursor.style.left = left;
         const glowParent = getGlowSibling(cursor);
         const glow = glowParent?.getElementsByClassName("volCursor")[0] as HTMLElement;

@@ -12,7 +12,7 @@ import { UserContext } from "../../wrappers/mainBody";
 import cardStyles from "@/app/styles/card.module.css";
 import styles from "@/app/styles/paf.module.css";
 import HeardleGuesser from "./heardleGuesser";
-import { roundToDecimalPlaces, setCookie } from "@/scripts/lib/helpers";
+import { numberToEmoji, roundToDecimalPlaces, setCookie } from "@/scripts/lib/helpers";
 import { CUTOFF_INCREASE, MAX_SKIPS } from "@/scripts/lib/db";
 
 import { User } from "@/../generated/prisma";
@@ -60,7 +60,7 @@ export default function Heardle() {
             })
             .then(res => res.json())
             .then((data: {skips: number}) => {
-                if (skips + 1 > MAX_SKIPS) setOver(true);
+                if (skips >= MAX_SKIPS) setOver(true);
                 else setSkips(data.skips);
             })
         } else {
@@ -77,19 +77,6 @@ export default function Heardle() {
 
     function getMaxTimeFromStart(startTime: number) {
         return roundToDecimalPlaces(startTime + ((MAX_SKIPS * CUTOFF_INCREASE) + 1), 5)
-    }
-
-    function numberToEmoji(num : number) {
-        const dict = {"1":"1️⃣", "2":"1️⃣", "3":"3️⃣", "4":"4️⃣", "5":"5️⃣", "6":"6️⃣", "7":"7️⃣", "8":"8️⃣", "9":"9️⃣", "0":"0️⃣", ".": "."};
-
-        const nStr = num.toString();
-        let string = "";
-        for (let i = 0; i < nStr.length; i++) {
-            const key = nStr.charAt(i) as keyof typeof dict;
-            string += dict[key];
-        }
-
-        return string;
     }
 
     function copyResults() {

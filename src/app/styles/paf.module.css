@@ -17,6 +17,10 @@
     background-color: unset;
 }
 
+.container svg, .container button, .container div {
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
 /* Answer */
 .todays-song {
     border: 3px solid var(--term-text-color);
@@ -179,6 +183,7 @@
     margin: 30px;
     height: unset;
     width:600px;
+    text-align:center;
 }
 
 .leaderboardContainer > h3 {
@@ -188,6 +193,8 @@
 
 .leaderboardContainer ol {
     padding:0px;
+    margin:0px;
+    margin-top:10px;
 }
 
 .leaderboardContainer li div {

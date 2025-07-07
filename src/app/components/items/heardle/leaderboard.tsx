@@ -16,7 +16,6 @@ export default function Leaderboard() {
         fetch('/api/Leaderboard')
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if (data)
                     setLeaderboard(data);
             });
@@ -25,14 +24,14 @@ export default function Leaderboard() {
     return (
         <Card className={styles.leaderboardContainer}>
             <h3>Today&apos;s Leaderboard</h3>
-            {leaderboard ? 
+            {leaderboard && leaderboard.length > 0 ? 
             <ol>
             {leaderboard.map((performance, index) => {
-                return (<li key={index}><div style={{marginRight: 50}}>{performance.success ? index == 0 && <FaCrown/> : <FaSkull/>} {performance.user.name}</div> {performance.skipsUsed} skips</li>);
+                return (<li key={index}><div style={{marginRight: 50}}>{index+1}. {performance.success ? index == 0 && <FaCrown fill="gold" style={{paddingTop: 5}}/> : <FaSkull fill="red" style={{paddingTop: 5}}/>}{performance.user.name}</div> {Math.min(5, performance.skipsUsed)} skips</li>);
             })}
             </ol>
             :
-            <span>No one yet! You could be the first!</span>}
+            <span style={{fontSize:".7em"}}>No one yet! You could be the first!</span>}
         </Card>
     )
 }

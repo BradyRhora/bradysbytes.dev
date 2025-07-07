@@ -3,6 +3,12 @@
 .dropdownBox{
     overflow-x: hidden;
     border: solid 1px var(--term-text-color);
+    transition: background-color 0.2s ease-in-out;
+}
+
+.dropdownBox:hover svg {
+    fill: var(--term-bg-obj-color);
+    transition: fill 0.2s ease-in-out;
 }
 
 
@@ -64,7 +70,6 @@
 
 .styleSelector:hover {
     color: var(--term-bg-color);
-    transition: color 0.2s ease-in-out;
 }
 
 :global(.glow) .styleSelector {

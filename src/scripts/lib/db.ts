@@ -137,11 +137,12 @@ export async function addSkip(userID: string) {
 		return 1;
 	} else {
 		todaysPerformance.skipsUsed++;
-		if (todaysPerformance.skipsUsed > 5) return 5;
 
 		await prisma.userPerformance.update({
 			where: {id: todaysPerformance.id},
-			data: {skipsUsed: todaysPerformance.skipsUsed}
+			data: {
+				skipsUsed: todaysPerformance.skipsUsed
+			}
 		});
 
 		return todaysPerformance.skipsUsed;
@@ -203,12 +204,12 @@ export async function getTodaysLeaderboard() {
 
 	const leaderboard = await prisma.userPerformance.findMany(
 		{
-			where:   {scheduleIndex: config.songIndex},
+			where:   {scheduleIndex: config.songIndex, OR: [{success:true}, {skipsUsed: {gt: 5}}]},
 			include: {user: true},
 			orderBy: [{success: "desc"}, {skipsUsed: "asc"}, {createdAt: "asc"}],
 			take:5
 		}
 	)
-	console.log(leaderboard);
+
 	return leaderboard;
 }

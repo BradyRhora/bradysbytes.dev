@@ -41,3 +41,16 @@ export function roundToDecimalPlaces(value: number, decimals : number) {
     const factor = Math.pow(10, decimals);
     return Math.round(value * factor) / factor;
 }
+
+export function numberToEmoji(num : number) {
+    const dict = {"1":"1️⃣", "2":"1️⃣", "3":"3️⃣", "4":"4️⃣", "5":"5️⃣", "6":"6️⃣", "7":"7️⃣", "8":"8️⃣", "9":"9️⃣", "0":"0️⃣", ".": "."};
+
+    const nStr = num.toString();
+    let string = "";
+    for (let i = 0; i < nStr.length; i++) {
+        const key = nStr.charAt(i) as keyof typeof dict;
+        string += dict[key];
+    }
+
+    return string;
+}
