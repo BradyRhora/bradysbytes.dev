@@ -271,7 +271,7 @@ export async function showIntro() {
         {type: CLEAR, time:0},
         {type: PRINT, text:"ENTER LOGIN\n", time:0},
         {type: PRINT, text:"USER: " , time: .6},
-        {type: TYPE, text: terminal.user + "\n", time: 700},
+        {type: TYPE, text: terminal.user + "\n", time: .7},
         {type: PRINT, text:"PASS: " , time: .5},
         {type: TYPE, text: pass + "\n", time: (pass.length * .05)},
         {type: PRINT, text: "ACCESS GRANTED.", time: 2},
