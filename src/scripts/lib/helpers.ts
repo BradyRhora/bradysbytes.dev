@@ -54,3 +54,9 @@ export function numberToEmoji(num : number) {
 
     return string;
 }
+
+export function getEncodedFilePath(pathString: string) {
+    let secs = pathString.split('/');
+    secs = secs.map(s => encodeURIComponent(s));
+    return secs.join('/');
+}
