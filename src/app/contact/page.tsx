@@ -21,7 +21,7 @@ export default function Contact() {
 
   return (
     <>
-    <PageHeader title="CONTACT ME"/>
+    <PageHeader title="CONTACT"/>
     <h2 style={{textAlign: "center"}}>Not currently functional!</h2>
     <Card>            
         <form onSubmit={handleSubmit}>
