@@ -9,7 +9,7 @@ import { PafPlayingContext } from "../../wrappers/contextProviderWrapper";
 
 import styles from "@/app/styles/audioPlayer.module.css";
 import Slider from "./slider";
-import { getCookie, setCookie } from "@/scripts/lib/helpers";
+import { getCookie, getEncodedFilePath, setCookie } from "@/scripts/lib/helpers";
 
 type AudioPlayerProps = {
     src: string,
@@ -245,7 +245,7 @@ export default function HeardleAudioPlayer({src, startTime = 0, maxTime = 0, cut
     return (
         <BindSibling hashString={`player-${src}`}>
             <div className={styles.audioPlayer}>
-                <audio ref={audioRef} src={src} onTimeUpdate={ensureTimeInBounds} onEnded={audioEndHandler}></audio>
+                <audio ref={audioRef} src={getEncodedFilePath(src)} onTimeUpdate={ensureTimeInBounds} onEnded={audioEndHandler}></audio>
 
         
                 <div className={styles.audioContainer}>
