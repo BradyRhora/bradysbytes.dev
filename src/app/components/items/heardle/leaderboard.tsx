@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { FaCrown, FaSkull } from "react-icons/fa";
+import { FaCrown, FaSkull, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 import { User, UserPerformance } from "../../../../../generated/prisma";
 import { Card } from "../cards";
@@ -11,19 +11,33 @@ import styles from "@/app/styles/paf.module.css"
 export default function Leaderboard() {
     type LeaderboardEntry = UserPerformance & { user: User };
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]|null>(null);
+    const [offset, setOffset] = useState(0);
+    const [title, setTitle] = useState("Today");
+
+    function offsetBack() {
+        setOffset(offset+1);
+    }
+
+    function offsetForward() {
+        if (offset == 0) return;
+        setOffset(offset-1);
+    }
 
     useEffect(() => {
-        fetch('/api/Leaderboard')
+        if (offset == 0) setTitle("Today");
+        else if (offset == 1) setTitle("Yesterday");
+        else setTitle(`${offset} Days Ago`)
+        fetch(`/api/Leaderboard?offset=${offset}`)
             .then(res => res.json())
             .then(data => {
                 if (data)
                     setLeaderboard(data);
             });
-    }, []);
+    }, [offset]);
 
     return (
         <Card className={styles.leaderboardContainer}>
-            <h3>Today&apos;s Leaderboard</h3>
+            <h3>{title}&apos;s Leaderboard</h3>
             {leaderboard && leaderboard.length > 0 ? 
             <ol>
             {leaderboard.map((performance, index) => {
@@ -32,6 +46,10 @@ export default function Leaderboard() {
             </ol>
             :
             <span style={{fontSize:".7em"}}>No one yet! You could be the first!</span>}
+            <div className={styles.offsetControls}>
+                <FaArrowLeft onClick={offsetBack}></FaArrowLeft>
+                <FaArrowRight onClick={offsetForward}></FaArrowRight>
+            </div>
         </Card>
     )
 }

@@ -12,7 +12,7 @@ import { UserContext } from "../../wrappers/mainBody";
 import cardStyles from "@/app/styles/card.module.css";
 import styles from "@/app/styles/paf.module.css";
 import HeardleGuesser from "./heardleGuesser";
-import { numberToEmoji, roundToDecimalPlaces, setCookie } from "@/scripts/lib/helpers";
+import { getEncodedFilePath, numberToEmoji, roundToDecimalPlaces, setCookie } from "@/scripts/lib/helpers";
 import { CUTOFF_INCREASE, MAX_SKIPS } from "@/scripts/lib/db";
 
 import { User } from "@/../generated/prisma";
@@ -149,7 +149,7 @@ export default function Heardle() {
                                 <h2>{songData.meta.title}</h2>
                                 <span><i>{songData.meta.artist} {songData.meta.date && `- ${songData.meta.date.slice(0,4)}`}</i></span>
                                 <audio className={styles["song-info-player"]} controls>
-                                    <source src={songData.songPath} type="audio/mpeg"/>
+                                    <source src={getEncodedFilePath(songData.songPath)} type="audio/mpeg"/>
                                 </audio>
                                 </>
                             }

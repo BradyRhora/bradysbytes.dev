@@ -198,6 +198,22 @@ export async function getSkips(userID: string) {
 	return todaysPerformance.skipsUsed;
 }
 
+export async function getLeaderboardFromOffset(offset: number) {
+	const config = await prisma.paFConfig.findFirst();
+	if (!config) return null;
+
+	const leaderboard = await prisma.userPerformance.findMany(
+		{
+			where:   {scheduleIndex: config.songIndex - offset, OR: [{success:true}, {skipsUsed: {gt: 5}}]},
+			include: {user: true},
+			orderBy: [{success: "desc"}, {skipsUsed: "asc"}, {createdAt: "asc"}],
+			take:5
+		}
+	)
+
+	return leaderboard;
+}
+
 export async function getTodaysLeaderboard() {	
 	const config = await prisma.paFConfig.findFirst();
 	if (!config) return null;

@@ -7,7 +7,7 @@ import Leaderboard from '@/app/components/items/heardle/leaderboard';
 
 export const metadata = {
     title: "Phineas and Ferbdle",
-    description: "Can you guess today's Phineas and Ferb song?"
+    description: "Phineas and Ferb Heardle! Can you guess today's Phineas and Ferb song?"
 }
 
 export default function HeardlePage() {

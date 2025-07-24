@@ -181,6 +181,7 @@
 /* Leaderboard */
 .leaderboardContainer {
     margin: 30px;
+    padding-bottom:0px;
     height: unset;
     width:600px;
     text-align:center;
@@ -206,6 +207,24 @@
     flex-direction: row;
     justify-content: space-between;
 
+}
+
+.offsetControls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom:10px;
+}
+
+.offsetControls > svg {
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+}
+
+.offsetControls > svg:hover {
+    color: var(--term-bg-color);
 }
 
 @media (max-width: 800px) {
