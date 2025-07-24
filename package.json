@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "PORT=4000 next dev --turbopack",
+    "dev": "cross-env PORT=4000 next dev --turbopack",
     "build": "next build",
     "start": "DATABASE_URL=\"file:./prod.db\" next start",
     "lint": "next lint",
@@ -22,6 +22,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "prisma": "^6.10.1",
