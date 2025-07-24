@@ -13,7 +13,7 @@ export class BBFileSystem {
         const scripts = new BBDirectory("scripts", this.root);
         const styles = new BBDirectory("styles", this.root);
         const games = new BBDirectory("games", this.root);
-        const contact = new BBDirectory("contact", this.root);
+        new BBDirectory("contact", this.root);
 
         // Scripts
         new BBFile("BRADYSBYTES.sh", this.root);
