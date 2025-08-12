@@ -48,6 +48,25 @@
     margin-bottom:5px;
 }
 
+.skipIntroButtonContainer {
+    display: none;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+}
+
+.skipIntroButton {
+    position:absolute;
+    bottom: 10px;
+    right: 10px;
+
+    height: 25px;
+    width: 75px;
+    line-height: 0px;
+    border-radius:3px;
+    font-family: unset;
+}
+
 
 /* Small Devices */
 @media (max-width: 600px) {

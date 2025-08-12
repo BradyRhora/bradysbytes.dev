@@ -5,6 +5,13 @@ import { showPage } from "./pageFunctions";
 import { Asteroid } from "@/scripts/asteroids"
 import { Command } from "./terminalCommands";
 
+const TerminalCommand = {
+    CLEAR: -1,
+    WAIT: 0,
+    PRINT: 1,
+    TYPE: 2
+}
+
 export class Terminal {
     static instance: Terminal;
     static autoTyping = false;
@@ -203,6 +210,49 @@ export class Terminal {
         this.print(this.getCommandPrefix() + this.currentInput);
     }
 
+    buildIntroScript() {
+        const pass = "*********";
+        
+        const script = [//*
+            {type: TerminalCommand.WAIT, time:1},
+            {type: TerminalCommand.PRINT, text:"BRADY_TERM 2.0\n", time:0},
+            {type: TerminalCommand.PRINT, text:"(c) All rights reserved.\n\n", time:1.5},
+            {type: TerminalCommand.PRINT, text: this.getCommandPrefix(), time:1.5},
+            {type: TerminalCommand.TYPE, text:"./BRADYSBYTES.sh\n", time:1},
+            {type: TerminalCommand.PRINT, text: "Loading BRADYSBYTES.DEV", time:.5},//.5},
+            {type: TerminalCommand.PRINT, text: ".", time:.6},
+            {type: TerminalCommand.PRINT, text: ".", time:.7},
+            {type: TerminalCommand.PRINT, text: ".\n", time:2},
+            {type: TerminalCommand.CLEAR, time:0},
+            {type: TerminalCommand.PRINT, text:"ENTER LOGIN\n", time:0},
+            {type: TerminalCommand.PRINT, text:"USER: " , time: .6},
+            {type: TerminalCommand.TYPE, text: this.user + "\n", time: .7},
+            {type: TerminalCommand.PRINT, text:"PASS: " , time: .5},
+            {type: TerminalCommand.TYPE, text: pass + "\n", time: (pass.length * .05)},
+            {type: TerminalCommand.PRINT, text: "ACCESS GRANTED.", time: 2},
+            {type: TerminalCommand.CLEAR, time:.5},//*/
+        ]
+
+        const jargon = ["Implementing style formatting","Upgrading service modules","Downloading processor firmware","Installing new updates","Deleting trojans","Calling mom","Adding firewall exceptions","Launching Garry's Mod","Activating Windows","Pushing to Git","Creating new user accounts","Hacking enemy mainframe","Fuzzing URLs","Downloading MineCraft modpack","Forwarding ports","Backing up critical files","Prompting AI","Initializing matrix transceiver","Stablizing black hole","Extracting tachyon crystals","Warping to Andromeda","Conceiving witty fake terminal commands","Obtaining launch codes","Searching hash tables","Pulling from database","Writing pseudocode","Imagining quantum algorithms","Rendering 3D objects","Enabling dark mode","Attaching to debugger breakpoints","Rebooting toilet server","Reloading hamster wheel cheese compartments","Reversing polarity","Artificially increasing load times","Reheating last night's dinner","Parsing source code","Connecting via dial-up","Aligning with moon phase","Scraping the internet","Gaining root access","Escalating Privileges","Coding yet another bot","Designing macros","Populating database","Cutting red wire","Summoning daemons"];
+
+        const loopCount = 3;
+        let counter = 0;
+        const jargonCount = jargon.length * loopCount;
+        for (let c = 1; c <= loopCount; c++) {
+            shuffle(jargon);
+            for (const i in jargon) {
+                const line = jargon[i];
+                const t = counter++ / jargonCount;
+                const length = 0.5 * Math.exp(-10 * t);
+
+                script.push({type:TerminalCommand.PRINT, text: line+"..\n", time:length});
+            }
+        }
+
+        script.push({type:TerminalCommand.CLEAR,time:1});
+        return script;
+    }
+
     // Event Listeners
 
     charInput(key: string) {
@@ -249,55 +299,20 @@ export class Terminal {
 
 }
 
-const CLEAR = -1;
-const WAIT = 0;
-const PRINT = 1;
-const TYPE = 2;
-
 export async function showIntro() {
     const terminal = Terminal.instance;
-    const pass = "*********";
-    
-    const script = [//*
-        {type: WAIT, time:1},
-        {type: PRINT, text:"BRADY_TERM 2.0\n", time:0},
-        {type: PRINT, text:"(c) All rights reserved.\n\n", time:1.5},
-        {type: PRINT, text: terminal.getCommandPrefix(), time:1.5},
-        {type: TYPE, text:"./BRADYSBYTES.sh\n", time:1},
-        {type: PRINT, text: "Loading BRADYSBYTES.DEV", time:.5},//.5},
-        {type: PRINT, text: ".", time:.6},
-        {type: PRINT, text: ".", time:.7},
-        {type: PRINT, text: ".\n", time:2},
-        {type: CLEAR, time:0},
-        {type: PRINT, text:"ENTER LOGIN\n", time:0},
-        {type: PRINT, text:"USER: " , time: .6},
-        {type: TYPE, text: terminal.user + "\n", time: .7},
-        {type: PRINT, text:"PASS: " , time: .5},
-        {type: TYPE, text: pass + "\n", time: (pass.length * .05)},
-        {type: PRINT, text: "ACCESS GRANTED.", time: 2},
-        {type: CLEAR, time:.5},//*/
-    ]
+    const script = terminal.buildIntroScript();
+    const skipBtn = document.getElementById("intro-skip-button");
 
-    const jargon = ["Implementing style formatting","Upgrading service modules","Downloading processor firmware","Installing new updates","Deleting trojans","Calling mom","Adding firewall exceptions","Launching Garry's Mod","Activating Windows","Pushing to Git","Creating new user accounts","Hacking enemy mainframe","Fuzzing URLs","Downloading MineCraft modpack","Forwarding ports","Backing up critical files","Prompting AI","Initializing matrix transceiver","Stablizing black hole","Extracting tachyon crystals","Warping to Andromeda","Conceiving witty fake terminal commands","Obtaining launch codes","Searching hash tables","Pulling from database","Writing pseudocode","Imagining quantum algorithms","Rendering 3D objects","Enabling dark mode","Attaching to debugger breakpoints","Rebooting toilet server","Reloading hamster wheel cheese compartments","Reversing polarity","Artificially increasing load times","Reheating last night's dinner","Parsing source code","Connecting via dial-up","Aligning with moon phase","Scraping the internet","Gaining root access","Escalating Privileges","Coding yet another bot","Designing macros","Populating database","Cutting red wire","Summoning daemons"];
+    // Show Skip button after short delay
+    setTimeout(() => {        
+        if (skipBtn) skipBtn.style.display = "block";
+    }, 5 * 1000)
 
-    const loopCount = 3;
-    let counter = 0;
-    const jargonCount = jargon.length * loopCount;
-    for (let c = 1; c <= loopCount; c++) {
-        shuffle(jargon);
-        for (const i in jargon) {
-            const line = jargon[i];
-            const t = counter++ / jargonCount;
-            const length = 0.5 * Math.exp(-10 * t);
-
-            script.push({type:PRINT, text: line+"..\n", time:length});
-        }
-    }
-
-    script.push({type:CLEAR,time:1});
-
+    // Run Intro
     for (const a in script) {
         if (terminal.skipIntro) {
+            if (skipBtn) skipBtn.style.display = "none";
             terminal.clearText();
             break;
         }
@@ -305,19 +320,20 @@ export async function showIntro() {
         const action = script[a];
 
         switch(action.type) {
-            case PRINT:
+            case TerminalCommand.PRINT:
                 await terminal.print(action.text ?? "", action.time);
                 break;
-            case TYPE: 
+            case TerminalCommand.TYPE: 
                 await terminal.autoType(action.text ?? "", action.time);
                 break;
-            case CLEAR:
+            case TerminalCommand.CLEAR:
                 terminal.clearText();
-            case WAIT:
+            case TerminalCommand.WAIT:
                 await wait(action.time);
         }
     }
     
+    if (skipBtn) skipBtn.style.display = "none";
     document.removeEventListener('keydown', terminal.forceSkipListener);
     setCookie("skip-intro", "", 60);
 }
