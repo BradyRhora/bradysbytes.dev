@@ -115,3 +115,9 @@
     background-color: var(--term-bg-color);
     border: 1px solid var(--term-text-color);
 }
+
+/* Contact */
+
+.contactCard input {
+    height: 30px;
+}
