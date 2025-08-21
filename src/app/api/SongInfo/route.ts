@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getTodaysSong } from "@/scripts/lib/db";
+import { getTodaysSong } from "@/scripts/lib/paf";
 import { getAlbumCover } from "@/scripts/heardle";
 
 // Get todays song information

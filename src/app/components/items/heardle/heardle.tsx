@@ -13,7 +13,7 @@ import cardStyles from "@/app/styles/card.module.css";
 import styles from "@/app/styles/paf.module.css";
 import HeardleGuesser from "./heardleGuesser";
 import { numberToEmoji, roundToDecimalPlaces, setCookie } from "@/scripts/lib/helpers";
-import { CUTOFF_INCREASE, MAX_SKIPS } from "@/scripts/lib/db";
+import { CUTOFF_INCREASE, MAX_SKIPS } from "@/scripts/lib/paf";
 
 import { User } from "@/../generated/prisma";
 

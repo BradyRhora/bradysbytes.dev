@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { IAudioMetadata, parseFile } from 'music-metadata';
-import { addSong, addSongsToSchedule, getAllSongs } from './lib/db';
+import { addSong, addSongsToSchedule, getAllSongs } from './lib/paf';
 
 const SONG_DIR = '/songs/';
 const PUBLIC_SONG_DIR = 'public' + SONG_DIR;

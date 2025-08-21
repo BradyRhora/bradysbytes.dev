@@ -10,7 +10,7 @@ export default function TerminalComponent() {
 			<div id="terminal" className={styles.terminal}></div>
 		</div>
 		<div id="intro-skip-button" className={styles.skipIntroButtonContainer}>
-			<button onClick={() => {Terminal.instance.skipIntro = true}} className={`${styles.skipIntroButton} glow`}>SKIP</button>
+			<button className={`${styles.skipIntroButton} glow`}>SKIP</button>
 			<button onClick={() => {Terminal.instance.skipIntro = true}} className={styles.skipIntroButton}>SKIP</button>
 		</div>
 		</>

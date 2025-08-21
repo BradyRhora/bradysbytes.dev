@@ -1,4 +1,4 @@
-import { getUser } from "@/scripts/lib/db";
+import { getUser } from "@/scripts/lib/paf";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

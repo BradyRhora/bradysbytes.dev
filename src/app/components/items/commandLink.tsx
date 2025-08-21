@@ -15,6 +15,6 @@ export default function CommandLink({children, href, className} : CommandLinkPro
     }
 
     return (
-        <Link href={href} className={className} onMouseUp={changeDirectory}>{children}</Link>
+        <Link href={href} className={className} onClick={changeDirectory}>{children}</Link>
     )
 }

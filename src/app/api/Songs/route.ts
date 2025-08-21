@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllSongs } from "@/scripts/lib/db";
+import { getAllSongs } from "@/scripts/lib/paf";
 
 function stripString(string: string) {
     let returnString = string.trim().toLowerCase();

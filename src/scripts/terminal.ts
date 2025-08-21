@@ -176,7 +176,9 @@ export class Terminal {
     getCommandPrefix() { 
         let currentDir = Terminal.instance.fileSystem.currentDir.getPathString();
         currentDir = currentDir.slice(0, currentDir.length - 1);
-        return `${this.user}@bradyserver:${currentDir}$ `; 
+        let serverName = 'bradyserver';
+        if (window.location.href.includes('/sbps')) serverName = 'SBPS'
+        return `${this.user}@${serverName}:${currentDir}$ `; 
     }
 
     clearText() {
@@ -217,11 +219,11 @@ export class Terminal {
             {type: TerminalCommand.WAIT, time:1},
             {type: TerminalCommand.PRINT, text:"BRADY_TERM 2.0\n", time:0},
             {type: TerminalCommand.PRINT, text:"(c) All rights reserved.\n\n", time:1.5},
-            {type: TerminalCommand.PRINT, text: this.getCommandPrefix(), time:1.5},
+            {type: TerminalCommand.PRINT, text: this.getCommandPrefix(), time:0.8},
             {type: TerminalCommand.TYPE, text:"./BRADYSBYTES.sh\n", time:1},
             {type: TerminalCommand.PRINT, text: "Loading BRADYSBYTES.DEV", time:.5},//.5},
-            {type: TerminalCommand.PRINT, text: ".", time:.6},
-            {type: TerminalCommand.PRINT, text: ".", time:.7},
+            {type: TerminalCommand.PRINT, text: ".", time:.4},
+            {type: TerminalCommand.PRINT, text: ".", time:.5},
             {type: TerminalCommand.PRINT, text: ".\n", time:2},
             {type: TerminalCommand.CLEAR, time:0},
             {type: TerminalCommand.PRINT, text:"ENTER LOGIN\n", time:0},
@@ -229,7 +231,7 @@ export class Terminal {
             {type: TerminalCommand.TYPE, text: this.user + "\n", time: .7},
             {type: TerminalCommand.PRINT, text:"PASS: " , time: .5},
             {type: TerminalCommand.TYPE, text: pass + "\n", time: (pass.length * .05)},
-            {type: TerminalCommand.PRINT, text: "ACCESS GRANTED.", time: 2},
+            {type: TerminalCommand.PRINT, text: "ACCESS GRANTED.", time: 1},
             {type: TerminalCommand.CLEAR, time:.5},//*/
         ]
 
@@ -306,7 +308,7 @@ export async function showIntro() {
 
     // Show Skip button after short delay
     setTimeout(() => {        
-        if (skipBtn) skipBtn.style.display = "block";
+        if (skipBtn && !terminal.skipIntro) skipBtn.style.display = "block";
     }, 5 * 1000)
 
     // Run Intro
@@ -335,7 +337,7 @@ export async function showIntro() {
     
     if (skipBtn) skipBtn.style.display = "none";
     document.removeEventListener('keydown', terminal.forceSkipListener);
-    setCookie("skip-intro", "", 60);
+    setCookie("skip-intro", "", 180);
 }
 
 export async function setup(username?: string) {  

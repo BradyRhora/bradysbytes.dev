@@ -11,6 +11,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// PAF
 
 model User {
   id        String   @id @default(uuid())
@@ -32,14 +33,14 @@ model UserPerformance {
 }
 
 model Song {
-  id            String     @id @default(uuid())
-  title         String
-  artist        String
-  duration      Float
-  filePath      String
-  date          DateTime?
+  id              String     @id @default(uuid())
+  title           String
+  artist          String
+  duration        Float
+  filePath        String
+  date            DateTime?
   scheduleIndices Schedule[]
-  addedAt       DateTime   @default(now())
+  addedAt         DateTime   @default(now())
 }
 
 model PaFConfig {
@@ -54,4 +55,104 @@ model Schedule {
   songId       String
   song         Song   @relation(fields: [songId], references: [id])
   performances UserPerformance[]
+}
+
+// SBPS
+
+model SBPSCharacter {
+  id           String   @id @default(uuid())
+  name         String
+  range        Float
+  weight       Float
+  power        Float
+  speed        Float
+  weapon_size  Float?
+  sex_appeal   Float
+  style        Float
+  colour       String
+  blurb        String
+  series       SBPSSeries   @relation(fields: [seriesId], references: [id])
+  seriesId     String
+  mainFor      SBPSPlayer[]  @relation("main")
+  secondaryFor SBPSPlayer[]  @relation("secondary")
+}
+
+model SBPSSeries {
+  id           String   @id @default(uuid())
+  name         String
+  releaseYear  Int
+  genre        String
+  characters   SBPSCharacter[]
+}
+
+model SBPSPlayer {
+  id           String   @id @default(uuid())
+  tag          String
+  name         String
+  main         SBPSCharacter @relation(name: "main", fields: [mainId], references: [id])
+  mainId       String
+  secondary    SBPSCharacter? @relation(name: "secondary", fields: [secondaryId], references: [id])
+  secondaryId  String?
+  weight       Float
+  charm        Float
+  anger        Float
+  depression   Float
+  intoxication Float
+  fingerCount  Int    @default(10)
+  coordination Float
+  intelligence Float
+  techSkill    Float
+  stink        Float
+
+  tournaments  SBPSTournamentEntry[]
+  matches      SBPSTournamentMatch[] @relation("player1")
+  matches2     SBPSTournamentMatch[] @relation("player2")
+  wonMatches   SBPSTournamentMatch[] @relation("winner")
+}
+
+model SBPSTournament {
+  id           String   @id @default(uuid())
+  name         String
+  startDate    DateTime
+  active       Boolean  @default(true)
+  participants SBPSTournamentEntry[]
+  matches      SBPSTournamentMatch[]
+}
+
+model SBPSTournamentEntry {
+  id          String   @id @default(uuid())
+  tournament  SBPSTournament @relation(fields: [tournamentId], references: [id])
+  tournamentId String
+  player      SBPSPlayer @relation(fields: [playerId], references: [id])
+  playerId    String
+  rank        Int?
+}
+
+model SBPSTournamentMatch {
+  id           String   @id @default(uuid())
+  tournament   SBPSTournament @relation(fields: [tournamentId], references: [id])
+  tournamentId String
+  round        Int
+
+  // Should these reference SBPSTournamentEntry instead?
+  player1      SBPSPlayer? @relation(name: "player1", fields: [player1Id], references: [id])
+  player1Id    String?
+  player2      SBPSPlayer? @relation(name: "player2", fields: [player2Id], references: [id])
+  player2Id    String?
+  
+  winner       SBPSPlayer? @relation(name: "winner", fields: [winnerId], references: [id])
+  winnerId     String?
+  score1       Int  @default(0)
+  score2       Int  @default(0)
+
+  previousMatch1 SBPSTournamentMatch? @relation(name: "previousMatch1", fields: [previousMatch1Id], references: [id])
+  previousMatch1Id String? @unique
+  previousMatch2 SBPSTournamentMatch? @relation(name: "previousMatch2", fields: [previousMatch2Id], references: [id])
+  previousMatch2Id String? @unique
+  nextMatch SBPSTournamentMatch? @relation(name: "nextMatch", fields: [nextMatchId], references: [id])
+  nextMatchId String?
+
+  nextMatchRel SBPSTournamentMatch[] @relation(name: "nextMatch")
+  previousMatch1Rel SBPSTournamentMatch? @relation(name: "previousMatch1")
+  previousMatch2Rel SBPSTournamentMatch? @relation(name: "previousMatch2")
 }

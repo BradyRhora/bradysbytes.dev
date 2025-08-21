@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";;
 
-import { getGlowSibling } from "../wrappers/siblingBinder";
+import { getGlowSibling } from "./siblingBinder";
 
 import styles from "@/app/styles/semiComponents.module.css"
 

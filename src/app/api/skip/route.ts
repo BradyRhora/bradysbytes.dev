@@ -1,4 +1,4 @@
-import { addSkip, getSkips, getSuccess } from "@/scripts/lib/db";
+import { addSkip, getSkips, getSuccess } from "@/scripts/lib/paf";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

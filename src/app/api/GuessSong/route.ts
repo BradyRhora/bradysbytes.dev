@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { succeed, getTodaysSong } from "@/scripts/lib/db";
+import { succeed, getTodaysSong } from "@/scripts/lib/paf";
 
 export async function GET(req: NextRequest) {
     const todaysSong = await getTodaysSong();
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
             }
         }
         else {
-            // should we add a skip here?
+            // TODO: should we add a skip here?
             status = 406;
         }
     }

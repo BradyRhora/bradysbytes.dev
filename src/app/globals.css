@@ -34,9 +34,6 @@ button {
     color: var(--term-bg-color);
     padding: 10px 20px;
     cursor:pointer;
-    
-    width:100px;
-    height:50px;
 
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }

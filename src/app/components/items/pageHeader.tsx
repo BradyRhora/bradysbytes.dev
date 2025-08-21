@@ -1,29 +1,33 @@
+import { JSX } from 'react';
 import CommandLink from './commandLink';
 
 import styles from '@/app/styles/main.module.css';
 
-export default function PageHeader({title, path, root = false}: {title: string, path?: string[] | null, root?: boolean}) {
+export default function PageHeader({title, path, isRoot = false}: {title: string, path?: string[] | null, isRoot?: boolean}) {
+    const links: JSX.Element[] = [];
+    if (path) {
+        for (let i = 0; i < path.length; i++) {
+            links.push(
+                <span key={path[i]}>
+                    /
+                    <CommandLink key={path[i]} className={styles.goBack} href={'/' + path.slice(0,i+1).join('/')}>
+                        {path[i].toUpperCase()}
+                    </CommandLink>
+                </span>
+            )
+        }
+    }
+
     return (
         <div className={styles.headerContainer}>
             
             <h1 className={styles.header}>
-                { !root &&
+                { !isRoot &&
                 <CommandLink className={styles.goBack} href={'/'}>
                     ..
                 </CommandLink>
                 }
-                {path && 
-                    path.map((dir) => {
-                        return (
-                        <span key={dir}>
-                        /
-                        <CommandLink key={dir} className={styles.goBack} href={'/'+dir}>
-                            {dir.toUpperCase()}
-                        </CommandLink>
-                        </span>
-                        );
-                    })
-                }
+                {links}
                 /{title}
             </h1>
         </div>

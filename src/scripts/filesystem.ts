@@ -29,9 +29,10 @@ export class BBFileSystem {
         
         // Games
         new BBFile("phineas_and_ferbdle.gam", games, `{"title":"Phineas and Ferbdle","description":"Guess the Phineas and Ferb song with as little context as possible!","url":"/games/paf"}`);
-        new BBFile("pizzaverse.gam", games, `{"title":"Pizzaverse","description":"Achieve your dream of running the best pizzeria this size of the Milky Way.","imagePath":"/game_covers/pizzaverse.png", "url":"https://www.coolmathgames.com/0-pizzaverse"}`);
+        new BBFile("pizzaverse.gam", games, `{"title":"Pizzaverse","description":"Achieve your dream of running the best pizzeria this side of the Milky Way.","imagePath":"/game_covers/pizzaverse.png", "url":"https://www.coolmathgames.com/0-pizzaverse"}`);
         new BBFile("gone_fishing.gam", games, `{"title":"Gone Fishing","description":"Catch fish to earn money and go deeper and deeper in this cute fishing game.","imagePath":"/game_covers/gone_fishing.png", "url":"https://matthewi.itch.io/gone-fishing"}`);
         new BBFile("sea_shawty.gam", games, `{"title":"Sea Shawty","description":"Help Chestnut the Pirate and Clamantha escape the haunted island with the Pirate's Treasure!","imagePath":"/game_covers/sea_shawty.png", "url":"https://matthewi.itch.io/sea-shawty"}`);
+        new BBFile("sbps.gam", games, `{"title":"Supreme Blast Pals: Scuffle","description":"The best of the best duke it out to see who's the best of the best of the best!","url":"/games/sbps"}`);
     }
 
     getFileFromPathString(path: string) {

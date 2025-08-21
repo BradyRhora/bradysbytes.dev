@@ -1,4 +1,4 @@
-import { getTodaysLeaderboard } from "@/scripts/lib/db";
+import { getTodaysLeaderboard } from "@/scripts/lib/paf";
 import { NextResponse } from "next/server";
 
 export async function GET() {

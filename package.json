@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "DATABASE_URL=\"file:./prod.db\" next start",
     "lint": "next lint",
-    "load-songs": "tsx src/scripts/server/loadSongsToDB.ts"
+    "load-songs": "tsx src/scripts/server/loadSongsToDB.ts",
+    "sbps": "tsx src/scripts/server/sbps/sbps.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.10.1",

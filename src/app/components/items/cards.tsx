@@ -22,14 +22,15 @@ function cardMouseLeave(event: React.MouseEvent<HTMLElement>) {
 type CardProps = {
     children: React.ReactNode;
     className?: string;
+    style?: React.CSSProperties;
 }
 
-export function Card({children, className = undefined}: CardProps) {
+export function Card({children, className = undefined, style = undefined}: CardProps) {
     let classes = `${cardStyles.contentCard} ${cardStyles.card} `;
     if (className) classes += className;
     
     return (
-        <div className={classes}>
+        <div className={classes} style={style}>
             {children}
         </div>
     );
