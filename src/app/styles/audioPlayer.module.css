@@ -1,5 +1,5 @@
 .audioPlayer {
-    border: 1px solid var(--term-text-color);
+    border: 1px solid var(--term-fg-color);
     min-width:300px;
     max-width: 500px;
     margin-left:auto;
@@ -25,8 +25,8 @@
 }
 
 .playButton {
-    stroke: var(--term-text-color);
-    fill: var(--term-text-color);
+    stroke: var(--term-fg-color);
+    fill: var(--term-fg-color);
     padding:10px;
 }
 
@@ -53,7 +53,7 @@
     height:40px;
     margin:10px;
     margin-left:0px;
-    border: 1px solid var(--term-text-color);
+    border: 1px solid var(--term-fg-color);
 
     cursor: pointer;
 }
@@ -66,7 +66,7 @@
     position: relative;
     width: 4px;
     height: 100%;
-    background-color: var(--term-text-color);
+    background-color: var(--term-fg-color);
     cursor: pointer;
 }
 
@@ -99,7 +99,7 @@
 .interactable:hover {
     cursor: pointer;
     background-color: var(--term-bg-color);
-    border: 1px solid var(--term-text-color);
+    border: 1px solid var(--term-fg-color);
 }
 
 @media (max-width: 800px) {

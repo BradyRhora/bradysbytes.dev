@@ -4,7 +4,7 @@
 }
 
 .arrow {
-    fill: var(--term-text-color);
+    fill: var(--term-fg-color);
     transition: fill 0.3s ease-in-out;
     height:100px;
     

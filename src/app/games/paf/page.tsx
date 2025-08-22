@@ -1,9 +1,8 @@
-import Heardle from '@/app/components/items/heardle/heardle'
+import Heardle from '@/app/games/paf/heardle'
 import PageHeader from '../../components/items/pageHeader';
-import StyleDropDown from '../../components/items/styleDropDown';
 
 import styles from '@/app/styles/paf.module.css'
-import Leaderboard from '@/app/components/items/heardle/leaderboard';
+import Leaderboard from '@/app/games/paf/leaderboard';
 
 export const metadata = {
     title: "Phineas and Ferbdle",
@@ -18,9 +17,6 @@ export default function HeardlePage() {
             <div className={styles.pageContainer}>
                 <Heardle/>
                 <Leaderboard/>
-            </div>
-            <div style={{display:"flex", justifyContent:"center"}}>
-                <StyleDropDown/>
             </div>
         </>
     );

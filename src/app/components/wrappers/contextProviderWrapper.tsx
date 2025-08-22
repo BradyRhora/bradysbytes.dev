@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useState, useEffect, useLayoutEffect, useContext } from "react";
 import { wait, shuffle } from "@/scripts/lib/helpers";
-import { UserContext } from "./mainBody";
+import { UserContext } from "@/app/mainBody";
 
 export const SkillContext = createContext("");
 export const PafSkipContext = createContext<[number, React.Dispatch<React.SetStateAction<number>>]>([0, () => {}]);
@@ -21,7 +21,7 @@ export default function ContextProvider({children}: {children: React.ReactNode})
 
     useLayoutEffect(() => {
         if (user) {
-            fetch('/api/skip?user='+user.id)
+            fetch('/api/PAF/skip?user='+user.id)
                 .then(res => res.json())
                 .then(({skips, success} : {skips:number, success:boolean}) => {
                     setPafSkips(skips);

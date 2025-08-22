@@ -6,13 +6,14 @@ import { setup } from "@/scripts/terminal";
 import { hookAsteroidEvents } from "@/scripts/asteroids";
 import { startTerminal } from "@/scripts/pageFunctions";
 
-import GlowWrapper from "./glowWrapper";
+import GlowWrapper from "@/app/glowWrapper";
 import TerminalComponent from "@/app/components/items/terminal";
 import ContextProvider from "@/app/components/wrappers/contextProviderWrapper";
 
-import { User } from "../../../../generated/prisma";
+import { User } from "@/../generated/prisma"
 
 import styles from "@/app/styles/main.module.css";
+import StyleDropDown from "./components/items/styleDropDown";
 
 export const UserContext = createContext<[User | null, React.Dispatch<React.SetStateAction<User | null>>]>([null, () => {}]);
 
@@ -21,13 +22,17 @@ export default function MainBody({children,}: Readonly<{children: React.ReactNod
 
     useLayoutEffect(() => {
         async function loadUserCookie() {
-            const userID = getCookie("user");
-            if (userID) {
-                const res = await fetch("/api/User?id="+userID)
-                const userData = await res.json();
-                
-                setUser(userData);
-                return userData;
+            try {
+                const userID = getCookie("user");
+                if (userID) {
+                    const res = await fetch("/api/PAF/User?id="+userID)
+                    const userData = await res.json();
+                    
+                    setUser(userData);
+                    return userData;
+                }
+            } finally {
+                return null;
             }
         }
 
@@ -46,6 +51,9 @@ export default function MainBody({children,}: Readonly<{children: React.ReactNod
             <ContextProvider>
                 <GlowWrapper>
                     {children}
+                    <div style={{display:"flex", justifyContent:"center"}}>
+                        <StyleDropDown/>
+                    </div>
                     <div className={styles.terminalSpacer}></div>
                 </GlowWrapper>
             </ContextProvider>

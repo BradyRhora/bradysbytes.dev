@@ -1,12 +1,12 @@
 import React, { useState, useRef, useContext } from "react";
 
-import DropdownBox from "../../wrappers/dropdownBox";
+import DropdownBox from "../../components/wrappers/dropdownBox";
 import { PafSkipContext, PafSuccessContext } from "@/app/components/wrappers/contextProviderWrapper";
-import BindSibling, { getGlowSibling } from "../../wrappers/siblingBinder";
+import BindSibling, { getGlowSibling } from "../../components/wrappers/siblingBinder";
 
 import styles from "@/app/styles/paf.module.css"
 import dropdownStyles from "@/app/styles/semiComponents.module.css"
-import { UserContext } from "../../wrappers/mainBody";
+import { UserContext } from "@/app/mainBody";
 
 export default function HeardleGuesser() {
     type basicSongInfo = {
@@ -48,7 +48,7 @@ export default function HeardleGuesser() {
 
     function skip() {
         if (user) {
-            fetch('/api/skip', {
+            fetch('/api/PAF/skip', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user: user.id })

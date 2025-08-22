@@ -2,12 +2,11 @@
 import Image from "next/image";
 import { useLayoutEffect, useEffect, useState, useContext, useRef } from "react";
 
-import { Card } from "../cards";
-import HeardleAudioPlayer from "./audioPlayer";
+import { Card } from "../../components/items/cards";
+import HeardleAudioPlayer from "../../components/items/heardle/audioPlayer";
 
-import { Terminal } from "@/scripts/terminal";
 import { ErrorContext, PafOverContext, PafSkipContext, PafSuccessContext } from "@/app/components/wrappers/contextProviderWrapper";
-import { UserContext } from "../../wrappers/mainBody";
+import { UserContext } from "@/app/mainBody";
 
 import cardStyles from "@/app/styles/card.module.css";
 import styles from "@/app/styles/paf.module.css";
@@ -53,7 +52,7 @@ export default function Heardle() {
    
     function skip() {
         if (user) {
-            fetch('/api/skip', {
+            fetch('/api/PAF/skip', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user: user.id })
@@ -95,7 +94,7 @@ export default function Heardle() {
                 return;
             }
 
-            fetch('/api/ChooseName?name=' + nameInputRef.current.value)
+            fetch('/api/PAF/ChooseName?name=' + nameInputRef.current.value)
                 .then(res => res.json())
                 .then((userData: User) => {
                     setUser(userData);
@@ -118,12 +117,7 @@ export default function Heardle() {
     }, [setUser]);
 
     useEffect(() => {        
-        Terminal.instance.skipIntro = true;
         if (skips > MAX_SKIPS || success) setOver(true);
-        
-        return (() => {
-            Terminal.instance.skipIntro = false;
-        })
     }, [skips, setSuccess, success, setOver])
 
     return (

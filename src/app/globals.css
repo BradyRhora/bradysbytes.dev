@@ -2,7 +2,7 @@
 
 :root {
     --term-bg-color: #002400;
-    --term-text-color: #63ff63;
+    --term-fg-color: #63ff63;
     --term-bg-obj-color: #335b33bd;
     --main-font: 'Inconsolata', monospace;
 }
@@ -29,7 +29,7 @@ body {
 }
 
 button {
-    background-color: var(--term-text-color);
+    background-color: var(--term-fg-color);
     border: none;
     color: var(--term-bg-color);
     padding: 10px 20px;
@@ -40,7 +40,7 @@ button {
 
 button:hover {
     background-color: var(--term-bg-color);
-    color: var(--term-text-color);
+    color: var(--term-fg-color);
 }
 
 /* Target the scrollbar track */
@@ -51,7 +51,7 @@ button:hover {
 
 /* Handle (thumb) */
 ::-webkit-scrollbar-thumb {
-  background: var(--term-text-color);
+  background: var(--term-fg-color);
   margin:5px;
   border-radius: 6px;
 }

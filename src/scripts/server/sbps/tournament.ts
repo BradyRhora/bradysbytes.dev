@@ -11,7 +11,7 @@ export async function createTournament() {
         const words = [
             words1[Math.floor(Math.random() * words1.length)],
             words2[Math.floor(Math.random() * words2.length)],
-            words3[Math.floor(Math.random() * words3.length)]
+            Math.random() < 0.45 ? words3[Math.floor(Math.random() * words3.length)] : ''
         ];
 
         // Keyword Replacement
@@ -36,7 +36,6 @@ export async function createTournament() {
 
     // Entrants and Match generation
     const entries = await createEntries(tournament);
-    const bracket = await BuildBracket(tournament, entries);
-    console.log(bracket);
+    await BuildBracket(tournament, entries);
     return tournament;
 }

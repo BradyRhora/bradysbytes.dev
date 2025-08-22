@@ -12,7 +12,7 @@
     overflow: hidden;
     left: 0;
     
-    color: var(--term-text-color);
+    color: var(--term-fg-color);
     transition: color 0.3s ease-in-out;
     font-size:1.8em;
     min-width: 50%;

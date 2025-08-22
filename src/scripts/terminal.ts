@@ -340,10 +340,13 @@ export async function showIntro() {
     setCookie("skip-intro", "", 180);
 }
 
+const INTRO_BLOCKED_ROUTES = ['/games/sbps', 'games/paf']
+
 export async function setup(username?: string) {  
     if (username) Terminal.instance.user = username;
     
-    if (getCookie('skip-intro') == undefined && getCookie('skip-intro-toggle') == undefined) {
+    const introBlocked = INTRO_BLOCKED_ROUTES.some(route => window.location.pathname.includes(route));
+    if (!introBlocked && getCookie('skip-intro') == undefined && getCookie('skip-intro-toggle') == undefined) {
         await showIntro();
     }
 

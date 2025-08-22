@@ -21,11 +21,11 @@ export class BBFileSystem {
         new BBFile("skipIntro.sh", scripts);
 
         // Styles
-        new BBFile("default.sty", styles, `{"--term-bg-color": "#002400","--term-text-color": "#63ff63","--term-bg-obj-color": "#335b33bd","--main-font": "'Inconsolata', monospace"}`);
-        new BBFile("classic.sty", styles, `{"--term-bg-color": "#111111","--term-text-color": "#ffffff","--term-bg-obj-color": "#2a2a2abd","--main-font": "'Inconsolata', monospace"}`);
-        new BBFile("bright.sty", styles, `{"--term-bg-color": "#ffffff","--term-text-color": "#333333","--term-bg-obj-color": "#878787bd","--main-font": "'Inconsolata', monospace"}`);
-        new BBFile("jace.sty", styles, `{"--term-bg-color": "#420413","--term-text-color": "#df8cdc","--term-bg-obj-color": "#e2ff3557","--main-font": "'Short Stack', cursive"}`);
-        new BBFile("jacebright.sty", styles, `{"--term-bg-color": "#ffef86","--term-text-color": "#ffb1b1","--term-bg-obj-color": "#ffcbcb","--main-font": "'Short Stack', cursive"}`);
+        new BBFile("default.sty", styles, `{"--term-bg-color": "#002400","--term-fg-color": "#63ff63","--term-bg-obj-color": "#335b33bd","--main-font": "'Inconsolata', monospace"}`);
+        new BBFile("classic.sty", styles, `{"--term-bg-color": "#111111","--term-fg-color": "#ffffff","--term-bg-obj-color": "#2a2a2abd","--main-font": "'Inconsolata', monospace"}`);
+        new BBFile("bright.sty", styles, `{"--term-bg-color": "#ffffff","--term-fg-color": "#333333","--term-bg-obj-color": "#878787bd","--main-font": "'Inconsolata', monospace"}`);
+        new BBFile("jace.sty", styles, `{"--term-bg-color": "#420413","--term-fg-color": "#df8cdc","--term-bg-obj-color": "#e2ff3557","--main-font": "'Short Stack', cursive"}`);
+        new BBFile("jacebright.sty", styles, `{"--term-bg-color": "#ffef86","--term-fg-color": "#ffb1b1","--term-bg-obj-color": "#ffcbcb","--main-font": "'Short Stack', cursive"}`);
         
         // Games
         new BBFile("phineas_and_ferbdle.gam", games, `{"title":"Phineas and Ferbdle","description":"Guess the Phineas and Ferb song with as little context as possible!","url":"/games/paf"}`);

@@ -2,7 +2,7 @@
 
 .dropdownBox{
     overflow-x: hidden;
-    border: solid 1px var(--term-text-color);
+    border: solid 1px var(--term-fg-color);
     transition: background-color 0.2s ease-in-out;
 }
 
@@ -36,8 +36,8 @@
 }
 
 .dropdownBoxIcon {
-    stroke: var(--term-text-color);
-    fill:  var(--term-text-color);
+    stroke: var(--term-fg-color);
+    fill:  var(--term-fg-color);
     width:100%;
     height:100%;
 }
@@ -64,8 +64,8 @@
 
 .styleSelector {
     width:300px;
-    border: solid 1px var(--term-text-color);
-    color: var(--term-text-color);
+    border: solid 1px var(--term-fg-color);
+    color: var(--term-fg-color);
 }
 
 .styleSelector:hover {
@@ -78,7 +78,7 @@
 }
 
 :global(.hovered).styleSelector {
-    background-color: var(--term-text-color);
+    background-color: var(--term-fg-color);
     color: var(--term-bg-color);
 }
 
@@ -98,7 +98,7 @@
 .sliderBar {
     width: 100%;
     height: 2px;
-    background-color: var(--term-text-color);
+    background-color: var(--term-fg-color);
     border-radius:5px;
 }
 
@@ -106,14 +106,14 @@
     position: absolute;
     width: 15px;
     height: 15px;
-    background-color: var(--term-text-color);
+    background-color: var(--term-fg-color);
     border-radius: 50%;
     cursor: pointer;
 }
 
 .sliderCursor:hover {
     background-color: var(--term-bg-color);
-    border: 1px solid var(--term-text-color);
+    border: 1px solid var(--term-fg-color);
 }
 
 /* Contact */

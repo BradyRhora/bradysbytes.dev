@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { FaCrown, FaSkull } from "react-icons/fa";
 
-import { User, UserPerformance } from "../../../../../generated/prisma";
-import { Card } from "../cards";
+import { User, UserPerformance } from "../../../../generated/prisma";
+import { Card } from "../../components/items/cards";
 
 import styles from "@/app/styles/paf.module.css"
 
@@ -13,7 +13,7 @@ export default function Leaderboard() {
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]|null>(null);
 
     useEffect(() => {
-        fetch('/api/Leaderboard')
+        fetch('/api/PAF/Leaderboard')
             .then(res => res.json())
             .then(data => {
                 if (data)

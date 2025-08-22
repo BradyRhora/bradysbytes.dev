@@ -5,7 +5,7 @@ import "./globals.css";
 import styles from "@/app/styles/main.module.css";
 import { BBFileSystem } from "@/scripts/filesystem";
 
-import MainBody from "@/app/components/wrappers/mainBody";
+import MainBody from "./mainBody";
 
 export const metadata: Metadata = {
   title: "BradysBytes",

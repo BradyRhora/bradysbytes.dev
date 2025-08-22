@@ -1,0 +1,62 @@
+.hero {
+    font-size:40px;
+    text-align: center;
+}
+
+.tournamentBracket {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.bracketRound {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.bracketMatch {
+    border: 1px solid var(--term-fg-color);
+    width: 120px;
+    margin:5px;
+}
+
+.bracketPlayer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1px;
+
+    border: 1px solid orangered;
+}
+
+.bracketScore {
+    padding: 2px;
+}
+
+.bracketWinnerScore {
+    background-color: gold;
+    color: black;
+}
+
+.playerHovered {
+    background: linear-gradient(90deg, orange, yellow, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.playerInfoModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    border: 1px solid var(--term-fg-color);    
+    background-color: var(--term-bg-color);
+}
+
+.playerInfoModal > * {
+    width: 100%;
+}

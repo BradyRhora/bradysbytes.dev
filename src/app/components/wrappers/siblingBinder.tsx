@@ -24,7 +24,8 @@ function generateHash(str: string): string {
 
 type BindSiblingProps = {
     children: React.ReactNode,
-    hashString: string
+    hashString: string,
+    style?: React.CSSProperties
 }
 
 /*
@@ -33,10 +34,10 @@ type BindSiblingProps = {
  * we need to be able to get this sibling is because when the main element changes it's shape/content/etc.,
  * the glow sibling has to match this change or else the elements will become visually out of sync.
  */
-export default function BindSibling({children, hashString} : BindSiblingProps) {
+export default function BindSibling({children, hashString, style} : BindSiblingProps) {
     const hashID = generateHash(hashString);
     return (
-        <div className="binder" data-sibling-id={hashID} >
+        <div style={style} className="binder" data-sibling-id={hashID} >
             {children}
         </div>
     );

@@ -1,5 +1,5 @@
 import { prisma } from '@/scripts/lib/db'
-import { SBPSTournament, SBPSTournamentEntry, SBPSTournamentMatch } from '../../../generated/prisma';
+import { Prisma, SBPSTournament, SBPSTournamentEntry, SBPSTournamentMatch } from '../../../generated/prisma';
 import { shuffle } from './helpers';
 
 // players
@@ -48,21 +48,7 @@ export async function GetAllCharacters() {
     return characters;
 }
 
-type characterType = {
-    name: string,
-    range: number,
-    weight: number,
-    power: number,
-    speed: number,
-    weapon_size: number,
-    sex_appeal: number,
-    style: number,
-    colour: string,
-    blurb: string,
-    seriesId: string
-}
-
-export async function CreateCharacters(characterData : characterType[]) {
+export async function CreateCharacters(characterData : Prisma.SBPSCharacterCreateManyInput[]) {
     console.log(characterData);
     const payload = await prisma.sBPSCharacter.createMany({data: characterData});
     return payload.count;
@@ -80,29 +66,43 @@ export async function GetAllSeries() {
     return series;
 }
 
-type seriesType = {
-    name: string,
-    releaseYear: number,
-    genre: string
-}
-
-export async function CreateSeries(seriesData: seriesType[]) {
+export async function CreateSeries(seriesData: Prisma.SBPSSeriesCreateManyInput[]) {
     const payload = await prisma.sBPSSeries.createMany({data: seriesData});
     return payload.count;
 }
 
 // tournaments
+export async function GetTournamentMatches(id: string) {
+    return await prisma.sBPSTournamentMatch.findMany({
+        where:{
+            tournamentId: id
+        },
+        include: {
+            player1: {select: {id: true, tag: true}},
+            player2: {select: {id: true, tag: true}},
+            winner:  {select: {id: true}}
+        },
+        orderBy: [
+            { round: 'asc' },
+            { nextMatchId: 'asc'}
+        ]
+    });
+}
+
+export async function GetActiveTournamentMatches() {
+    const tournament = await GetActiveTournament();
+    return tournament ? await GetTournamentMatches(tournament.id) : [];
+}
+
+export async function GetTournament(id: string) {
+    return await prisma.sBPSTournament.findFirst({where:{id: id}});
+}
 
 export async function GetActiveTournament() {
-    return prisma.sBPSTournament.findFirst({where:{active:true}});
+    return await prisma.sBPSTournament.findFirst({where:{active: true}});
 }
 
-type tournamentType = {
-    name: string,
-    startDate: Date,
-}
-
-export async function CreateTournament(tournamentData: tournamentType) {
+export async function CreateTournament(tournamentData: Prisma.SBPSTournamentCreateManyInput) {
     const tournament = await prisma.sBPSTournament.create({data: tournamentData});
     return tournament;
 }
