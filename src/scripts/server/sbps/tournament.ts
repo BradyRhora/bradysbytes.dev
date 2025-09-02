@@ -4,14 +4,14 @@ import { SBPSTournament } from "../../../../generated/prisma";
 export async function createTournament() {
     function generateTournamentName() {
         // TODO: ADD MORE!!
-        const words1 = ['Super','Salty','Apex','Evo','The','Neo','Can\'t Gorf the','Cloud','Arby\'s'];
-        const words2 = ['Smash','Bets','Zone','Mega','Prime','Legends','Supreme','Dunked','Dorf'];
-        const words3 = ['Con','[year]','Bros.', '']
+        const words1 = ['Super','Salty','Apex','Evo','The','Neo','Can\'t Gorf the','Cloud','Arby\'s', 'Delicious'];
+        const words2 = ['Smash','Bets','Zone','Mega','Prime','Legends','Supreme','Dunked','Dorf', 'Suite', 'Expo', 'Games', 'Sunset'];
+        const words3 = ['Con','[year]','Bros.']
 
         const words = [
             words1[Math.floor(Math.random() * words1.length)],
             words2[Math.floor(Math.random() * words2.length)],
-            Math.random() < 0.45 ? words3[Math.floor(Math.random() * words3.length)] : ''
+            Math.random() < 0.40 ? words3[Math.floor(Math.random() * words3.length)] : ''
         ];
 
         // Keyword Replacement

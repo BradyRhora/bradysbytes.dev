@@ -1,6 +1,7 @@
 .hero {
     font-size:40px;
     text-align: center;
+    margin-bottom: 0px;
 }
 
 .tournamentBracket {
@@ -8,11 +9,16 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    overflow-x: auto;
 }
 
 .bracketRound {
     margin-left: 30px;
     margin-right: 30px;
+}
+
+.bracketMatchContainer {
+    position:relative;
 }
 
 .bracketMatch {
@@ -21,11 +27,14 @@
     margin:5px;
 }
 
+:global(.glow) .bracketMatch {
+    background-color: var(--term-bg-color);
+}
+
 .bracketPlayer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1px;
 
     border: 1px solid orangered;
 }
@@ -59,4 +68,15 @@
 
 .playerInfoModal > * {
     width: 100%;
+}
+
+@media (max-width: 600px) {
+    .tournamentBracket {
+       justify-content: unset;
+    }
+
+    .bracketRound {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 }

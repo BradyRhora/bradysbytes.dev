@@ -55,6 +55,7 @@ export default function Player({id, tag} : {id: string, tag?:string}) {
         <div className={style.playerInfoModal} style={{left: modalPos.x, top: modalPos.y}}>
             {playerData ? 
             <>
+            <div>{playerData.name}</div>
             <div style={{backgroundColor:playerData.main.colour}}>Main: {playerData.main.name}</div>
             {playerData.secondary && <div style={{backgroundColor:playerData.secondary.colour}}>Secondary: {playerData.secondary.name}</div>}
             </>
@@ -65,7 +66,7 @@ export default function Player({id, tag} : {id: string, tag?:string}) {
 
     return (
         <BindSibling style={{display:"inline-block"}} hashString={playerTag+"-bracket"}>
-            <span ref={playerRef} className={`${style.player} ${modalOpen ? style.playerHovered : ''}`} onMouseOver={handleModalOpen} onMouseLeave={handleModalClose}>
+            <span ref={playerRef} className={`${modalOpen ? style.playerHovered : ''}`} onMouseOver={handleModalOpen} onMouseLeave={handleModalClose}>
                 {playerTag}
             </span>
             {modal}

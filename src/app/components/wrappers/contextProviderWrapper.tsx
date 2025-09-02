@@ -2,6 +2,7 @@
 import React, { createContext, useState, useEffect, useLayoutEffect, useContext } from "react";
 import { wait, shuffle } from "@/scripts/lib/helpers";
 import { UserContext } from "@/app/mainBody";
+import { SBPSTournament } from "../../../../generated/prisma";
 
 export const SkillContext = createContext("");
 export const PafSkipContext = createContext<[number, React.Dispatch<React.SetStateAction<number>>]>([0, () => {}]);
@@ -9,6 +10,7 @@ export const PafSuccessContext = createContext<[boolean, React.Dispatch<React.Se
 export const PafOverContext = createContext<[boolean, React.Dispatch<React.SetStateAction<boolean>>]>([false, () => {}]);
 export const PafPlayingContext = createContext<[boolean, React.Dispatch<React.SetStateAction<boolean>>]>([false, () => {}]);
 export const ErrorContext = createContext<[string, React.Dispatch<React.SetStateAction<string>>]>(["", () => {}]);
+export const SbpsLiveTournamentContext = createContext<[SBPSTournament | undefined, React.Dispatch<React.SetStateAction<SBPSTournament | undefined>>]>([undefined, () => {}]);
 
 export default function ContextProvider({children}: {children: React.ReactNode}) {
     const [user, ] = useContext(UserContext);
@@ -18,6 +20,7 @@ export default function ContextProvider({children}: {children: React.ReactNode})
     const [pafOver, setPafOver] = useState(false);
     const [pafPlaying, setPafPlaying] = useState(false);
     const [error, setError] = useState("");
+    const [sbpsLiveTournament, setSbpsLiveTournament] = useState<SBPSTournament>()
 
     useLayoutEffect(() => {
         if (user) {
@@ -80,9 +83,11 @@ export default function ContextProvider({children}: {children: React.ReactNode})
         <PafOverContext.Provider value={[pafOver, setPafOver]}>
         <PafSkipContext.Provider value={[pafSkips, setPafSkips]}>
         <PafPlayingContext.Provider value={[pafPlaying, setPafPlaying]}>
+        <SbpsLiveTournamentContext value={[sbpsLiveTournament, setSbpsLiveTournament]}>
         <ErrorContext.Provider value={[error, setError]}>
             {children}
         </ErrorContext.Provider>
+        </SbpsLiveTournamentContext>
         </PafPlayingContext.Provider>
         </PafSkipContext.Provider>
         </PafOverContext.Provider>

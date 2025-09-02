@@ -65,7 +65,7 @@ export default function HeardleGuesser() {
     async function guess(e: React.MouseEvent, id: string) {
         if (e.button == 2) return; // right click
         
-        const data = await fetch(`/api/GuessSong?id=${id}${user ? '&user='+user.id : ''}`);
+        const data = await fetch(`/api/PAF/GuessSong?id=${id}${user ? '&user='+user.id : ''}`);
         const result = data.status;
         if (result == 204) {
             setSuccess(true);
@@ -91,7 +91,7 @@ export default function HeardleGuesser() {
 
         searching.current = true;
 
-        const res = await fetch(`/api/Songs?input=${input}`);
+        const res = await fetch(`/api/PAF/Songs?input=${input}`);
         const songs = await res.json();
         if (songs.songData)
             setSongs(songs.songData);

@@ -104,7 +104,7 @@ export default function Heardle() {
     }
 
     useLayoutEffect(() => {
-        fetch("/api/SongInfo")
+        fetch("/api/PAF/SongInfo")
         .then(res => res.json())
         .then(data => {
             setSongData(data);

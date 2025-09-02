@@ -60,3 +60,7 @@ export function getEncodedFilePath(pathString: string) {
     secs = secs.map(s => encodeURIComponent(s));
     return secs.join('/');
 }
+
+export function isGlowElement(element: HTMLElement) {
+    return document.getElementById("container-glow")?.contains(element) ?? false;
+}

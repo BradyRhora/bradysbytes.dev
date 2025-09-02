@@ -133,6 +133,7 @@ model SBPSTournamentMatch {
   tournament   SBPSTournament @relation(fields: [tournamentId], references: [id])
   tournamentId String
   round        Int
+  number      Int @default(0) // Match number within the round, used for sorting
 
   // Should these reference SBPSTournamentEntry instead?
   player1      SBPSPlayer? @relation(name: "player1", fields: [player1Id], references: [id])
@@ -155,4 +156,34 @@ model SBPSTournamentMatch {
   nextMatchRel SBPSTournamentMatch[] @relation(name: "nextMatch")
   previousMatch1Rel SBPSTournamentMatch? @relation(name: "previousMatch1")
   previousMatch2Rel SBPSTournamentMatch? @relation(name: "previousMatch2")
+  games SBPSGame[]
+}
+
+model SBPSGame {
+  id            String   @id @default(uuid())
+  number        Int
+
+  player1Damage Int @default(0)
+  player2Damage Int @default(0)
+  player1Stocks Int @default(3)
+  player2Stocks Int @default(3)
+  player1State  String @default("spawning") // see app/scripts/server/sbps/match.ts for different states
+  player2State  String @default("spawning")
+
+  steps         Int @default(0) // How many "updates" have occurred
+
+  match         SBPSTournamentMatch @relation(fields: [matchId], references: [id])
+  matchId       String
+
+  logs          SBPSGameLog[]
+}
+
+model SBPSGameLog {
+  id         String   @id @default(uuid())
+  index      Int
+  game       SBPSGame  @relation(fields: [gameId], references: [id])
+  gameId     String
+  timestamp  DateTime @default(now())
+  content    String
+
 }
