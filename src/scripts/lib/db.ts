@@ -22,10 +22,10 @@ export async function getSongByScheduleIndex(index: number) {
 
 async function reshuffleSongs() {
 	const lastID = (await prisma.schedule.findFirst({orderBy: {id: "desc"}}))?.id || -1;
-	let songIDs = (await prisma.song.findMany()).map(s => s.id);
+	let songIDs = (await prisma.song.findMany()).map((s : Song) => s.id);
 	songIDs = shuffle(songIDs);
 	await prisma.schedule.createMany({
-		data: songIDs.map((id, index) => ({
+		data: songIDs.map((id:number, index:number) => ({
 			id: 1 + index + lastID,
 			songId: id
 		}))

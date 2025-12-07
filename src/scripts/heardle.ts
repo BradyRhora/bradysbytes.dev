@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { IAudioMetadata, parseFile } from 'music-metadata';
 import { addSong, addSongsToSchedule, getAllSongs } from './lib/db';
+import { Song } from '../../generated/prisma';
 
 const SONG_DIR = '/songs/';
 const PUBLIC_SONG_DIR = 'public' + SONG_DIR;
@@ -29,7 +30,7 @@ export async function loadSongsToDB() {
     const dbSongs = await getAllSongs();
 
 
-    const dbPaths: string[] = dbSongs.map((song) => song.filePath);
+    const dbPaths: string[] = dbSongs.map((song : Song) => song.filePath);
 
     const newSongs = [];
     for (const s in songFiles) {
