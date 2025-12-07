@@ -36,7 +36,8 @@ export default function Contact() {
   return (
     <>
     <PageHeader title="CONTACT"/>
-    <Card className={style.contactCard}>            
+    <Card className={style.contactCard}>  
+        <span style={{fontSize:20}}>Need to get in touch?<br/>Use the form below to shoot me a message!</span><br/><br/>       
         <form onSubmit={handleSubmit}>
         <label>
             Name:
