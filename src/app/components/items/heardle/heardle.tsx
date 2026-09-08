@@ -149,7 +149,7 @@ export default function Heardle() {
                                 <h2>{songData.meta.title}</h2>
                                 <span><i>{songData.meta.artist} {songData.meta.date && `- ${songData.meta.date.slice(0,4)}`}</i></span>
                                 <audio className={styles["song-info-player"]} controls>
-                                    <source src={songData.songPath} type="audio/mpeg"/>
+                                    <source src={encodeURI(songData.songPath)} type="audio/mpeg"/>
                                 </audio>
                                 </>
                             }

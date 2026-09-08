@@ -25,7 +25,7 @@ async function reshuffleSongs() {
 	let songIDs = (await prisma.song.findMany()).map((s : Song) => s.id);
 	songIDs = shuffle(songIDs);
 	await prisma.schedule.createMany({
-		data: songIDs.map((id:number, index:number) => ({
+		data: songIDs.map((id:string, index:number) => ({
 			id: 1 + index + lastID,
 			songId: id
 		}))
