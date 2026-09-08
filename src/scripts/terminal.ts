@@ -233,7 +233,54 @@ export class Terminal {
             {type: TerminalCommand.CLEAR, time:.5},//*/
         ]
 
-        const jargon = ["Implementing style formatting","Upgrading service modules","Downloading processor firmware","Installing new updates","Deleting trojans","Calling mom","Adding firewall exceptions","Launching Garry's Mod","Activating Windows","Pushing to Git","Creating new user accounts","Hacking enemy mainframe","Fuzzing URLs","Downloading MineCraft modpack","Forwarding ports","Backing up critical files","Prompting AI","Initializing matrix transceiver","Stablizing black hole","Extracting tachyon crystals","Warping to Andromeda","Conceiving witty fake terminal commands","Obtaining launch codes","Searching hash tables","Pulling from database","Writing pseudocode","Imagining quantum algorithms","Rendering 3D objects","Enabling dark mode","Attaching to debugger breakpoints","Rebooting toilet server","Reloading hamster wheel cheese compartments","Reversing polarity","Artificially increasing load times","Reheating last night's dinner","Parsing source code","Connecting via dial-up","Aligning with moon phase","Scraping the internet","Gaining root access","Escalating Privileges","Coding yet another bot","Designing macros","Populating database","Cutting red wire","Summoning daemons"];
+        const jargon = [
+            "Implementing style formatting",
+            "Upgrading service modules",
+            "Downloading processor firmware",
+            "Installing new updates",
+            "Deleting trojans",
+            "Calling mom",
+            "Adding firewall exceptions",
+            "Launching Garry's Mod",
+            "Activating Windows",
+            "Pushing to Git",
+            "Creating new user accounts",
+            "Hacking enemy mainframe",
+            "Fuzzing URLs",
+			"Downloading MineCraft modpack",
+			"Forwarding ports",
+			"Backing up critical files",
+			"Prompting AI",
+			"Initializing matrix transceiver",
+			"Stablizing black hole",
+			"Extracting tachyon crystals",
+			"Warping to Andromeda",
+			"Conceiving witty fake terminal commands",
+			"Obtaining launch codes",
+			"Searching hash tables",
+			"Pulling from database",
+			"Writing pseudocode",
+			"Imagining quantum algorithms",
+			"Rendering 3D objects",
+			"Enabling dark mode",
+			"Attaching to debugger breakpoints",
+			"Rebooting toilet server",
+			"Reloading hamster wheel cheese compartments",
+			"Reversing polarity",
+			"Artificially increasing load times",
+			"Reheating last night's dinner",
+			"Parsing source code",
+			"Connecting via dial-up",
+			"Aligning with moon phase",
+			"Scraping the internet",
+			"Gaining root access",
+			"Escalating Privileges",
+			"Coding yet another bot",
+			"Designing macros",
+			"Populating database",
+			"Cutting red wire",
+            "Summoning daemons"
+        ];
 
         const loopCount = 3;
         let counter = 0;
@@ -318,7 +365,7 @@ export async function showIntro() {
         }
 
         const action = script[a];
-
+        
         switch(action.type) {
             case TerminalCommand.PRINT:
                 await terminal.print(action.text ?? "", action.time);

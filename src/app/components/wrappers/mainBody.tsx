@@ -1,5 +1,5 @@
 "use client"
-import { useState, useLayoutEffect, createContext } from "react";
+import { useState, useLayoutEffect, createContext, useRef } from "react";
 
 import { getCookie } from "@/scripts/lib/helpers";
 import { setup } from "@/scripts/terminal";
@@ -18,8 +18,13 @@ export const UserContext = createContext<[User | null, React.Dispatch<React.SetS
 
 export default function MainBody({children,}: Readonly<{children: React.ReactNode;}>) {
     const [user, setUser] = useState<User | null>(null);
+    const hasInitialized = useRef(false);
 
     useLayoutEffect(() => {
+        // Ensure init only runs once
+        if (hasInitialized.current) return;
+        hasInitialized.current = true;
+        
         async function loadUserCookie() {
             const userID = getCookie("user");
             if (userID) {
