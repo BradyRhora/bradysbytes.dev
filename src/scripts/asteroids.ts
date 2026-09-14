@@ -2,7 +2,7 @@ import styles from '@/app/styles/asteroid.module.css';
 
 let asteroidCount = 10;
 const MOUSE_DETECTION_RANGE = 100;
-const STROKE_SIZE = 5; // must be set to match style.css svg stroke
+const STROKE_SIZE = 5; // must be set to match aseroid.module.css svg stroke
 const MIN_SIZE = 32;
 const MAX_SIZE = 86;
 
@@ -11,6 +11,7 @@ const MAX_SIZE = 86;
 export class Asteroid {
     static asteroids : Asteroid[] = [];
     static container : HTMLElement | null = null;
+    static scrollContainer : HTMLElement;
     static mousePos: [number, number] = [-1000,-1000];
     static asteroidInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -41,6 +42,10 @@ export class Asteroid {
 
         
         if (Asteroid.container != null) Asteroid.container.append(this.div);
+
+        const sContainer = document.getElementById("container");
+        if (Asteroid.scrollContainer == null && sContainer) Asteroid.scrollContainer = sContainer;
+
         Asteroid.asteroids.push(this);
         this.update();
     }
@@ -159,7 +164,7 @@ export class Asteroid {
         if (this.x < 0 - (this.size * 2)
          || this.x > Asteroid.container.clientWidth
          || this.y < 0 - (this.size * 2)
-         || this.y > Asteroid.container.clientHeight) 
+         || this.y > Asteroid.scrollContainer.scrollHeight) 
         {
             this.div.remove();
             return false; // Tells outer function to remove from asteroid array
@@ -178,7 +183,10 @@ export class Asteroid {
     }
 
     static updateMousePosition(x: number, y: number) {
-        Asteroid.mousePos = [x, y];
+        if (!Asteroid.container) return;
+
+        const scrollOffset = Asteroid.scrollContainer.scrollTop;
+        Asteroid.mousePos = [x, y + scrollOffset];
     }
 
     static async start() {
