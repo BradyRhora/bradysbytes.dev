@@ -68,7 +68,7 @@ export class Terminal {
         Terminal.autoTyping = true;
         for (let i = 0; i < text.length; i++){
             if (!Terminal.autoTyping) {
-                this.getCommandReady();
+                this.setCommandReady();
                 break;
             }
 
@@ -92,7 +92,7 @@ export class Terminal {
 
     async autoCommand(command: string, runCommand = true) {
         if (true || !isMobile()) {
-            await this.getCommandReady();
+            await this.setCommandReady();
             await this.autoType(command, 0.35);
             this.commandHistory.unshift(command);
             if (runCommand) this.runCommand(command);
@@ -121,27 +121,31 @@ export class Terminal {
                     setCookie("skip-intro", "" , 0);
                     return "Intro will play each session.";
                 }
+            case "spaceship.sh":
+                Asteroid.startShip();
         }
     }
 
     async runCommand(args: string) {
         if (args == undefined || args == "") {
-            this.getCommandReady();
+            this.setCommandReady();
             return;
         }
         
         this.commandHistory.unshift(this.currentInput);
 
+        // Check if script with matching name exists in current directory
         const file = Terminal.instance.fileSystem.getFileFromPathString(args);
         if (file != undefined && file.name.endsWith('.sh')) {
             const output = await this.runScript(file.name);
             if (output != undefined) {
-                await this.clearText();
+                this.clearText();
                 await this.print(output);
             }
             return;
         }
 
+        // Split and parse command arguments
         const splitArgs = args.split(' ');
         const commandName = splitArgs.shift();
         if (commandName == undefined) {
@@ -149,6 +153,7 @@ export class Terminal {
             return;
         }
 
+        // Fetch and run command
         const command = Command.getCommand(commandName);
         
         this.clearText();
@@ -159,14 +164,15 @@ export class Terminal {
             if (output != undefined)
                 await this.print(output);
             else {
-                this.getCommandReady();
+                this.setCommandReady();
             }
         }
         
         this.currentInput = "";
     }
 
-    async getCommandReady(clearTerminal = true) {
+    // Make the terminal input ready for command entering
+    async setCommandReady(clearTerminal = true) {
         if (clearTerminal) this.clearText(); // TODO: why command no go away then
         this.currentInput = "";
         await this.print(this.getCommandPrefix());
@@ -208,6 +214,30 @@ export class Terminal {
     updateInput() {
         this.clearText();
         this.print(this.getCommandPrefix() + this.currentInput);
+    }
+
+    autoFillCommand() {
+        // Get current word being typed
+        const entry = this.currentInput.split(' ').at(-1);
+        if (entry == undefined) return;
+
+        // See if it matches beginning of any command / alias
+        for (const c in Command.commands) {
+            const command = Command.commands[c];
+
+            for (const n in command.name) {
+                const name = command.name[n];
+
+                if (name.startsWith(entry.toLowerCase())) {
+                    // Fill remainder of command name
+                    const remainder = name.substring(entry.length);
+                    this.currentInput += remainder;
+                    this.updateInput();
+                    return;
+                }
+            }
+        }
+
     }
 
     buildIntroScript() {
@@ -255,7 +285,7 @@ export class Terminal {
 			"Stablizing black hole",
 			"Extracting tachyon crystals",
 			"Warping to Andromeda",
-			"Conceiving witty fake terminal commands",
+			"Conceiving witty terminal commands",
 			"Obtaining launch codes",
 			"Searching hash tables",
 			"Pulling from database",
@@ -275,7 +305,7 @@ export class Terminal {
 			"Scraping the internet",
 			"Gaining root access",
 			"Escalating Privileges",
-			"Coding yet another bot",
+			"Coding yet another chat bot",
 			"Designing macros",
 			"Populating database",
 			"Cutting red wire",
@@ -316,16 +346,16 @@ export class Terminal {
                 this.currentInput = this.currentInput.slice(0, this.currentInput.length-1);
                 this.deleteLastCharacter();
             }
-        } else if (key == "Enter") {
+        } else if (key == "Enter") { // Run command
             this.historyIndex = -1;
             this.runCommand(this.currentInput);
-        } else if (key == "ArrowUp") {
+        } else if (key == "ArrowUp") { // Previous history command
             if (this.historyIndex < this.commandHistory.length - 1) {
                 this.historyIndex++;
                 this.currentInput = this.commandHistory[this.historyIndex];
                 this.updateInput();
             }
-        } else if (key == "ArrowDown") {
+        } else if (key == "ArrowDown") { // Next history command
             if (this.historyIndex > 0) {
                 this.historyIndex--;
                 this.currentInput = this.commandHistory[this.historyIndex];
@@ -335,6 +365,8 @@ export class Terminal {
                 this.currentInput = "";
                 this.updateInput();
             }
+        } else if (key == "Tab") { // Auto fill
+            this.autoFillCommand();
         }
     }
     
