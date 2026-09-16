@@ -103,7 +103,7 @@ export class Terminal {
         switch(scriptName)
         {
             case "asteroids.sh":                
-                const active = Asteroid.asteroidInterval != undefined;
+                const active = Asteroid.updateInterval != undefined;
                 if (active) Asteroid.end();
                 else Asteroid.start();
                 this.currentInput = "";
@@ -384,8 +384,8 @@ export async function showIntro() {
     const skipBtn = document.getElementById("intro-skip-button");
 
     // Show Skip button after short delay
-    setTimeout(() => {        
-        if (skipBtn) skipBtn.style.display = "block";
+    setTimeout(() => {  
+        if (skipBtn && !terminal.skipIntro) skipBtn.style.display = "block";
     }, 5 * 1000)
 
     // Run Intro
