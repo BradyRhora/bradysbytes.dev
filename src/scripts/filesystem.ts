@@ -19,6 +19,7 @@ export class BBFileSystem {
         new BBFile("BRADYSBYTES.sh", this.root);
         new BBFile("asteroids.sh", scripts);
         new BBFile("skipIntro.sh", scripts);
+        new BBFile("spaceship.sh", scripts);
 
         // Styles
         new BBFile("default.sty", styles, `{"--term-bg-color": "#002400","--term-text-color": "#63ff63","--term-bg-obj-color": "#335b33bd","--main-font": "'Inconsolata', monospace"}`);

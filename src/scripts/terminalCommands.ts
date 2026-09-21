@@ -126,7 +126,8 @@ new Command(["help", "?"], "Usage: `help (command)` - Get command information.",
         if (command != undefined && Command.commands[c].name.includes(command.toLowerCase()))
             return Command.commands[c].description;
 
-        if (Number(c) < Command.commands.length - 1) commands += ",";
+        // inserts commas between commands - not really necessary since they can't have spaces anyway
+        //if (Number(c) < Command.commands.length - 1) commands += ",";
         commands += " ";
     }
     
