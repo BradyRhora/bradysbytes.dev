@@ -68,7 +68,7 @@ export class Terminal {
         Terminal.autoTyping = true;
         for (let i = 0; i < text.length; i++){
             if (!Terminal.autoTyping) {
-                this.getCommandReady();
+                this.setCommandReady();
                 break;
             }
 
@@ -92,7 +92,7 @@ export class Terminal {
 
     async autoCommand(command: string, runCommand = true) {
         if (true || !isMobile()) {
-            await this.getCommandReady();
+            await this.setCommandReady();
             await this.autoType(command, 0.35);
             this.commandHistory.unshift(command);
             if (runCommand) this.runCommand(command);
@@ -103,7 +103,7 @@ export class Terminal {
         switch(scriptName)
         {
             case "asteroids.sh":                
-                const active = Asteroid.asteroidInterval != undefined;
+                const active = Asteroid.updateInterval != undefined;
                 if (active) Asteroid.end();
                 else Asteroid.start();
                 this.currentInput = "";
@@ -121,27 +121,31 @@ export class Terminal {
                     setCookie("skip-intro", "" , 0);
                     return "Intro will play each session.";
                 }
+            case "spaceship.sh":
+                Asteroid.startShip();
         }
     }
 
     async runCommand(args: string) {
         if (args == undefined || args == "") {
-            this.getCommandReady();
+            this.setCommandReady();
             return;
         }
         
         this.commandHistory.unshift(this.currentInput);
 
+        // Check if script with matching name exists in current directory
         const file = Terminal.instance.fileSystem.getFileFromPathString(args);
         if (file != undefined && file.name.endsWith('.sh')) {
             const output = await this.runScript(file.name);
             if (output != undefined) {
-                await this.clearText();
+                this.clearText();
                 await this.print(output);
             }
             return;
         }
 
+        // Split and parse command arguments
         const splitArgs = args.split(' ');
         const commandName = splitArgs.shift();
         if (commandName == undefined) {
@@ -149,6 +153,7 @@ export class Terminal {
             return;
         }
 
+        // Fetch and run command
         const command = Command.getCommand(commandName);
         
         this.clearText();
@@ -159,14 +164,15 @@ export class Terminal {
             if (output != undefined)
                 await this.print(output);
             else {
-                this.getCommandReady();
+                this.setCommandReady();
             }
         }
         
         this.currentInput = "";
     }
 
-    async getCommandReady(clearTerminal = true) {
+    // Make the terminal input ready for command entering
+    async setCommandReady(clearTerminal = true) {
         if (clearTerminal) this.clearText(); // TODO: why command no go away then
         this.currentInput = "";
         await this.print(this.getCommandPrefix());
@@ -212,6 +218,30 @@ export class Terminal {
         this.print(this.getCommandPrefix() + this.currentInput);
     }
 
+    autoFillCommand() {
+        // Get current word being typed
+        const entry = this.currentInput.split(' ').at(-1);
+        if (entry == undefined) return;
+
+        // See if it matches beginning of any command / alias
+        for (const c in Command.commands) {
+            const command = Command.commands[c];
+
+            for (const n in command.name) {
+                const name = command.name[n];
+
+                if (name.startsWith(entry.toLowerCase())) {
+                    // Fill remainder of command name
+                    const remainder = name.substring(entry.length);
+                    this.currentInput += remainder;
+                    this.updateInput();
+                    return;
+                }
+            }
+        }
+
+    }
+
     buildIntroScript() {
         const pass = "*********";
         
@@ -235,7 +265,54 @@ export class Terminal {
             {type: TerminalCommand.CLEAR, time:.5},//*/
         ]
 
-        const jargon = ["Implementing style formatting","Upgrading service modules","Downloading processor firmware","Installing new updates","Deleting trojans","Calling mom","Adding firewall exceptions","Launching Garry's Mod","Activating Windows","Pushing to Git","Creating new user accounts","Hacking enemy mainframe","Fuzzing URLs","Downloading MineCraft modpack","Forwarding ports","Backing up critical files","Prompting AI","Initializing matrix transceiver","Stablizing black hole","Extracting tachyon crystals","Warping to Andromeda","Conceiving witty fake terminal commands","Obtaining launch codes","Searching hash tables","Pulling from database","Writing pseudocode","Imagining quantum algorithms","Rendering 3D objects","Enabling dark mode","Attaching to debugger breakpoints","Rebooting toilet server","Reloading hamster wheel cheese compartments","Reversing polarity","Artificially increasing load times","Reheating last night's dinner","Parsing source code","Connecting via dial-up","Aligning with moon phase","Scraping the internet","Gaining root access","Escalating Privileges","Coding yet another bot","Designing macros","Populating database","Cutting red wire","Summoning daemons"];
+        const jargon = [
+            "Implementing style formatting",
+            "Upgrading service modules",
+            "Downloading processor firmware",
+            "Installing new updates",
+            "Deleting trojans",
+            "Calling mom",
+            "Adding firewall exceptions",
+            "Launching Garry's Mod",
+            "Activating Windows",
+            "Pushing to Git",
+            "Creating new user accounts",
+            "Hacking enemy mainframe",
+            "Fuzzing URLs",
+			"Downloading MineCraft modpack",
+			"Forwarding ports",
+			"Backing up critical files",
+			"Prompting AI",
+			"Initializing matrix transceiver",
+			"Stablizing black hole",
+			"Extracting tachyon crystals",
+			"Warping to Andromeda",
+			"Conceiving witty terminal commands",
+			"Obtaining launch codes",
+			"Searching hash tables",
+			"Pulling from database",
+			"Writing pseudocode",
+			"Imagining quantum algorithms",
+			"Rendering 3D objects",
+			"Enabling dark mode",
+			"Attaching to debugger breakpoints",
+			"Rebooting toilet server",
+			"Reloading hamster wheel cheese compartments",
+			"Reversing polarity",
+			"Artificially increasing load times",
+			"Reheating last night's dinner",
+			"Parsing source code",
+			"Connecting via dial-up",
+			"Aligning with moon phase",
+			"Scraping the internet",
+			"Gaining root access",
+			"Escalating Privileges",
+			"Coding yet another chat bot",
+			"Designing macros",
+			"Populating database",
+			"Cutting red wire",
+            "Summoning daemons"
+        ];
 
         const loopCount = 3;
         let counter = 0;
@@ -271,16 +348,16 @@ export class Terminal {
                 this.currentInput = this.currentInput.slice(0, this.currentInput.length-1);
                 this.deleteLastCharacter();
             }
-        } else if (key == "Enter") {
+        } else if (key == "Enter") { // Run command
             this.historyIndex = -1;
             this.runCommand(this.currentInput);
-        } else if (key == "ArrowUp") {
+        } else if (key == "ArrowUp") { // Previous history command
             if (this.historyIndex < this.commandHistory.length - 1) {
                 this.historyIndex++;
                 this.currentInput = this.commandHistory[this.historyIndex];
                 this.updateInput();
             }
-        } else if (key == "ArrowDown") {
+        } else if (key == "ArrowDown") { // Next history command
             if (this.historyIndex > 0) {
                 this.historyIndex--;
                 this.currentInput = this.commandHistory[this.historyIndex];
@@ -290,6 +367,8 @@ export class Terminal {
                 this.currentInput = "";
                 this.updateInput();
             }
+        } else if (key == "Tab") { // Auto fill
+            this.autoFillCommand();
         }
     }
     
@@ -307,7 +386,7 @@ export async function showIntro() {
     const skipBtn = document.getElementById("intro-skip-button");
 
     // Show Skip button after short delay
-    setTimeout(() => {        
+    setTimeout(() => {  
         if (skipBtn && !terminal.skipIntro) skipBtn.style.display = "block";
     }, 5 * 1000)
 
@@ -320,7 +399,7 @@ export async function showIntro() {
         }
 
         const action = script[a];
-
+        
         switch(action.type) {
             case TerminalCommand.PRINT:
                 await terminal.print(action.text ?? "", action.time);

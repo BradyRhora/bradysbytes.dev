@@ -1,18 +1,19 @@
 import styles from '@/app/styles/asteroid.module.css';
+import { throwIfSyncIOUsed } from 'next/dist/server/app-render/dynamic-rendering';
 
 let asteroidCount = 10;
 const MOUSE_DETECTION_RANGE = 100;
-const STROKE_SIZE = 5; // must be set to match style.css svg stroke
+const STROKE_SIZE = 5; // must be set to match aseroid.module.css svg stroke
 const MIN_SIZE = 32;
 const MAX_SIZE = 86;
 
 // TODO: click & drag asteroids around?
 
-export class Asteroid {
-    static asteroids : Asteroid[] = [];
+export class SpaceObject {
     static container : HTMLElement | null = null;
+    static scrollContainer : HTMLElement;
     static mousePos: [number, number] = [-1000,-1000];
-    static asteroidInterval: ReturnType<typeof setInterval> | null = null;
+    static updateInterval: ReturnType<typeof setInterval> | null = null;
 
     size! : number;
     speed! : [number, number];
@@ -40,40 +41,84 @@ export class Asteroid {
         </svg>`;
 
         
-        if (Asteroid.container != null) Asteroid.container.append(this.div);
+        if (SpaceObject.container != null) SpaceObject.container.append(this.div);
+
+        const sContainer = document.getElementById("container");
+        if (SpaceObject.scrollContainer == null && sContainer) SpaceObject.scrollContainer = sContainer;
+
         Asteroid.asteroids.push(this);
         this.update();
     }
 
+    static async start() {
+        const div = document.createElement("div");
+        div.id = "asteroids";
+        div.className = `${styles["asteroids"]}`;
+        this.container = div;
+
+        document.getElementById("container-glow")?.append(this.container);
+
+        Asteroid.init();
+        
+        this.updateInterval = setInterval(() => {
+            Asteroid.updateAll();
+        }, 30);
+    }
+
+    static end() {
+        Asteroid.cleanup();
+
+        this.container?.remove();
+        if (this.updateInterval != null) {
+            clearInterval(this.updateInterval);
+            this.updateInterval = null;
+        }
+    }
+
+    static updateMousePosition(x: number, y: number) {
+        if (!this.container) return;
+
+        const scrollOffset = this.scrollContainer.scrollTop;
+        this.mousePos = [x, y + scrollOffset];
+    }
+
+    static startShip() {
+        // Hide main website UI
+        const container = document.getElementById("something");
+        if (container) container.style.display = "None";
+
+        // Create Ship object
+    }
+
     randomSpawn() {
-        if (Asteroid.container == null) return; 
+        if (SpaceObject.container == null) return; 
 
         const side = Math.trunc(Math.random() * 4);
         switch(side) {
             case 0:
                 this.y = -this.size;
-                this.x = Math.random() * Asteroid.container.clientWidth;
+                this.x = Math.random() * SpaceObject.container.clientWidth;
                 this.speed = [Math.random() - 0.5, Math.random() * 0.5];
                 break;
             case 1:
-                this.x = Asteroid.container.clientWidth;
-                this.y = Math.random() * Asteroid.container.clientHeight;
+                this.x = SpaceObject.container.clientWidth;
+                this.y = Math.random() * SpaceObject.container.clientHeight;
                 this.speed = [Math.random() * -0.5, Math.random() - 0.5];
                 break;
             case 2:
-                this.y = Asteroid.container.clientHeight;
-                this.x = Math.random() * Asteroid.container.clientWidth;
+                this.y = SpaceObject.container.clientHeight;
+                this.x = Math.random() * SpaceObject.container.clientWidth;
                 this.speed = [Math.random() - 0.5, Math.random() * -0.5];
                 break;
             case 3:
                 this.x = -this.size;
-                this.y = Math.random() * Asteroid.container.clientHeight;
+                this.y = Math.random() * SpaceObject.container.clientHeight;
                 this.speed = [Math.random() * 0.5, Math.random() - 0.5];
                 break;
         }
     }
 
-    collide(other: Asteroid) {
+    collide(other: SpaceObject) {
         const meCenter = [this.x + this.size / 2, this.y + this.size / 2];
         const otherCenter = [other.x + other.size / 2, other.y + other.size / 2];
         const directionVector = [otherCenter[0] - meCenter[0], otherCenter[1] - meCenter[1]];
@@ -129,9 +174,57 @@ export class Asteroid {
     }
 
     update() {
-        if (!Asteroid.container) return false; // If container doesn't exist, don't update
+        if (!SpaceObject.container) return false; // If container doesn't exist, don't update
         this.checkCollision();
 
+        
+
+
+        // Move position
+        this.x += this.speed[0];
+        this.y += this.speed[1];
+
+        this.div.style.left = this.x + "px"
+        this.div.style.top = this.y + "px"
+
+        // Out of bounds check
+        if (this.x < 0 - (this.size * 2)
+         || this.x > SpaceObject.container.clientWidth
+         || this.y < 0 - (this.size * 2)
+         || this.y > SpaceObject.scrollContainer.scrollHeight) 
+        {
+            this.div.remove();
+            return false; // Tells outer function to remove from asteroid array
+        }
+
+        return true;
+    }
+}
+
+export class Asteroid extends SpaceObject {
+    static asteroids : Asteroid[] = [];
+
+    static init() {        
+        setDynamicAsteroidCount();
+        for (let i = 0; i < asteroidCount; i++) {
+            new Asteroid();
+        }
+    }
+
+    static updateAll() {
+        for (let i = Asteroid.asteroids.length - 1; i >= 0; i--) {
+            if (!Asteroid.asteroids[i].update()) {
+                Asteroid.asteroids.splice(i,1);
+                new Asteroid();
+            }
+        }
+    }
+
+    static cleanup() {
+        Asteroid.asteroids = [];
+    }
+
+    update() {
         // Mouse detection
         const mouseDistVec = [this.x+this.size/2 - Asteroid.mousePos[0], this.y+this.size/2 - Asteroid.mousePos[1]];
         const mouseDist = Math.sqrt((mouseDistVec[0] ** 2) + (mouseDistVec[1] ** 2));
@@ -147,66 +240,12 @@ export class Asteroid {
             this.speed = [this.speed[0] + xMod, this.speed[1] + yMod];
         }
 
-
-        // Move position
-        this.x += this.speed[0];
-        this.y += this.speed[1];
-
-        this.div.style.left = this.x + "px"
-        this.div.style.top = this.y + "px"
-
-        // Out of bounds check
-        if (this.x < 0 - (this.size * 2)
-         || this.x > Asteroid.container.clientWidth
-         || this.y < 0 - (this.size * 2)
-         || this.y > Asteroid.container.clientHeight) 
-        {
-            this.div.remove();
-            return false; // Tells outer function to remove from asteroid array
-        }
-
-        return true;
+        return super.update();        
     }
+}
 
-    static updateAll() {
-        for (let i = Asteroid.asteroids.length - 1; i >= 0; i--) {
-            if (!this.asteroids[i].update()) {
-                Asteroid.asteroids.splice(i,1);
-                new Asteroid();
-            }
-        }
-    }
+export class Spaceship extends SpaceObject {
 
-    static updateMousePosition(x: number, y: number) {
-        Asteroid.mousePos = [x, y];
-    }
-
-    static async start() {
-        const div = document.createElement("div");
-        div.id = "asteroids";
-        div.className = `${styles["asteroids"]}`;
-        Asteroid.container = div;
-
-        document.getElementById("container-glow")?.append(Asteroid.container);
-
-        setDynamicAsteroidCount();
-        for (let i = 0; i < asteroidCount; i++) {
-            new Asteroid();
-        }
-        
-        Asteroid.asteroidInterval = setInterval(() => {
-            Asteroid.updateAll();
-        }, 30);
-    }
-
-    static end() {
-        Asteroid.container?.remove();
-        Asteroid.asteroids = [];
-        if (Asteroid.asteroidInterval != null) {
-            clearInterval(Asteroid.asteroidInterval);
-            Asteroid.asteroidInterval = null;
-        }
-    }
 }
 
 function noisyCirclePath(cx: number, cy: number, r: number, points = 32, noise = 0.15) {

@@ -11,7 +11,7 @@ export default function Home() {
 			<HeroHeader/>
 
 			<div className={styles.navLinks}>
-				<LinkCard destination="/" title="BLOG [WIP]" description="A space to read about my projects and thoughts."/>
+				{/*<LinkCard destination="/" title="BLOG [WIP]" description="A space to read about my projects and thoughts."/>*/}
 				<LinkCard destination="/games" title="GAMES" description="Check out and play some of the games I've helped create!"/>
 				<LinkCard destination="/contact" title="GET IN TOUCH" description=""/>
 			</div>
