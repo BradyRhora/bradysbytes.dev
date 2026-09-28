@@ -1,4 +1,4 @@
-import { prisma } from '@/scripts/lib/db'
+import { prisma } from '@/scripts/lib/db/paf'
 import { shuffle } from './helpers';
 import { Song } from '../../../generated/prisma';
 

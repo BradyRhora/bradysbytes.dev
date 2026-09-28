@@ -39,7 +39,17 @@ export class GamePlayer {
     game: Game;
     position: playerPosition = playerPosition.in_air;
     state: playerState = playerState.spawning;
-    character: SBPSCharacter;
+    character: SBPSCharacter; // player's currently active character
+    cooldown: number = 0; // When above 0, character is unable to take actions
+    damage: number = 0;
+
+    actionScores: UtilityAction[] = [
+        new UtilityAction("attack", () => {}),
+        new UtilityAction("block", () => {}),
+        new UtilityAction("dodge", () => {}),
+        new UtilityAction("taunt", () => {}),
+        new UtilityAction("recover", () => {})
+    ];
 
     constructor(player: playerType, game: Game, usingSecondary = false) {
         this.playerData = player;
@@ -52,7 +62,14 @@ export class GamePlayer {
     // character stats: speed, power, range, defense, weight, weaponsize, sex appeal, style
     // player stats   : weight, charm, anger, depression, intoxication, fingerCount, coordination, intelligence, techSkill, stink
     update(opponent: GamePlayer) {
-        console.log(`What should ${this.playerData.tag} do about ${opponent.playerData.tag}...?`)
+
+        if (this.cooldown > 0) {
+            console.log(`[DEBUG] ${this.playerData.tag} is on cooldown.`);
+            this.cooldown--;
+            return;
+        }
+
+        console.log(`[DEBUG] What should ${this.playerData.tag} do about ${opponent.playerData.tag}...?`)
         
         // Am I in danger?
         // - off stage?
@@ -63,17 +80,14 @@ export class GamePlayer {
         // = Attack, else...
         // Approach opponent?
 
+        const weightedPlayerGap = this.game.playerGap / 10;
+        const weightedDamage = this.damage / 200;
+        // const weighted
+
         
 
-        // start simple...
-        if (this.inAttackRange(this.game.playerGap)) { // try attacking
-            this.state = playerState.attacking;
-        } else if (opponent.inAttackRange(this.game.playerGap)) { // opponent can attack but i cant
-            if (this.check(this.character.speed)) this.state = playerState.dodging;
-            else this.state = playerState.blocking;
-        } else {
-            this.state = playerState.approaching;
-        }
+        
+
     }
 
     check(stat : number, difficulty : checkDifficulty = checkDifficulty.medium) {
@@ -85,13 +99,28 @@ export class GamePlayer {
     }
 
     inAttackRange(distance: number) {
-        return distance < this.character.range * 3;
+        return distance < this.character.range * 3; // TODO: May need tweaking
     }
 
     canAct() {
-        const cantActStates = [playerState.launching, playerState.stunned, playerState.taunting]; // will need some kind of counter that determines when these states are over
+        if (this.cooldown > 0) return false;
+
+        const cantActStates = [playerState.launching, playerState.stunned, playerState.taunting];
         if (this.state in cantActStates) return false;
 
         return true;
     }
+}
+
+class UtilityAction {
+    Name: string
+    Score: number = 0
+    Action: () => void
+
+    constructor(name: string, action: () => void) {
+        this.Name = name;
+        this.Action = action;
+    }
+
+    
 }

@@ -13,7 +13,7 @@ export default function Leaderboard() {
     const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]|null>(null);
 
     useEffect(() => {
-        fetch('/api/PAF/Leaderboard')
+        fetch('/api/paf/Leaderboard')
             .then(res => res.json())
             .then(data => {
                 if (data)

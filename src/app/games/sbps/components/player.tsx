@@ -1,9 +1,9 @@
 "use client"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom";
-import { Prisma } from "../../../../generated/prisma"
+import { Prisma } from "../../../../../generated/prisma"
 
-import style from './sbps.module.css'
+import style from '../sbps.module.css'
 import BindSibling, { getGlowSibling } from "@/app/components/wrappers/siblingBinder";
 
 type PlayerWithCharacters = Prisma.SBPSPlayerGetPayload<{include: {main: true, secondary: true}}>;
@@ -17,7 +17,7 @@ export default function Player({id, tag} : {id: string, tag?:string}) {
     const [modalPos, setModalPos] = useState<{x: number, y: number}>({x: 0, y: 0})
 
     const fetchPlayerData = useCallback(async () => {
-        fetch('/api/SBPS/Player?id='+id)
+        fetch('/api/sbps/player?id='+id)
             .then(resp => resp.json())
             .then((player) => {
                 setPlayerTag(player.tag);

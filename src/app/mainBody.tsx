@@ -30,7 +30,7 @@ export default function MainBody({children,}: Readonly<{children: React.ReactNod
             try {
                 const userID = getCookie("user");
                 if (userID) {
-                    const res = await fetch("/api/PAF/User?id="+userID)
+                    const res = await fetch("/api/paf/User?id="+userID)
                     const userData = await res.json();
                     
                     setUser(userData);

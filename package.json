@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env PORT=4000 next dev --turbopack & tsx src/scripts/server/sbps/sbps.ts",
+    "dev": "concurrently \"cross-env PORT=4000 next dev --turbopack\" \"tsx src/scripts/server/sbps/sbps.ts\"",
     "build": "next build",
     "start": "DATABASE_URL=\"file:./prod.db\" next start & tsx src/scripts/server/sbps/sbps.ts",
     "lint": "next lint",
@@ -27,6 +27,7 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "baseline-browser-mapping": "^2.10.0",
+    "concurrently": "^10.0.5",
     "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "^16.0.10",

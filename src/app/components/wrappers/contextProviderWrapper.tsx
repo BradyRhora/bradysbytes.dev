@@ -24,7 +24,7 @@ export default function ContextProvider({children}: {children: React.ReactNode})
 
     useLayoutEffect(() => {
         if (user) {
-            fetch('/api/PAF/skip?user='+user.id)
+            fetch('/api/paf/skip?user='+user.id)
                 .then(res => res.json())
                 .then(({skips, success} : {skips:number, success:boolean}) => {
                     setPafSkips(skips);

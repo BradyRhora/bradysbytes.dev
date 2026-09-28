@@ -1,4 +1,4 @@
-import { BuildBracket, CreateTournament, EnterPlayers, GetAllPlayers } from "@/scripts/lib/sbps";
+import { BuildBracket, CreateTournament, EnterPlayers, GetAllPlayers } from "@/scripts/lib/db/sbps";
 import { SBPSTournament } from "../../../../generated/prisma";
 
 export async function createTournament() {

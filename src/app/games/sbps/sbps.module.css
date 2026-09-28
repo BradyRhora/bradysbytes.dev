@@ -27,6 +27,10 @@
     margin:5px;
 }
 
+.currentMatch {
+    border: 2px solid gold; /* Change this to match theme? Honestly it's not too bad... */
+}
+
 :global(.glow) .bracketMatch {
     background-color: var(--term-bg-color);
 }
@@ -68,6 +72,14 @@
 
 .playerInfoModal > * {
     width: 100%;
+}
+
+.matchBox { 
+    border: solid 1px;
+    width: 60%;
+    height: 250px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media (max-width: 600px) {

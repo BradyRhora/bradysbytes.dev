@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { CreateSeries, GetAllSeries, GetSeries } from '@/scripts/lib/sbps';
+import { CreateSeries, GetAllSeries, GetSeries } from '@/scripts/lib/db/sbps';
 
 export async function GET(req : NextRequest) {
     const id = req.nextUrl.searchParams.get("id");

@@ -1,6 +1,6 @@
-import { prisma } from '@/scripts/lib/db'
-import { Prisma, SBPSGame, SBPSTournament, SBPSTournamentEntry, SBPSTournamentMatch } from '../../../generated/prisma';
-import { shuffle } from './helpers';
+import { prisma } from '@/scripts/lib/db/paf'
+import { Prisma, SBPSGame, SBPSTournament, SBPSTournamentEntry, SBPSTournamentMatch } from '../../../../generated/prisma';
+import { shuffle } from '../helpers';
 
 // players
 
@@ -49,7 +49,7 @@ export async function GetAllCharacters() {
 }
 
 export async function CreateCharacters(characterData : Prisma.SBPSCharacterCreateManyInput[]) {
-    console.log(characterData);
+    // console.log(characterData);
     const payload = await prisma.sBPSCharacter.createMany({data: characterData});
     return payload.count;
 }
@@ -223,6 +223,19 @@ export async function GetActiveTournamentMatches() {
     return tournament ? await GetTournamentMatches(tournament.id) : [];
 }
 
+// assumes only one match active at a time, which i think is the way we're going
+export async function GetCurrentMatch() {
+    const matches = await GetActiveTournamentMatches();
+
+    for (const match of matches) {
+        if (match.winnerId == null) {
+            return await GetMatchWithPlayers(match.id);
+        }
+    }
+
+    return undefined;
+}
+
 export async function GetMatchWithPlayers(matchId: string) {
     return await prisma.sBPSTournamentMatch.findFirst({
         where: { id: matchId },
@@ -235,7 +248,7 @@ export async function GetMatchWithPlayers(matchId: string) {
 }
 
 // games
-export async function CreateOrObtainGame(matchId: string, gameNumber: number = 1) {
+export async function GetOrCreateGame(matchId: string, gameNumber: number = 1) {
     const existingGame = await prisma.sBPSGame.findFirst({where: {matchId: matchId, number: gameNumber}});
     if (existingGame) return existingGame;
 

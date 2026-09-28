@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { CreatePlayers, GetAllPlayers, GetPlayer } from '@/scripts/lib/sbps';
+import { CreatePlayers, GetAllPlayers, GetPlayer } from '@/scripts/lib/db/sbps';
 import { roundToDecimalPlaces } from '@/scripts/lib/helpers';
 
 export async function GET(req : NextRequest) {

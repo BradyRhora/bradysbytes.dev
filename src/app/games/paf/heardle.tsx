@@ -52,7 +52,7 @@ export default function Heardle() {
    
     function skip() {
         if (user) {
-            fetch('/api/PAF/skip', {
+            fetch('/api/paf/skip', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user: user.id })
@@ -94,7 +94,7 @@ export default function Heardle() {
                 return;
             }
 
-            fetch('/api/PAF/ChooseName?name=' + nameInputRef.current.value)
+            fetch('/api/paf/ChooseName?name=' + nameInputRef.current.value)
                 .then(res => res.json())
                 .then((userData: User) => {
                     setUser(userData);
@@ -104,7 +104,7 @@ export default function Heardle() {
     }
 
     useLayoutEffect(() => {
-        fetch("/api/PAF/SongInfo")
+        fetch("/api/paf/SongInfo")
         .then(res => res.json())
         .then(data => {
             setSongData(data);

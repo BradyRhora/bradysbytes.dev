@@ -1,6 +1,6 @@
 "use client"
 import PageHeader from "@/app/components/items/pageHeader";
-import Bracket from "./bracket";
+import Bracket from "./components/bracket";
 import { useEffect, useCallback, useRef, useContext, useState } from "react";
 
 import styles from './sbps.module.css'
@@ -17,7 +17,7 @@ export default function SBPS() {
     const [live, setLive] = useState(false);
 
     const getTournament = useCallback((id: string) => {
-        fetch('/api/SBPS/Tournament?id='+id)
+        fetch('/api/sbps/tournament?id='+id)
             .then(data => data.json())
             .then(tournamentObject => {
                 setTournament(tournamentObject);
@@ -25,7 +25,7 @@ export default function SBPS() {
     }, [setTournament]);
 
     const getActiveTournament = useCallback(() => {
-        fetch('/api/SBPS/Tournament')
+        fetch('/api/sbps/tournament')
             .then(data => data.json())
             .then(tournamentObject => {
                 setTournament(tournamentObject);

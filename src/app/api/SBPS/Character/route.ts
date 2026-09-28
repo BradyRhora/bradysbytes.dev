@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { CreateCharacters, GetAllCharacters, GetCharacter } from '@/scripts/lib/sbps';
+import { CreateCharacters, GetAllCharacters, GetCharacter } from '@/scripts/lib/db/sbps';
 import { roundToDecimalPlaces } from '@/scripts/lib/helpers';
 
 export async function GET(req : NextRequest) {

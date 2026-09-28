@@ -17,7 +17,7 @@ export default function SBPSAdmin() {
 
     function importData(ref: RefObject<HTMLTextAreaElement|null>, dest: string) {
         if (ref.current && ref.current.value) {
-            fetch('/api/SBPS/' + dest, {method:'POST', body:ref.current.value})
+            fetch('/api/sbps/' + dest, {method:'POST', body:ref.current.value})
                 .then(res => res.json())
                 .then((data) => {
                     console.log(data);
@@ -33,7 +33,7 @@ export default function SBPSAdmin() {
     }
 
     useEffect(() => {
-        fetch('/api/SBPS/Character')
+        fetch('/api/sbps/character')
         .then((res) => res.json())
         .then((data) => {
             setCharacters(data);
@@ -41,7 +41,7 @@ export default function SBPSAdmin() {
     }, [])
 
     useEffect(() => {
-        fetch('/api/SBPS/Player')
+        fetch('/api/sbps/player')
         .then((res) => res.json())
         .then((data) => {
             setPlayers(data);
@@ -50,7 +50,7 @@ export default function SBPSAdmin() {
 
     
     useEffect(() => {
-        fetch('/api/SBPS/Series')
+        fetch('/api/sbps/series')
         .then((res) => res.json())
         .then((data) => {
             setSeries(data);
@@ -109,7 +109,7 @@ export default function SBPSAdmin() {
                 placeholder={"name,range,weight,power,speed,weaponSize,sexAppeal,style,#000000,blurb,seriesID"}                
             ></textarea>
             <br/>
-            <button onClick={() => importData(characterRef, 'Character')}>Import CSV</button>
+            <button onClick={() => importData(characterRef, 'character')}>Import CSV</button>
 
             <h2>Game Series</h2>
             <table>
@@ -144,7 +144,7 @@ export default function SBPSAdmin() {
                 placeholder={"name,year,genre"}
             ></textarea>
             <br/>
-            <button onClick={() => importData(seriesRef, 'Series')}>Import CSV</button>
+            <button onClick={() => importData(seriesRef, 'series')}>Import CSV</button>
 
             <h2>Players</h2>
             <table>
@@ -202,7 +202,7 @@ export default function SBPSAdmin() {
                 
             ></textarea>
             <br/>
-            <button onClick={() => importData(playerRef, 'Player')}>Import CSV</button>
+            <button onClick={() => importData(playerRef, 'player')}>Import CSV</button>
 
             <style>{`
                 table, th, td {

@@ -1,6 +1,6 @@
 "use server";
 import { loadSongsToDB } from "../heardle";
-import { prisma } from "../lib/db";
+import { prisma } from "../lib/db/paf";
 
 async function generateConfig() {
     if (! (await prisma.paFConfig.findFirst())) {

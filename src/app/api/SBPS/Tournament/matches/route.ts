@@ -1,4 +1,4 @@
-import { GetActiveTournamentMatches, GetTournamentMatches } from '@/scripts/lib/sbps';
+import { GetActiveTournamentMatches, GetTournamentMatches } from '@/scripts/lib/db/sbps';
 import {NextRequest, NextResponse} from 'next/server';
 
 export async function GET(req: NextRequest) {
