@@ -37,7 +37,7 @@ enum checkDifficulty {
 export class GamePlayer {
     playerData: playerType;
     game: Game;
-    position: playerPosition = playerPosition.in_air;
+    position: playerPosition = playerPosition.on_stage;
     state: playerState = playerState.spawning;
     character: SBPSCharacter; // player's currently active character
     cooldown: number = 0; // When above 0, character is unable to take actions
@@ -48,7 +48,8 @@ export class GamePlayer {
         new UtilityAction("block", () => {}),
         new UtilityAction("dodge", () => {}),
         new UtilityAction("taunt", () => {}),
-        new UtilityAction("recover", () => {})
+        new UtilityAction("recover", () => {}),
+        new UtilityAction("approach", () => {}),
     ];
 
     constructor(player: playerType, game: Game, usingSecondary = false) {
@@ -84,7 +85,7 @@ export class GamePlayer {
         const weightedDamage = this.damage / 200;
         // const weighted
 
-        
+
 
         
 
