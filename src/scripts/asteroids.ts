@@ -1,5 +1,4 @@
 import styles from '@/app/styles/asteroid.module.css';
-import { throwIfSyncIOUsed } from 'next/dist/server/app-render/dynamic-rendering';
 
 let asteroidCount = 10;
 const MOUSE_DETECTION_RANGE = 100;
